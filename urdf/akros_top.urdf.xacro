@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <robot name="akros_top" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find depthai_ros_driver)/urdf/oakd.urdf.xacro"/>
   <xacro:include filename="$(find rplidar_ros)/urdf/rplidar.urdf.xacro"/>
+  <xacro:include filename="$(find depthai_bridge)/urdf/depthai_descr.urdf"/>
   
   <xacro:property name="M_PI"              value="3.1415926535897931" />
-  <xacro:property name="lidar_offset_yaw"  value="${3*M_PI/4}" />
+  <xacro:property name="lidar_offset_yaw"  value="${3*M_PI/4 - M_PI/12}" />
+  <xacro:property name="baseline"          value="0.075" />
   
   <xacro:arg name="oakd_offset_z"     default="0.100" />
   <xacro:arg name="oakd_offset_x"     default="0.038" />
@@ -21,7 +22,8 @@
   <joint name="base2oakd_link" type="fixed">
     <origin xyz="$(arg oakd_offset_x) 0 $(arg oakd_offset_z)" rpy="0 0 0"/>
     <parent link="base_link"/>
-    <child link="depthai_base"/>
+    <child link="oakd_frame"/>
   </joint>
-
+  
+  
 </robot>

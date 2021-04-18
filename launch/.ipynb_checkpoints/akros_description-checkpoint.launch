@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- args for urdf -->
+  <arg name="system_name" default="akros" />
+    
+  <param name="robot_description" command="$(find xacro)/xacro '$(find akros_test)/urdf/akros_top.urdf.xacro'"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+    <param name="tf_prefix" value=""/>
+  </node>
+        
+        <!-- Rviz configuration -->
+  <!-- node type="rviz" name="rviz" pkg="rviz" args="-d $(find depthai_examples)/rviz/stereo_nodelet.rviz" / -->
+
+</launch>
