@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find akros_test)/launch/pointcloud_stereo.launch" /> 
+    <arg name="nodeName" default="stereo_pub"/>
+    
+    <!-- Run a StatisticalOutlierRemoval filter to clean the data -->
+    <node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
+        <remap from="~input" to="/$(arg nodeName)/stereo/points" />
+        <remap from="~output" to="/$(arg nodeName)/stereo/points_sor" />
+        <rosparam>
+          mean_k: 8
+          stddev: 0.01
+          negative: False
+        </rosparam>
+    </node>
+    
+    <!-- Run a VoxelGrid filter to limit data to 7.5m and downsample the data -->
+    <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pointcloud_manager" output="screen">
+        <remap from="~input" to="/$(arg nodeName)/stereo/points_sor" />
+        <remap from="~output" to="/$(arg nodeName)/stereo/points_vox" />
+        <rosparam>
+          filter_field_name: z
+          filter_limit_min: 0.01
+          filter_limit_max: 8
+          filter_limit_negative: False
+          leaf_size: 0.01
+        </rosparam>
+    </node>
+    
+    <include file="$(find rplidar_ros)/launch/rplidar_publisher.launch" /> 
+    <arg name="lidarName" default="rplidar"/>
+    
+    <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
+        <rosparam command="load" file="$(find akros_test)/config/laser_filter_config.yaml" />
+        <remap from="scan" to="$(arg lidarName)/scan" />
+        <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
+    </node>
+    
+</launch>
