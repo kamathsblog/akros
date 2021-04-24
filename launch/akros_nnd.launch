@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
 
-    <include file="$(find akros_test)/launch/pointcloud_rgbd.launch" /> 
-    <arg name="nodeName" default="rgbd_pub"/>
+    <include file="$(find akros_test)/launch/pointcloud_nnd.launch" /> 
+    <arg name="nodeName" default="nnd_pub"/>
     
     <!-- Run a StatisticalOutlierRemoval filter to clean the data -->
     <node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
@@ -36,5 +36,7 @@
         <remap from="scan" to="$(arg lidarName)/scan" />
         <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
     </node>
+    
+    <!-- add node for bounding boxes -->
     
 </launch>

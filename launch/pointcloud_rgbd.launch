@@ -2,7 +2,7 @@
 <launch>
 
     <include file="$(find akros_test)/launch/akros_description.launch" />
-    <include file="$(find depthai_nodes)/launch/stereo_publisher.launch" />
+    <include file="$(find depthai_nodes)/launch/rgbd_publisher.launch" />
     <arg name="nodeName"         default="rgbd_pub"/>
     <arg name="camera_name"      default="oakd" />
     <arg name="camera_param_uri" default="package://depthai_nodes/params/camera" />
@@ -10,7 +10,7 @@
     <!-- depth_image_proc nodelet -->
     <node pkg="nodelet" type="nodelet" name="pointcloud_manager"  args="manager" output="screen"/>
     
-    <!-- <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen">
+    <!-- <node pkg="nodelet" type="nodelet" name="pointcloud_manager"  args="manager" output="screen">
         <param name="camera_name" value="$(arg camera_name)"/>
         <param name="camera_param_uri" value="$(arg camera_param_uri)"/>
     </node> -->
@@ -21,28 +21,28 @@
         <remap from="image" to="/$(arg nodeName)/stereo/depth_m"/>
     </node -->
 
-    <!-- node pkg="nodelet" type="nodelet" name="depth_pointcloud"
+    <node pkg="nodelet" type="nodelet" name="depth_pointcloud"
         args="load depth_image_proc/point_cloud_xyz pointcloud_manager">
         <remap from="camera_info" to="/$(arg nodeName)/stereo/camera_info"/>
         <remap from="image_rect" to="/$(arg nodeName)/stereo/depth"/>    
-        <remap from="points" to="/$(arg nodeName)/pointcloud/points"/>
-    </node -->
+        <remap from="points" to="/$(arg nodeName)/stereo/points"/>
+    </node>
     
-    <node pkg="nodelet" type="nodelet" name="depth_rgb_register" 
+    <!-- node pkg="nodelet" type="nodelet" name="depth_rgb_register" 
         args="load depth_image_proc/register pointcloud_manager">   
         <remap from="rgb/camera_info" to="/$(arg nodeName)/color/camera_info"/> 
         <remap from="depth/camera_info" to="/$(arg nodeName)/stereo/camera_info"/>
         <remap from="depth/image_rect" to="/$(arg nodeName)/stereo/depth"/>
         <remap from="depth_registered/camera_info" to="/$(arg nodeName)/stereo_rect/camera_info"/>
         <remap from="depth_registered/image_rect" to="/$(arg nodeName)/stereo_rect/depth"/>
-    </node>
+    </node -->
        
-    <node pkg="nodelet" type="nodelet" name="depth_pointcloud_rgb" 
+    <!-- node pkg="nodelet" type="nodelet" name="depth_pointcloud_rgb" 
         args="load depth_image_proc/point_cloud_xyzrgb pointcloud_manager"> 
         <remap from="rgb/camera_info" to="/$(arg nodeName)/color/camera_info"/>    
         <remap from="rgb/image_rect_color" to="/$(arg nodeName)/color/image"/>
         <remap from="depth_registered/image_rect" to="/$(arg nodeName)/stereo_rect/depth"/>
         <remap from="depth_registered/points" to="/$(arg nodeName)/pointcloud/points_rgb"/>
-    </node>
+    </node -->
 
 </launch>
