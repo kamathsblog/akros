@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     
-    <include file="$(find akros_test)/launch/akros_stereo.launch" />
-    <!-- include file="$(find akros_test)/launch/akros_rgbd.launch" / -->
+    <include file="$(find akros_test)/launch/akros_rgbd.launch" />
+    <!-- include file="$(find akros_test)/launch/akros_stereo.launch" / -->
     <arg name="lidarName" default="rplidar"/>
 
     <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
