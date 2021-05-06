@@ -9,7 +9,7 @@
     <node pkg="image_transport" type="republish" name="image_compress" args="raw in:=/$(arg nodeName)/color/image compressed out:=/$(arg nodeName)/color/image" />
     
     <!-- DETECT ARUCO MARKERS -->
-    <arg name="fiducial_len" default="0.05"/>
+    <arg name="fiducial_len" default="0.068"/>
     <arg name="dictionary" default="7"/>
     <arg name="do_pose_estimation" default="true"/>
     <arg name="vis_msgs" default="false"/>
@@ -18,7 +18,7 @@
 
     <node pkg="aruco_detect" name="aruco_detect" type="aruco_detect" output="screen" respawn="false">
         <param name="image_transport" value="compressed"/>
-        <param name="publish_images" value="true" />
+        <param name="publish_images" value="false" />
         <param name="fiducial_len" value="$(arg fiducial_len)"/>
         <param name="dictionary" value="$(arg dictionary)"/>
         <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
@@ -65,6 +65,7 @@
         <remap from="scan" to="$(arg lidarName)/scan" />
         <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
     </node>
+    
     
     <!-- add node for bounding boxes -->
     
