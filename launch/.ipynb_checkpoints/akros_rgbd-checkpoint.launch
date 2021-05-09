@@ -32,7 +32,7 @@
     
     <!-- FILTER POINTCLOUDS -->
     <!-- Run a StatisticalOutlierRemoval filter to clean the data -->
-    <node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
+    <!-- node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
         <remap from="~input" to="/$(arg nodeName)/stereo/points" />
         <remap from="~output" to="/$(arg nodeName)/stereo/points_sor" />
         <rosparam>
@@ -40,11 +40,11 @@
           stddev: 0.01
           negative: False
         </rosparam>
-    </node>
+    </node -->
     
     <!-- Run a VoxelGrid filter to limit data to 7.5m and downsample the data -->
     <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pointcloud_manager" output="screen">
-        <remap from="~input" to="/$(arg nodeName)/stereo/points_sor" />
+        <remap from="~input" to="/$(arg nodeName)/stereo/points" />
         <remap from="~output" to="/$(arg nodeName)/stereo/points_vox" />
         <rosparam>
           filter_field_name: z
@@ -65,6 +65,12 @@
         <remap from="scan" to="$(arg lidarName)/scan" />
         <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
     </node>
+    
+    <!-- node pkg="nodelet" type="nodelet" name="depth_laserscan"
+        args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet pointcloud_manager" output="screen">
+        <remap from="camera_info" to="/$(arg nodeName)/stereo/camera_info"/>
+        <remap from="image" to="/$(arg nodeName)/stereo/depth"/>    
+    </node -->
     
     
     <!-- add node for bounding boxes -->
