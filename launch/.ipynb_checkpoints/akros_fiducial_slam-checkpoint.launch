@@ -2,7 +2,6 @@
 <launch>
     
     <include file="$(find akros_test)/launch/akros_rgbd.launch" />
-    <!-- include file="$(find akros_test)/launch/akros_rgbd.launch" / -->
     <arg name="nodeName" default="rgbd_pub"/>
     <arg name="map_frame" default="map"/>
     <arg name="odom_frame" default="base_link"/>

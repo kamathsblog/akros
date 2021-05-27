@@ -9,11 +9,6 @@
     
     <!-- depth_image_proc nodelet -->
     <node pkg="nodelet" type="nodelet" name="pointcloud_manager" args="manager" output="screen"/>
-    
-    <!-- <node pkg="nodelet" type="nodelet" name="pointcloud_manager"  args="manager" output="screen">
-        <param name="camera_name" value="$(arg camera_name)"/>
-        <param name="camera_param_uri" value="$(arg camera_param_uri)"/>
-    </node> -->
 
     <!-- node pkg="nodelet" type="nodelet" name="depth_convert"
         args="load depth_image_proc/convert_metric pointcloud_manager">
@@ -26,6 +21,12 @@
         <remap from="camera_info" to="/$(arg nodeName)/stereo/camera_info"/>
         <remap from="image_rect" to="/$(arg nodeName)/stereo/depth"/>
         <remap from="points" to="/$(arg nodeName)/stereo/points"/>
+    </node>
+    
+    <node pkg="nodelet" type="nodelet" name="pointcloud_laserscan"
+        args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet pointcloud_manager">
+        <remap from="cloud_in" to="/$(arg nodeName)/stereo/points"/>
+        <remap from="scan" to="/$(arg nodeName)/stereo/scan"/>
     </node>
 
 </launch>

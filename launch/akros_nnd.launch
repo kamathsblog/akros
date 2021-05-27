@@ -4,8 +4,33 @@
     <include file="$(find akros_test)/launch/pointcloud_nnd.launch" /> 
     <arg name="nodeName" default="nnd_pub"/>
     
+    <!-- COMPRESS RGB IMAGES -->
+    <node pkg="image_transport" type="republish" name="image_compress" args="raw in:=/$(arg nodeName)/right/image compressed out:=/$(arg nodeName)/right/image" />
+    
+    <!-- DETECT ARUCO MARKERS -->
+    <arg name="fiducial_len" default="0.068"/>
+    <arg name="dictionary" default="7"/>
+    <arg name="do_pose_estimation" default="true"/>
+    <arg name="vis_msgs" default="false"/>
+    <arg name="ignore_fiducials" default="" />
+    <arg name="fiducial_len_override" default="" />
+
+    <node pkg="aruco_detect" name="aruco_detect" type="aruco_detect" output="screen" respawn="false">
+        <param name="image_transport" value="compressed"/>
+        <param name="publish_images" value="true" />
+        <param name="fiducial_len" value="$(arg fiducial_len)"/>
+        <param name="dictionary" value="$(arg dictionary)"/>
+        <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
+        <param name="vis_msgs" value="$(arg vis_msgs)"/>
+        <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
+        <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
+        <remap from="camera/compressed" to="$(arg nodeName)/right/image/compressed"/>
+        <remap from="camera_info" to="$(arg nodeName)/right/camera_info"/>
+        <remap from="fiducial_images" to="$(arg nodeName)/right/fiducial_images"/>
+    </node>
+    
     <!-- Run a StatisticalOutlierRemoval filter to clean the data -->
-    <node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
+    <!-- node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
         <remap from="~input" to="/$(arg nodeName)/stereo/points" />
         <remap from="~output" to="/$(arg nodeName)/stereo/points_sor" />
         <rosparam>
@@ -13,11 +38,11 @@
           stddev: 0.01
           negative: False
         </rosparam>
-    </node>
+    </node -->
     
     <!-- Run a VoxelGrid filter to limit data to 7.5m and downsample the data -->
     <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pointcloud_manager" output="screen">
-        <remap from="~input" to="/$(arg nodeName)/stereo/points_sor" />
+        <remap from="~input" to="/$(arg nodeName)/stereo/points" />
         <remap from="~output" to="/$(arg nodeName)/stereo/points_vox" />
         <rosparam>
           filter_field_name: z

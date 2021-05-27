@@ -26,7 +26,7 @@
         <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
         <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
         <remap from="camera/compressed" to="$(arg nodeName)/color/image/compressed"/>
-        <remap from="camera_info" to="$(arg nodeName)/color/camera_info"/>
+        <remap from="camera_info" to="$(arg nodeName)/stereo/camera_info"/>
         <remap from="fiducial_images" to="$(arg nodeName)/color/fiducial_images"/>
     </node>
     
