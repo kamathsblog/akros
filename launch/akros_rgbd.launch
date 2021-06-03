@@ -2,7 +2,7 @@
 <launch>
 
     <!-- LAUNCH RGBD PUBLISHER -->
-    <include file="$(find akros_test)/launch/pointcloud_rgbd.launch" /> 
+    <include file="$(find akros_test)/launch/base_launch/pointcloud_rgbd.launch" /> 
     <arg name="nodeName" default="rgbd_pub"/>
     
     <!-- COMPRESS RGB IMAGES -->

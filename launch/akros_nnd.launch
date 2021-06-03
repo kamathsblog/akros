@@ -4,7 +4,7 @@
     <arg name="pub_fiducials" default="false"/>
     <arg name="pub_detections" default="false"/>
 
-    <include file="$(find akros_test)/launch/pointcloud_nnd.launch">
+    <include file="$(find akros_test)/launch/base_launch/pointcloud_nnd.launch">
         <arg name="pub_detections" value="$(arg pub_detections)"/>
     </include> 
     <arg name="nodeName" default="nnd_pub"/>

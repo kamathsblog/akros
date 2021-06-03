@@ -3,8 +3,8 @@
 
     <arg name="pub_detections" default="true"/>
 
-    <include file="$(find akros_test)/launch/akros_description.launch" />
-    <include file="$(find depthai_nodes)/launch/nnd_publisher.launch">
+    <include file="$(find akros_test)/launch/base_launch/akros_description.launch" />
+    <include file="$(find depthai_nodes)/launch/base_launch/nnd_nodelet_publisher.launch"> <!-- nnd_publisher or nnd_nodelet_publisher -->
         <arg name="pub_detections" value="$(arg pub_detections)"/>
     </include>
     <arg name="nodeName"         default="nnd_pub"/>

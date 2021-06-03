@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <include file="$(find akros_test)/launch/pointcloud_stereo.launch" /> 
+    <include file="$(find akros_test)/launch/base_launch/pointcloud_stereo.launch" /> 
     <arg name="nodeName" default="stereo_pub"/>
 
     <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
