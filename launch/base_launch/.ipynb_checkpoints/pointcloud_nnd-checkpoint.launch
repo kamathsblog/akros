@@ -2,11 +2,14 @@
 <launch>
 
     <arg name="pub_detections" default="true"/>
+    <arg name="modelName"      default="mobilenet"/> <!-- mobilenet or yolov4 -->
 
     <include file="$(find akros_test)/launch/base_launch/akros_description.launch" />
     <include file="$(find depthai_nodes)/launch/base_launch/nnd_nodelet_publisher.launch"> <!-- nnd_publisher or nnd_nodelet_publisher -->
         <arg name="pub_detections" value="$(arg pub_detections)"/>
+        <arg name="modelName" value="$(arg modelName)"/>
     </include>
+    
     <arg name="nodeName"         default="nnd_pub"/>
     <arg name="camera_name"      default="oakd" />
     <arg name="camera_param_uri" default="package://depthai_nodes/params/camera" />

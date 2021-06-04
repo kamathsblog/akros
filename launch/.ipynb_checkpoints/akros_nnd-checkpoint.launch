@@ -3,9 +3,11 @@
     
     <arg name="pub_fiducials" default="false"/>
     <arg name="pub_detections" default="false"/>
+    <arg name="modelName"      default="mobilenet"/> <!-- mobilenet or yolov4 -->
 
     <include file="$(find akros_test)/launch/base_launch/pointcloud_nnd.launch">
         <arg name="pub_detections" value="$(arg pub_detections)"/>
+        <arg name="modelName" value="$(arg modelName)"/>
     </include> 
     <arg name="nodeName" default="nnd_pub"/>
     
