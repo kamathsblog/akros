@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="pub_fiducials"  default="true"/>
-    <arg name="pub_detections" default="true"/>
+    <arg name="pub_fiducials"  default="false"/>
+    <arg name="pub_detections" default="false"/>
     <arg name="modelName"      default="yolov4"/> <!-- mobilenet or yolov4 -->
     
     <include file="$(find akros_test)/launch/akros_nnd.launch">
