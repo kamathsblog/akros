@@ -1,8 +1,13 @@
 <?xml version="1.0"?>
 <launch>
 
-    <include file="$(find akros_test)/launch/base_launch/pointcloud_stereo.launch" /> 
-    <arg name="nodeName" default="stereo_pub"/>
+    <arg name="mode"      default="depth" /> <!-- depth or disparity -->
+    <arg name="nodeName"  default="stereo_pub"/>
+    <arg name="lidarName" default="rplidar"/>
+
+    <include file="$(find akros_test)/launch/base_launch/pointcloud_stereo.launch">
+        <arg name="mode" value="$(arg mode)"/>
+    </include>
     
     <!-- Run a StatisticalOutlierRemoval filter to clean the data -->
     <node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
@@ -28,8 +33,7 @@
         </rosparam>
     </node>
     
-    <include file="$(find rplidar_ros)/launch/rplidar_publisher.launch" /> 
-    <arg name="lidarName" default="rplidar"/>
+    <include file="$(find rplidar_ros)/launch/rplidar_publisher.launch"> 
     
     <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
         <rosparam command="load" file="$(find akros_test)/config/laser_filter_config.yaml" />

@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <launch>
-    
-    <arg name="pub_fiducials" default="false"/>
+
+    <arg name="nodeName" default="nnd_pub"/>
+    <arg name="pub_fiducials"  default="false"/>
     <arg name="pub_detections" default="false"/>
     <arg name="modelName"      default="mobilenet"/> <!-- mobilenet or yolov4 -->
+    <arg name="lidarName"      default="rplidar"/>
 
     <include file="$(find akros_test)/launch/base_launch/pointcloud_nnd.launch">
         <arg name="pub_detections" value="$(arg pub_detections)"/>
         <arg name="modelName" value="$(arg modelName)"/>
     </include> 
-    <arg name="nodeName" default="nnd_pub"/>
     
     <!-- DETECT ARUCO MARKERS -->
     <arg name="fiducial_len" default="0.068"/>
@@ -59,15 +60,12 @@
         </rosparam>
     </node>
     
-    <include file="$(find rplidar_ros)/launch/rplidar_publisher.launch" /> 
-    <arg name="lidarName" default="rplidar"/>
+    <include file="$(find rplidar_ros)/launch/rplidar_publisher.launch"/>       
     
     <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
         <rosparam command="load" file="$(find akros_test)/config/laser_filter_config.yaml" />
         <remap from="scan" to="$(arg lidarName)/scan" />
         <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
     </node>
-    
-    <!-- add node for bounding boxes -->
     
 </launch>

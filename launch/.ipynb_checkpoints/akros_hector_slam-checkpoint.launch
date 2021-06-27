@@ -3,15 +3,15 @@
 
     <arg name="pub_fiducials"  default="false"/>
     <arg name="pub_detections" default="false"/>
-    <arg name="modelName"      default="yolov4"/> <!-- mobilenet or yolov4 -->
+    <arg name="modelName"      default="mobilenet"/> <!-- mobilenet or yolov4 -->
+    <arg name="lidarName"      default="rplidar"/>
     
     <include file="$(find akros_test)/launch/akros_nnd.launch">
         <arg name="pub_fiducials" value="$(arg pub_fiducials)"/>
         <arg name="pub_detections" value="$(arg pub_detections)"/>
         <arg name="modelName" value="$(arg modelName)"/>
+        <arg name="lidarName" value="$(arg lidarName)"/>
     </include>
-    
-    <arg name="lidarName" default="rplidar"/>
 
     <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
 
