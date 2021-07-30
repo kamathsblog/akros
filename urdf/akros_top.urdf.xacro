@@ -5,7 +5,7 @@
   <xacro:include filename="$(find depthai_bridge)/urdf/depthai_descr.urdf"/>
   
   <xacro:property name="M_PI"              value="3.1415926535897931" />
-  <xacro:property name="lidar_offset_yaw"  value="${3*M_PI/4 - M_PI/12}" />
+  <xacro:property name="lidar_offset_yaw"  value="${M_PI/2}" />
   <xacro:property name="baseline"          value="0.075" />
   
   <xacro:arg name="oakd_offset_z"     default="0.123" />

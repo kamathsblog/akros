@@ -1,19 +1,31 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="mode"      default="depth" /> <!-- depth or disparity -->
-    <arg name="nodeName"  default="rgbd_pub"/>
-    <arg name="lidarName" default="rplidar"/>
+    <!-- ARGUMENTS - GLOBAL -->
+    <arg name="mode"        default="depth" /> <!-- depth or disparity -->
+    <arg name="nodeName"    default="rgbd_pub"/>
+    <arg name="lidarName"   default="rplidar"/>
+    <arg name="lidarSerial" default="/dev/ttyUSB1"/>
 
-    <!-- LAUNCH RGBD PUBLISHER -->
-    <include file="$(find akros_test)/launch/base_launch/pointcloud_rgbd.launch"> 
+    <!-- INCLUDE BASE LAUNCH FILES -->
+    <!-- INCLUDE DESCRIPTION -->
+    <!-- include file="$(find akros_test)/launch/base_launch/akros_description.launch" / -->
+    
+    <!-- INCLUDE OAKD LAUNCH FILE -->
+    <include file="$(find akros_test)/launch/base_launch/oakd_rgbd_pointcloud.launch">
         <arg name="mode" value="$(arg mode)"/>
     </include>
     
-    <!-- COMPRESS RGB IMAGES -->
+    <!-- INCLUDE RPLIDAR LAUNCH FILE -->
+    <include file="$(find akros_test)/launch/base_launch/rplidar_2d_pointcloud.launch">
+        <arg name="lidarName" value="$(arg lidarName)"/>
+        <arg name="lidarSerial" value="$(arg lidarSerial)"/>
+    </include>
+    
+    <!-- IMAGE_COMPRESS NODE -->
     <node pkg="image_transport" type="republish" name="image_compress" args="raw in:=/$(arg nodeName)/color/image compressed out:=/$(arg nodeName)/color/image" />
     
-    <!-- DETECT ARUCO MARKERS -->
+    <!-- ARGUMENTS - ARUCO_DETECT -->
     <arg name="fiducial_len" default="0.068"/>
     <arg name="dictionary" default="7"/>
     <arg name="do_pose_estimation" default="true"/>
@@ -21,6 +33,7 @@
     <arg name="ignore_fiducials" default="" />
     <arg name="fiducial_len_override" default="" />
 
+    <!-- ARUCO_DETECT NODE -->
     <node pkg="aruco_detect" name="aruco_detect" type="aruco_detect" output="screen" respawn="false">
         <param name="image_transport" value="compressed"/>
         <param name="publish_images" value="false" />
@@ -33,41 +46,6 @@
         <remap from="camera/compressed" to="$(arg nodeName)/color/image/compressed"/>
         <remap from="camera_info" to="$(arg nodeName)/color/camera_info"/>
         <remap from="fiducial_images" to="$(arg nodeName)/color/fiducial_images"/>
-    </node>
-    
-    <!-- FILTER POINTCLOUDS -->
-    <!-- Run a StatisticalOutlierRemoval filter to clean the data -->
-    <!-- node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
-        <remap from="~input" to="/$(arg nodeName)/stereo/points" />
-        <remap from="~output" to="/$(arg nodeName)/stereo/points_sor" />
-        <rosparam>
-          mean_k: 8
-          stddev: 0.01
-          negative: False
-        </rosparam>
-    </node -->
-    
-    <!-- Run a VoxelGrid filter to limit data to 7.5m and downsample the data -->
-    <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pointcloud_manager" output="screen">
-        <remap from="~input" to="/$(arg nodeName)/stereo/points" />
-        <remap from="~output" to="/$(arg nodeName)/stereo/points_vox" />
-        <rosparam>
-          filter_field_name: z
-          filter_limit_min: 0.01
-          filter_limit_max: 8
-          filter_limit_negative: False
-          leaf_size: 0.01
-        </rosparam>
-    </node>
-    
-    <!-- LAUNCH LIDAR SCAN PUBLISHER -->
-    <include file="$(find rplidar_ros)/launch/rplidar_publisher.launch"> 
-    
-    <!-- FILTER LASER SCAN -->
-    <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
-        <rosparam command="load" file="$(find akros_test)/config/laser_filter_config.yaml" />
-        <remap from="scan" to="$(arg lidarName)/scan" />
-        <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
     </node>
     
 </launch>

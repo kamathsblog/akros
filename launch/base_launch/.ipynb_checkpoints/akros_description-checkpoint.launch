@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <!-- system description -->
+    <!-- ARGUMENTS -->
     <arg name="system_name"          default="akros"/>
     <arg name="camera_model"         default="BW1098OAK" /> <!-- 'zed' or 'zedm' -->
     <arg name="camera_name"          default="oakd" />
@@ -13,6 +13,7 @@
     <arg name="cam_pitch"             default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     <arg name="cam_yaw"               default="1.5708" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     
+    <!-- URDF -->
     <param name="$(arg system_name)_description"
                command="$(find xacro)/xacro '$(find akros_test)/urdf/akros_top.urdf.xacro'
                         camera_name:=$(arg camera_name)
@@ -25,7 +26,7 @@
                         cam_pitch:=$(arg cam_pitch)
                         cam_yaw:=$(arg cam_yaw)"/>
                         
-    <!-- state publisher node -->
+    <!-- STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" required="true">
         <remap from="robot_description" to="$(arg system_name)_description" />
     </node> 

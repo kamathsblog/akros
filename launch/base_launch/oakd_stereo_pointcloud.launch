@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
 <launch>
-
+    <!-- ARGUMENTS -->
     <arg name="camera_name"      default="oakd" />
     <arg name="nodeName"         default="stereo_pub"/>
     <arg name="mode"             default="depth" /> <!-- depth or disparity -->
     <arg name="camera_param_uri" default="package://depthai_nodes/params/camera" />
     
-    <include file="$(find akros_test)/launch/base_launch/akros_description.launch" />
+    <!-- INCLUDE STEREO_PUBLISHER NODE/NODELET -->
     <include file="$(find depthai_nodes)/launch/base_launch/stereo_publisher.launch">
         <arg name="mode" value="$(arg mode)"/>
-    <include/>
+    </include>
     
-    <!-- depth_image_proc nodelet -->
+    <!-- NODELET MANAGER -->
     <node pkg="nodelet" type="nodelet" name="pointcloud_manager"  args="manager" output="screen"/>
 
+    <!-- DEPTH_IMAGE_PROC/POINT_CLOUD_XYZ NODELET -->
     <node pkg="nodelet" type="nodelet" name="depth_pointcloud"
         args="load depth_image_proc/point_cloud_xyz pointcloud_manager">
         <remap from="camera_info" to="/$(arg nodeName)/stereo/camera_info"/>
@@ -21,14 +22,42 @@
         <remap from="points" to="/$(arg nodeName)/stereo/points"/>
     </node>
     
+    <!-- POINTCLOUD_TO_LASERSCAN NODELET -->
     <node pkg="nodelet" type="nodelet" name="pointcloud_laserscan"
         args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet pointcloud_manager">
         <remap from="cloud_in" to="/$(arg nodeName)/stereo/points"/>
         <remap from="scan" to="/$(arg nodeName)/stereo/scan"/>
     </node>
+    
+        <!-- FILTER POINTCLOUDS -->
+    <!-- STATISTICAL_OUTLIER_REMOVAL(SOR) NODELET -->
+    <node pkg="nodelet" type="nodelet" name="sor_filter" args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
+        <remap from="~input" to="/$(arg nodeName)/stereo/points" />
+        <remap from="~output" to="/$(arg nodeName)/stereo/points_sor" />
+        <rosparam>
+          mean_k: 8
+          stddev: 0.01
+          negative: False
+        </rosparam>
+    </node>
+    
+    <!-- FILTER POINTCLOUDS -->
+    <!-- VOXEL_GRID NODELET -->
+    <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pointcloud_manager" output="screen">
+        <remap from="~input" to="/$(arg nodeName)/stereo/points_sor" />
+        <remap from="~output" to="/$(arg nodeName)/stereo/points_vox" />
+        <rosparam>
+          filter_field_name: z
+          filter_limit_min: 0.01
+          filter_limit_max: 8
+          filter_limit_negative: False
+          leaf_size: 0.01
+        </rosparam>
+    </node>
 
 </launch>
 
+    <!-- DEPTH_IMAGE_PROC/CONVERT_METRIC NODELET -->
     <!-- node pkg="nodelet" type="nodelet" name="depth_convert"
         args="load depth_image_proc/convert_metric pointcloud_manager" -->
         <!-- remap from="image_raw" to="/$(arg nodeName)/stereo/depth"/ -->    
