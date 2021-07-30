@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- ARGUMENTS - GLOBAL -->
+    <arg name="device_type"      default="t265"/>
+    <arg name="enable_fisheye"   default="true"/>
+    <arg name="enable_imu"       default="true"/>
+    <arg name="enable_pose"      default="true"/>
+    <arg name="enable_sync"      default="false"/>
+    <arg name="tf_prefix"        default="$(arg device_type)"/>
+    <arg name="linear_accel_cov" default="0.01"/>
+    <arg name="initial_reset"    default="false"/>
+    <arg name="unite_imu_method" default=""/>
+    <arg name="publish_odom_tf"  default="true"/>
+    
+    <!-- INCLUDE T265_PUBLISHER LAUNCH FILE -->
+    <include file="$(find realsense2_camera)/launch/rs_t265.launch">
+      <arg name="tf_prefix"                value="$(arg tf_prefix)"/>
+      <arg name="device_type"              value="$(arg device_type)"/>
+      <arg name="enable_fisheye1"          value="$(arg enable_fisheye)"/>
+      <arg name="enable_fisheye2"          value="$(arg enable_fisheye)"/>
+      <arg name="enable_gyro"              value="$(arg enable_imu)"/>
+      <arg name="enable_accel"             value="$(arg enable_imu)"/>
+      <arg name="enable_pose"              value="$(arg enable_pose)"/>
+      <arg name="enable_sync"              value="$(arg enable_sync)"/>
+      <arg name="linear_accel_cov"         value="$(arg linear_accel_cov)"/>
+      <arg name="initial_reset"            value="$(arg initial_reset)"/>
+      <arg name="unite_imu_method"         value="$(arg unite_imu_method)"/>
+      <arg name="publish_odom_tf"          value="$(arg publish_odom_tf)"/>
+    </include>
+    
+</launch>
