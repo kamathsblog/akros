@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- ARGUMENTS -->
+    <arg name="pub_fiducials"         default="true"/>
+    <arg name="pub_detections"        default="true"/>
+    <arg name="modelName"             default="mobilenet"/> <!-- mobilenet or yolov4 -->
+    <arg name="lidarName"             default="rplidar"/>
+    <arg name="lidarSerial"           default="/dev/ttyUSB0"/>
+    <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
+    <arg name="trackCam"              default="t265"/>
+    
+    <!-- ARGUMENTS - T265 -->
+    <arg name="enable_fisheye"   default="false"/>
+    <arg name="enable_sync"      default="true"/>
+    <arg name="linear_accel_cov" default="0.01"/>
+    <arg name="initial_reset"    default="false"/>
+    <arg name="unite_imu_method" default=""/>
+    
+    <!-- INCLUDE AKROS LAUNCH FILE -->
+    <include file="$(find akros_test)/launch/akros_2d.launch">
+        <!-- arg name="pub_fiducials"    value="$(arg pub_fiducials)"/ -->
+        <!-- arg name="pub_detections"   value="$(arg pub_detections)"/ -->
+        <!-- arg name="modelName"        value="$(arg modelName)"/ -->
+        <arg name="lidarName"        value="$(arg lidarName)"/>
+        <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
+        <arg name="trackCam"         value="$(arg trackCam)"/>
+        <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
+        <arg name="enable_sync"      value="$(arg enable_sync)"/>
+        <arg name="linear_accel_cov" value="$(arg linear_accel_cov)"/>
+        <arg name="initial_reset"    value="$(arg initial_reset)"/>
+        <arg name="unite_imu_method" value="$(arg unite_imu_method)"/>
+    </include>
+
+    <!-- INCLUDE HECTOR_MAPPING LAUNCH FILE -->
+    <param name="/use_sim_time" value="false"/>
+    <include file="$(find hector_mapping)/launch/mapping_default.launch">
+        <arg name="scan_topic" value="$(arg lidarName)/scan"/>
+        <arg name="odom_frame" value="t265_odom_frame"/> <!-- odom_frame -->
+        <arg name="base_frame" value="t265_pose_frame"/> <!-- base_link -->
+    </include>
+    
+    <node pkg="tf" type="static_transform_publisher" name="t265_link_laser" args="0 0 0 3.1415 0 0 /t265_link /laser_frame 100"/>
+    
+    <!-- INCLUDE HECTOR_GEOTIFF LAUNCH FILE -->
+    <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
+        <arg name="trajectory_source_frame_name" value="base_link"/>
+        <arg name="map_file_path" value="$(arg geotiff_map_file_path)"/>
+    </include>
+
+</launch>

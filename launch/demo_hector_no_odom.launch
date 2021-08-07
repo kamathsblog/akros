@@ -6,13 +6,13 @@
     <arg name="pub_detections"        default="true"/>
     <arg name="modelName"             default="mobilenet"/> <!-- mobilenet or yolov4 -->
     <arg name="lidarName"             default="rplidar"/>
-    <arg name="lidarSerial"           default="/dev/ttyUSB0"/>
+    <arg name="lidarSerial"           default="/dev/ttyUSB1"/>
     <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
     <arg name="trackCam"              default="t265"/>
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"   default="true"/>
-    <arg name="enable_sync"      default="false"/>
+    <arg name="enable_sync"      default="true"/>
     <arg name="linear_accel_cov" default="0.01"/>
     <arg name="initial_reset"    default="false"/>
     <arg name="unite_imu_method" default=""/>
@@ -39,6 +39,8 @@
         <arg name="odom_frame" value="base_link"/>
         <arg name="base_frame" value="base_link"/>
     </include>
+    
+    <node pkg="tf" type="static_transform_publisher" name="t265_link_laser" args="0 0 0 3.1415 0 0 /t265_link /laser_frame 100"/>
     
     <!-- INCLUDE HECTOR_GEOTIFF LAUNCH FILE -->
     <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
