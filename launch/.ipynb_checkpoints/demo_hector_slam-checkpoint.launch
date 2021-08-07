@@ -6,7 +6,7 @@
     <arg name="pub_detections"        default="true"/>
     <arg name="modelName"             default="mobilenet"/> <!-- mobilenet or yolov4 -->
     <arg name="lidarName"             default="rplidar"/>
-    <arg name="lidarSerial"           default="/dev/ttyUSB0"/>
+    <arg name="lidarSerial"           default="/dev/ttyUSB1"/>
     <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
     <arg name="trackCam"              default="t265"/>
     

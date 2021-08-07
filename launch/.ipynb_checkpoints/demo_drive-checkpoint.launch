@@ -10,12 +10,12 @@
     <arg name="stamped" default="false" />
     
     <!-- ROSSERIAL ARGUMENTS -->
-    <arg name="port" default="/dev/ttyUSB1" />
+    <arg name="port" default="/dev/ttyUSB0" />
     <arg name="baud" default="256000" />
 
     <!-- DS4 -->
     <!-- DS4 DRIVER NODE -->
-    <node pkg="ds4_driver" type="ds4_driver_node.py" name="ds4_driver">
+    <node pkg="ds4_driver" type="ds4_driver_node.py" name="ds4_driver" output="screen">
       <rosparam command="load" file="$(find ds4_driver)/config/params.yaml" />
       <param name="device_addr" value="$(arg addr)" />
       <param name="use_standard_msgs" value="$(arg use_standard_msgs)" />
@@ -23,7 +23,7 @@
     </node>
     
     <!-- DS4 TWIST NODE -->
-    <node pkg="ds4_driver" type="ds4_twist_node.py" name="ds4_twist">
+    <node pkg="ds4_driver" type="ds4_twist_node.py" name="ds4_twist" output="screen">
       <rosparam command="load" file="$(find ds4_driver)/config/twist_$(arg dof)dof.yaml" />
       <param name="stamped" value="$(arg stamped)" />
     </node>
@@ -36,7 +36,7 @@
     
     <!-- ROSSERIAL -->
     <!-- ROSSERIAL PYTHON NODE -->
-    <node pkg="rosserial_python" type="serial_node.py" name="rosserial_node">
+    <node pkg="rosserial_python" type="serial_node.py" name="rosserial_node" output="screen">
       <param name="port" value="$(arg port)"/>
       <param name="baud" value="$(arg baud)"/>
     </node>
