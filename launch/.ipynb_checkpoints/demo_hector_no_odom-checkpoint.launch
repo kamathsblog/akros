@@ -40,7 +40,7 @@
         <arg name="base_frame" value="base_link"/>
     </include>
     
-    <node pkg="tf" type="static_transform_publisher" name="t265_link_laser" args="0 0 0 3.1415 0 0 /t265_link /laser_frame 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="t265_link_laser" args="0 0 0 0 0 0 /t265_link /laser_frame 100"/>
     
     <!-- INCLUDE HECTOR_GEOTIFF LAUNCH FILE -->
     <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">

@@ -14,7 +14,7 @@
     <arg name="cam_yaw"               default="1.5708" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     
     <!-- URDF -->
-    <param name="$(arg system_name)_description"
+    <param name="robot_description"
                command="$(find xacro)/xacro '$(find akros_test)/urdf/akros_top.urdf.xacro'
                         camera_name:=$(arg camera_name)
                         camera_model:=$(arg camera_model)
@@ -28,7 +28,7 @@
                         
     <!-- STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" required="true">
-        <remap from="robot_description" to="$(arg system_name)_description" />
+        <!-- remap from="robot_description" to="$(arg system_name)_description" / -->
     </node> 
 
 </launch>
