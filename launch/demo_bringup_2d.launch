@@ -23,10 +23,6 @@
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
     <include file="$(find akros_test)/launch/base_launch/akros_description.launch" />
     
-    <!-- INCLUDE OAKD LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/base_launch/oakd_$(arg nodeName)_pointcloud.launch">
-    </include>
-    
     <!-- INCLUDE T265 LAUNCH FILE -->
     <include file="$(find akros_test)/launch/base_launch/t265_stereo_slam.launch">
       <arg name="device_type"              value="$(arg trackCam)"/>

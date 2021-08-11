@@ -20,10 +20,11 @@
     <arg name="lidarSerial"      default="/dev/ttyUSB1"/>
     
     <!-- ARGUMENTS - HECTOR SLAM -->
+    <arg name="mappingType" default="2d"/> <!-- 2d or 3d -->
     <arg name="geotiff_map_file_path" default="$(find akros_test)/maps"/>
     
     <!-- INCLUDE AKROS LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/demo_bringup.launch">
+    <include file="$(find akros_test)/launch/demo_bringup_$(arg mappingType).launch">
         <arg name="nodeName"         value="$(arg nodeName)"/>
         <arg name="pub_fiducials"    value="$(arg pub_fiducials)"/>
         <arg name="pub_detections"   value="$(arg pub_detections)"/>

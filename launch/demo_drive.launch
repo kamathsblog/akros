@@ -11,7 +11,7 @@
     
     <!-- ROSSERIAL ARGUMENTS -->
     <arg name="port" default="/dev/ttyUSB0" />
-    <arg name="baud" default="256000" />
+    <arg name="baud" default="500000" />
 
     <!-- DS4 -->
     <!-- DS4 DRIVER NODE -->
