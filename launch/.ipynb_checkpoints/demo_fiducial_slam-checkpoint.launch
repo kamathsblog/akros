@@ -3,20 +3,8 @@
     
     <!-- ARGUMENTS - OAK-D -->
     <arg name="nodeName"         default="nnd"/>
-    <arg name="pub_fiducials"    default="false"/>
-    <arg name="pub_detections"   default="false"/>
     <arg name="modelName"        default="mobilenet"/> <!-- mobilenet or yolov4 -->
-    
-    <!-- ARGUMENTS - FIDUCIAL SLAM -->
-    <arg name="map_frame"              default="map"/>
-    <arg name="odom_frame"             default="t265_odom_frame"/>
-    <arg name="base_frame"             default="t265_pose_frame"/>
-    <arg name="publish_tf"             default="true"/>
-    <arg name="tf_publish_interval"    default="0.2"/>
-    <arg name="future_date_transforms" default="0.0"/>
-    <arg name="publish_6dof_pose"      default="true"/>
-    <arg name="systematic_error"       default="0.01"/>
-    <arg name="covariance_diagonal"    default=""/>
+    <arg name="pub_detections"   default="false"/>
     
     <!-- ARGUMENTS - T265 -->
     <arg name="trackCam"         default="t265"/>
@@ -26,18 +14,32 @@
     <arg name="initial_reset"    default="false"/>
     <arg name="unite_imu_method" default=""/>
     
-    <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarName"        default="rplidar"/>
-    <arg name="lidarSerial"      default="/dev/ttyUSB1"/>
+    <!-- ARGUMENTS - ARUCO_DETECT -->
+    <arg name="fiducial_len" default="0.068"/>
+    <arg name="dictionary" default="7"/>
+    <arg name="do_pose_estimation" default="true"/>
+    <arg name="vis_msgs" default="false"/>
+    <arg name="ignore_fiducials" default="" />
+    <arg name="fiducial_len_override" default="" />
+    <arg name="pub_fiducials"      default="false"/>
     
+    <!-- ARGUMENTS - FIDUCIAL SLAM -->
+    <arg name="map_frame"              default="map"/>
+    <arg name="odom_frame"             default="t265_odom_frame"/>
+    <arg name="base_frame"             default="base_link"/>
+    <arg name="publish_tf"             default="true"/>
+    <arg name="tf_publish_interval"    default="0.2"/>
+    <arg name="future_date_transforms" default="0.0"/>
+    <arg name="publish_6dof_pose"      default="true"/>
+    <arg name="systematic_error"       default="0.01"/>
+    <arg name="covariance_diagonal"    default=""/>
+    
+    <arg name="mappingType" default="3d"/> <!-- 2d or 3d -->
     <!-- INCLUDE AKROS LAUNCH FILE -->
     <include file="$(find akros_test)/launch/demo_bringup_$(arg mappingType).launch">
         <arg name="nodeName"         value="$(arg nodeName)"/>
-        <arg name="pub_fiducials"    value="$(arg pub_fiducials)"/>
         <arg name="pub_detections"   value="$(arg pub_detections)"/>
         <arg name="modelName"        value="$(arg modelName)"/>
-        <arg name="lidarName"        value="$(arg lidarName)"/>
-        <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
         <arg name="trackCam"         value="$(arg trackCam)"/>
         <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
         <arg name="enable_sync"      value="$(arg enable_sync)"/>
@@ -45,6 +47,23 @@
         <arg name="initial_reset"    value="$(arg initial_reset)"/>
         <arg name="unite_imu_method" value="$(arg unite_imu_method)"/>
     </include>
+
+    <!-- ARUCO_DETECT NODE -->
+    <node pkg="aruco_detect" name="aruco_detect" type="aruco_detect" output="screen" respawn="false">
+        <param name="image_transport" value="compressed"/>
+        <param name="publish_images" value="$(arg pub_fiducials)" />
+        <param name="fiducial_len" value="$(arg fiducial_len)"/>
+        <param name="dictionary" value="$(arg dictionary)"/>
+        <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
+        <param name="vis_msgs" value="$(arg vis_msgs)"/>
+        <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
+        <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
+        <remap from="camera/compressed" to="$(arg nodeName)_pub/color/image/compressed"/>
+        <remap from="camera_info" to="$(arg nodeName)_pub/color/camera_info"/>
+        <remap from="fiducial_images" to="$(arg nodeName)_pub/color/fiducial_images"/>
+        <remap from="fiducial_vertices" to="aruco_detect/fiducial_vertices"/>
+        <remap from="fiducial_transforms" to="aruco_detect/fiducial_transforms"/>
+    </node>
 
     <!-- FIDUCIAL_SLAM NODE -->
     <node type="fiducial_slam" pkg="fiducial_slam" output="screen" name="fiducial_slam">
@@ -58,7 +77,7 @@
         <param name="publish_6dof_pose" value="$(arg publish_6dof_pose)" />
         <param name="sum_error_in_quadrature" value="true"/>
         <rosparam param="covariance_diagonal" subst_value="True">$(arg covariance_diagonal)</rosparam>
-        <remap from="/camera_info" to="$(arg nodeName)/color/camera_info"/>
+        <remap from="/camera_info" to="$(arg nodeName)_pub/color/camera_info"/>
     </node>
 
 </launch>

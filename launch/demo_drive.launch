@@ -10,7 +10,7 @@
     <arg name="stamped" default="false" />
     
     <!-- ROSSERIAL ARGUMENTS -->
-    <arg name="port" default="/dev/ttyUSB0" />
+    <arg name="port" default="/dev/ttyUSB_ARDUINO" />
     <arg name="baud" default="500000" />
 
     <!-- DS4 -->

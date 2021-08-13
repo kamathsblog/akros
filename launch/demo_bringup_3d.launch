@@ -3,9 +3,8 @@
 
     <!-- ARGUMENTS - OAK-D -->
     <arg name="nodeName"         default="nnd"/>
-    <arg name="pub_fiducials"    default="false"/>
-    <arg name="pub_detections"   default="false"/>
     <arg name="modelName"        default="mobilenet"/> <!-- mobilenet or yolov4 -->
+    <arg name="pub_detections"   default="false"/>
     
     <!-- ARGUMENTS - T265 -->
     <arg name="trackCam"         default="t265"/>
@@ -14,10 +13,6 @@
     <arg name="linear_accel_cov" default="0.01"/>
     <arg name="initial_reset"    default="true"/>
     <arg name="unite_imu_method" default=""/>
-    
-    <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarName"        default="rplidar"/>
-    <arg name="lidarSerial"      default="/dev/ttyUSB0"/>
 
     <!-- INCLUDE BASE LAUNCH FILES -->
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
@@ -35,12 +30,7 @@
     
     <!-- INCLUDE OAKD LAUNCH FILE -->
     <include file="$(find akros_test)/launch/base_launch/oakd_$(arg nodeName)_pointcloud.launch">
-    </include>
-   
-    <!-- INCLUDE RPLIDAR LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/base_launch/rplidar_2d_pointcloud.launch">
-        <arg name="lidarName" value="$(arg lidarName)"/>
-        <arg name="lidarSerial" value="$(arg lidarSerial)"/>
+      <arg name="pub_detections"   value="$(arg pub_detections)"/>
     </include>
 
 </launch>
