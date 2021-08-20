@@ -7,15 +7,11 @@
     <arg name="modelName"        default="mobilenet"/> <!-- mobilenet or yolov4 -->
     
     <!-- ARGUMENTS - T265 -->
-    <arg name="trackCam"         default="t265"/>
     <arg name="enable_fisheye"   default="true"/>
-    <arg name="enable_sync"      default="true"/>
     <arg name="linear_accel_cov" default="0.01"/>
     <arg name="initial_reset"    default="true"/>
-    <arg name="unite_imu_method" default=""/>
     
     <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarName"        default="rplidar"/>
     <arg name="lidarSerial"      default="/dev/ttyUSB_RPLIDAR"/>
     
     <!-- ARGUMENTS - HECTOR SLAM -->
@@ -26,14 +22,10 @@
     <include file="$(find akros)/launch/demo_bringup_$(arg mappingType).launch">
         <arg name="nodeName"         value="$(arg nodeName)"/>
         <arg name="modelName"        value="$(arg modelName)"/>
-        <arg name="lidarName"        value="$(arg lidarName)"/>
         <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
-        <arg name="trackCam"         value="$(arg trackCam)"/>
         <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
-        <arg name="enable_sync"      value="$(arg enable_sync)"/>
         <arg name="linear_accel_cov" value="$(arg linear_accel_cov)"/>
         <arg name="initial_reset"    value="$(arg initial_reset)"/>
-        <arg name="unite_imu_method" value="$(arg unite_imu_method)"/>
     </include>
 
     <!-- INCLUDE HECTOR_MAPPING LAUNCH FILE -->

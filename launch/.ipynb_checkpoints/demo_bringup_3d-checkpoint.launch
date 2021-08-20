@@ -7,12 +7,9 @@
     <arg name="pub_detections"   default="false"/>
     
     <!-- ARGUMENTS - T265 -->
-    <arg name="trackCam"         default="t265"/>
     <arg name="enable_fisheye"   default="true"/>
-    <arg name="enable_sync"      default="true"/>
     <arg name="linear_accel_cov" default="0.01"/>
     <arg name="initial_reset"    default="true"/>
-    <arg name="unite_imu_method" default=""/>
 
     <!-- INCLUDE BASE LAUNCH FILES -->
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
@@ -20,12 +17,9 @@
     
     <!-- INCLUDE T265 LAUNCH FILE -->
     <include file="$(find akros)/launch/base_launch/t265_stereo_slam.launch">
-      <arg name="device_type"              value="$(arg trackCam)"/>
       <arg name="enable_fisheye"           value="$(arg enable_fisheye)"/>
-      <arg name="enable_sync"              value="$(arg enable_sync)"/>
       <arg name="linear_accel_cov"         value="$(arg linear_accel_cov)"/>
       <arg name="initial_reset"            value="$(arg initial_reset)"/>
-      <arg name="unite_imu_method"         value="$(arg unite_imu_method)"/>
     </include>
     
     <!-- INCLUDE OAKD LAUNCH FILE -->
