@@ -15,7 +15,7 @@
     
     <!-- URDF -->
     <param name="robot_description"
-               command="$(find xacro)/xacro '$(find akros_test)/urdf/akros_top.urdf.xacro'
+               command="$(find xacro)/xacro '$(find akros)/urdf/akros_top.urdf.xacro'
                         camera_name:=$(arg camera_name)
                         camera_model:=$(arg camera_model)
                         base_frame:=$(arg camera_base_frame)

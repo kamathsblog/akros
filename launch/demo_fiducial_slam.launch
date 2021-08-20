@@ -36,7 +36,7 @@
     
     <arg name="mappingType" default="3d"/> <!-- 2d or 3d -->
     <!-- INCLUDE AKROS LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/demo_bringup_$(arg mappingType).launch">
+    <include file="$(find akros)/launch/demo_bringup_$(arg mappingType).launch">
         <arg name="nodeName"         value="$(arg nodeName)"/>
         <arg name="pub_detections"   value="$(arg pub_detections)"/>
         <arg name="modelName"        value="$(arg modelName)"/>

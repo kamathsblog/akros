@@ -9,7 +9,7 @@
     <arg name="enable_sync"      default="true"/>
     <arg name="tf_prefix"        default="$(arg device_type)"/>
     <arg name="linear_accel_cov" default="0.01"/>
-    <arg name="initial_reset"    default="false"/>
+    <arg name="initial_reset"    default="true"/>
     <arg name="unite_imu_method" default=""/>
     <arg name="publish_odom_tf"  default="true"/>
     

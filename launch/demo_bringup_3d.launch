@@ -16,10 +16,10 @@
 
     <!-- INCLUDE BASE LAUNCH FILES -->
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/base_launch/akros_description.launch" />
+    <include file="$(find akros)/launch/base_launch/akros_description.launch" />
     
     <!-- INCLUDE T265 LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/base_launch/t265_stereo_slam.launch">
+    <include file="$(find akros)/launch/base_launch/t265_stereo_slam.launch">
       <arg name="device_type"              value="$(arg trackCam)"/>
       <arg name="enable_fisheye"           value="$(arg enable_fisheye)"/>
       <arg name="enable_sync"              value="$(arg enable_sync)"/>
@@ -29,7 +29,7 @@
     </include>
     
     <!-- INCLUDE OAKD LAUNCH FILE -->
-    <include file="$(find akros_test)/launch/base_launch/oakd_$(arg nodeName)_pointcloud.launch">
+    <include file="$(find akros)/launch/base_launch/oakd_$(arg nodeName)_pointcloud.launch">
       <arg name="pub_detections"   value="$(arg pub_detections)"/>
     </include>
 

@@ -12,23 +12,23 @@
   <xacro:arg name="oakd_offset_x"     default="-0.038" />
   
   <link name="base_link"/>
-  <link name="t265_link"/>
+  <link name="t265_pose_frame"/>
   
   <joint name="t265_base_link" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="t265_link"/>
+    <parent link="t265_pose_frame"/>
     <child link="base_link"/>
   </joint>
 
   <joint name="base2lidar_link" type="fixed">
     <origin xyz="$(arg oakd_offset_x) 0 $(arg oakd_offset_z)" rpy="0 0 ${lidar_offset_yaw}"/>
-    <parent link="t265_link"/>
+    <parent link="base_link"/>
     <child link="rplidar_base"/>
   </joint>
   
   <joint name="base2oakd_link" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="t265_link"/>
+    <parent link="base_link"/>
     <child link="oakd_frame"/>
   </joint>
   
