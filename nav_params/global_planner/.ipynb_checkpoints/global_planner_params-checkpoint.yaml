@@ -1,0 +1,20 @@
+# http://wiki.ros.org/global_planner
+
+GlobalPlanner:
+  allow_unknown: true
+  default_tolerance: 0.05
+  visualize_potential: true
+  use_dijkstra: true
+  use_quadratic: true
+  use_grid_path: false
+  old_navfn_behavior: false
+  
+  # https://roboticsknowledgebase.com/wiki/common-platforms/ros/ros-global-planner/
+  lethal_cost: 253
+  neutral_cost: 66 
+  cost_factor: 0.55
+  publish_potential: true
+  
+  orientation_mode: 2
+  orientation_window_size: 1
+  outline_map: true

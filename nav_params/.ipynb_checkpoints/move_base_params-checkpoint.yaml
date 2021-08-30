@@ -9,18 +9,18 @@ clearing_rotation_allowed: true
 shutdown_costmaps: false
 oscillation_timeout: 10.0
 oscillation_distance: 0.2
-planner_frequency: 5.0
+planner_frequency: 0.0
 max_planning_retries: -1
 
 recovery_behavior_enabled: true
 recovery_behaviors:
-  - name: "conservative_reset"
+  - name: "rotate_recovery"
     type: "clear_costmap_recovery/ClearCostmapRecovery"
-    reset_distance: 0.2
+    reset_distance: 0.5
   - name: "rotate_recovery"
     type: "rotate_recovery/RotateRecovery"
     frequency: 20.0
-    sim_granularity: 0.017
+    sim_granularity: 0.02
   - name: "aggressive_reset"
     type: "clear_costmap_recovery/ClearCostmapRecovery"
     reset_distance: 0.10

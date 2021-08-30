@@ -2,7 +2,6 @@
 <launch>
 
   <arg name="ns"            default="rplidar"/>
-  <arg name="lidar_name"    default="rplidar"/>
   <arg name="lidarSerial"  default="/dev/ttyUSB1"/>
 
   <group ns="$(arg ns)">
@@ -22,8 +21,8 @@
     <!-- LASER_FILTERS/SCAN_TO_SCAN_FILTER_CHAIN NODE -->
     <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
         <rosparam command="load" file="$(find akros)/config/laser_filter_config.yaml" />
-        <remap from="scan" to="$(arg lidarName)/scan" />
-        <remap from="scan_filtered" to="$(arg lidarName)/scan_filtered" />
+        <remap from="scan" to="$(arg ns)/scan" />
+        <remap from="scan_filtered" to="$(arg ns)/scan_filtered" />
     </node>
 
 </launch>

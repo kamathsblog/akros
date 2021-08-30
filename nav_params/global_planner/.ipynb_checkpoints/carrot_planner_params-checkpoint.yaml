@@ -1,0 +1,5 @@
+# http://wiki.ros.org/carrot_planner
+
+CarrotPlanner:
+  step_size: 0.05 # Resolution of the associated costmap)
+  min_dist_from_robot: 0.10

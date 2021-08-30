@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- ARGUMENTS - T265 -->
+    <arg name="enable_fisheye"   default="true"/>
+    <arg name="linear_accel_cov" default="0.01"/>
+    <arg name="initial_reset"    default="true"/>
+    
+    <!-- ARGUMENTS - RPLIDAR -->
+    <arg name="lidarSerial"      default="/dev/ttyUSB_RPLIDAR"/>
+    <arg name="lidarName"        default="rplidar"/>
+    <arg name="mappingType" default="2d"/> <!-- 2d or 3d -->
+    
+    <!-- ARGUMENTS - GMAPPING -->
+    <arg name="set_base_frame" default="t265_pose_frame"/>
+    <arg name="set_odom_frame" default="t265_odom_frame"/>
+    <arg name="set_map_frame"  default="map"/>
+    <arg name="scan_topic"     default="rplidar/scan"/>
+    
+    <!-- INCLUDE AKROS LAUNCH FILE -->
+    <include file="$(find akros)/launch/demo_bringup_$(arg mappingType).launch">
+        <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
+        <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
+        <arg name="linear_accel_cov" value="$(arg linear_accel_cov)"/>
+        <arg name="initial_reset"    value="$(arg initial_reset)"/>
+    </include>
+
+    <!-- LAUNCH GMAPPING NODE -->
+    <param name="/use_sim_time" value="false"/>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+        <param name="base_frame" value="$(arg set_base_frame)"/>
+        <param name="odom_frame" value="$(arg set_odom_frame)"/>
+        <param name="map_frame"  value="$(arg set_map_frame)"/>
+        <remap from="scan" to="$(arg scan_topic)"/>
+        <rosparam command="load" file="$(find akros)/config/gmapping_params.yaml" />
+    </node>
+
+</launch>

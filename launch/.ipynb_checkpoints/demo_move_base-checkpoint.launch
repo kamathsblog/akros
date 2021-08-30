@@ -22,7 +22,7 @@
     <arg name="initial_pose_a" default="0.0"/>
     
     <arg name="mappingType" default="2d"/> <!-- 2d or 3d -->
-    <arg name="map_file" default="$(find akros)/maps/zernikestraat_studio_obstacles.yaml"/>
+    <arg name="map_file" default="$(find akros)/maps/studio_obs_gmapping.yaml"/>
     
     <!-- INCLUDE AKROS LAUNCH FILE -->
     <include file="$(find akros)/launch/demo_bringup_$(arg mappingType).launch">
@@ -50,23 +50,21 @@
   <!-- MOVE BASE ARGUMENTS -->
   <arg name="base_global_planner" default="global_planner/GlobalPlanner"/> <!-- OLD: navfn/NavfnROS -->  
   <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/> <!-- OLD: dwa_local_planner/DWAPlannerROS-->
-  <arg name="cmd_vel_topic" default="/cmd_vel" />
+  <arg name="cmd_vel_topic" default="auto/cmd_vel" />
   <arg name="odom_topic" default="/camera/odom/sample" />
-  <arg name="move_forward_only" default="true"/>
 
   <!-- MOVE_BASE -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <!-- param name="base_global_planner" value="$(arg base_global_planner)" / -->
+    <param name="base_global_planner" value="$(arg base_global_planner)" />
     <param name="base_local_planner" value="$(arg base_local_planner)" />
-    <rosparam file="$(find akros)/nav_params/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find akros)/nav_params/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find akros)/nav_params/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find akros)/nav_params/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find akros)/nav_params/costmap/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find akros)/nav_params/costmap/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find akros)/nav_params/costmap/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find akros)/nav_params/costmap/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find akros)/nav_params/move_base_params.yaml" command="load" />
-    <rosparam file="$(find akros)/nav_params/global_planner_params.yaml" command="load" />
-    <rosparam file="$(find akros)/nav_params/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find akros)/nav_params/global_planner/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find akros)/nav_params/local_planner/base_local_planner_params.yaml" command="load" />
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
     <remap from="odom" to="$(arg odom_topic)"/>
-    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
   </node>
 </launch>
