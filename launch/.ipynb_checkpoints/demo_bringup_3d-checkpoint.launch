@@ -8,18 +8,14 @@
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"   default="true"/>
-    <arg name="linear_accel_cov" default="0.01"/>
-    <arg name="initial_reset"    default="true"/>
 
     <!-- INCLUDE BASE LAUNCH FILES -->
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
     <include file="$(find akros)/launch/base_launch/akros_description.launch" />
     
     <!-- INCLUDE T265 LAUNCH FILE -->
-    <include file="$(find akros)/launch/base_launch/t265_stereo_slam.launch">
+    <include file="$(find akros)/launch/base_launch/rs_t265.launch">
       <arg name="enable_fisheye"           value="$(arg enable_fisheye)"/>
-      <arg name="linear_accel_cov"         value="$(arg linear_accel_cov)"/>
-      <arg name="initial_reset"            value="$(arg initial_reset)"/>
     </include>
     
     <!-- INCLUDE OAKD LAUNCH FILE -->

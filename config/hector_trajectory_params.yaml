@@ -1,0 +1,2 @@
+trajectory_update_rate: 4
+trajectory_publish_rate: 0.25

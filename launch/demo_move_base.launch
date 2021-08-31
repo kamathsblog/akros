@@ -1,14 +1,7 @@
 <launch>
     
-    <!-- ARGUMENTS - OAK-D -->
-    <arg name="nodeName"         default="nnd"/>
-    <arg name="pub_detections"   default="false"/>
-    <arg name="modelName"        default="mobilenet"/> <!-- mobilenet or yolov4 -->
-    
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"   default="true"/>
-    <arg name="linear_accel_cov" default="0.01"/>
-    <arg name="initial_reset"    default="true"/>
     
     <!-- ARGUMENTS - RPLIDAR -->
     <arg name="lidarSerial"      default="/dev/ttyUSB_RPLIDAR"/>

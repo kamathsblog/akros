@@ -1,0 +1,3 @@
+geotiff_save_period: 0.00
+draw_background_checkerboard: true
+draw_free_space_grid: true
