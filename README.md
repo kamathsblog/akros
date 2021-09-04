@@ -1,2 +1,2 @@
 # akros
-test packages for the akros holonomic robot (ROS1 Noetic)
+ROS packages for the AKROS holonomic robot (ROS1 Noetic)

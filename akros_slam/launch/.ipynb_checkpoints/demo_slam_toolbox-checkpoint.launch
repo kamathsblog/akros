@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- ARGUMENTS - T265 -->
+    <arg name="enable_fisheye" default="true"/>
+    
+    <!-- ARGUMENTS - RPLIDAR -->
+    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
+    
+    <!-- ARGUMENTS - SLAM TOOLBOX -->
+    <arg name="base_frame"         default="t265_pose_frame"/>
+    <arg name="odom_frame"         default="t265_odom_frame"/>
+    <arg name="scan_topic"         default="/rplidar/scan"/>
+    <arg name="tb_mode"            default="async" doc="slam type [lifelong, localization, async, sync]"/>
+    <arg name="tf_buf_duration"    default="30."/> <!-- 30. for localization/lifelong/online, 14400. for offline -->
+    <arg name="enable_interactive" default="false"/>
+    
+    <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
+    <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
+    <include file="$(find akros_bringup)/launch/demo_bringup_$(arg bringupType).launch">
+        <arg name="lidarSerial"    value="$(arg lidarSerial)"/>
+        <arg name="enable_fisheye" value="$(arg enable_fisheye)"/>
+    </include>
+
+    <!-- LAUNCH SLAM_TOOLBOX NODE -->
+    <param name="/use_sim_time" value="false"/>
+    <node pkg="slam_toolbox" type="$(arg tb_mode)_slam_toolbox_node" name="slam_toolbox" output="screen">
+        <param name="base_frame"              value="$(arg base_frame)"/>
+        <param name="odom_frame"              value="$(arg odom_frame)"/>
+        <param name="map_frame"               value="map"/>
+        <param name="scan_topic"              value="$(arg scan_topic)"/>
+        <param name="tf_buffer_duration"      value="$(arg tf_buf_duration)"/>
+        <param name="enable_interactive_mode" value="$(arg enable_interactive)"/>
+        <param name="mode"                    value="$(arg tb_mode)" if="$(eval arg('tb_mode') == 'localization')" />
+        <rosparam command="load" file="$(find akros_slam)/config/slam_toolbox_params.yaml" />
+        <rosparam command="load" file="$(find akros_slam)/config/slam_toolbox_lifelong_params.yaml" if="$(eval arg('tb_mode') == 'lifelong')"/>
+    </node>
+
+</launch>

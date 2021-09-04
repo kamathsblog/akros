@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- ARGUMENTS - ROSSERIAL -->
+    <arg name="port" default="/dev/ttyUSB_ARDUINO" />
+    <arg name="baud" default="500000" />
+    
+    <!-- LAUNCH ROSSERIAL_PYTHON NODE -->
+    <node pkg="rosserial_python" type="serial_node.py" name="rosserial_node" output="screen">
+      <param name="port" value="$(arg port)"/>
+      <param name="baud" value="$(arg baud)"/>
+    </node>
+
+</launch>

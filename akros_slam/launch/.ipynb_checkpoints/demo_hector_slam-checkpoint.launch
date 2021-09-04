@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- ARGUMENTS - T265 -->
+    <arg name="enable_fisheye" default="true"/>
+    
+    <!-- ARGUMENTS - RPLIDAR -->
+    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
+    
+    <!-- ARGUMENTS - HECTOR_MAPPING -->
+    <arg name="scanmatch_transform_frame_name" default="scanmatcher_frame"/>
+    <arg name="base_frame"                     default="t265_pose_frame"/>
+    <arg name="odom_frame"                     default="t265_odom_frame"/>
+    <arg name="pub_map_odom_transform"         default="true"/>
+    <arg name="scan_topic"                     default="rplidar/scan"/>
+    
+    <!-- ARGUMENTS - HECTOR_GEOTIFF -->
+    <arg name="map_file_path"      default="$(find akros_slam)/maps"/>
+    <arg name="map_file_base_name" default="hector_slam_map"/>
+    
+    <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
+    <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
+    <include file="$(find akros_bringup)/launch/demo_bringup_$(arg bringupType).launch">
+        <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
+        <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
+    </include>
+
+    <!-- LAUNCH HECTOR_MAPPING NODE -->
+    <param name="/use_sim_time" value="false"/>
+    <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">
+        <param name="map_frame"              value="map" />
+        <param name="base_frame"             value="$(arg base_frame)" />
+        <param name="odom_frame"             value="$(arg odom_frame)" />
+        <param name="pub_map_odom_transform" value="$(arg pub_map_odom_transform)"/>
+        <param name="scan_topic"             value="$(arg scan_topic)"/>
+        <param name="tf_map_scanmatch_transform_frame_name" value="$(arg scanmatch_transform_frame_name)"/>
+        <rosparam command="load" file="$(find akros_slam)/config/hector_mapping_params.yaml" />
+    </node>
+    
+    <!-- LAUNCH HECTOR_TRAJECTORY_SERVER NODE -->
+    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server" output="screen">
+        <param name="target_frame_name" type="string" value="map" />
+        <param name="source_frame_name" type="string" value="$(arg base_frame)"/>
+        <rosparam command="load" file="$(find akros_slam)/config/hector_trajectory_params.yaml" />
+    </node>
+    
+    <!-- LAUNCH HECTOR_GEOTIFF NODE -->
+    <node pkg="hector_geotiff" type="geotiff_node" name="hector_geotiff_node" output="screen" launch-prefix="nice -n 15">
+        <remap from="map" to="/dynamic_map" />
+        <param name="map_file_path" type="string" value="$(arg map_file_path)" />
+        <param name="map_file_base_name" type="string" value="$(arg map_file_base_name)" />
+        <param name="plugins" type="string" value="hector_geotiff_plugins/TrajectoryMapWriter" />
+        <rosparam command="load" file="$(find akros_slam)/config/hector_geotiff_params.yaml" />
+    </node>
+
+</launch>

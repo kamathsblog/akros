@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- ARGUMENTS - T265 -->
+    <arg name="enable_fisheye" default="true"/>
+    
+    <!-- ARGUMENTS - RPLIDAR -->
+    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
+
+    <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
+    <include file="$(find akros_bringup)/launch/akros_description.launch" />
+    
+    <!-- INCLUDE T265 LAUNCH FILE -->
+    <include file="$(find akros_bringup)/launch/rs_t265.launch">
+        <arg name="enable_fisheye" value="$(arg enable_fisheye)"/>
+    </include>
+   
+    <!-- INCLUDE RPLIDAR LAUNCH FILE -->
+    <include file="$(find akros_bringup)/launch/rplidar_a2.launch">
+        <arg name="lidarSerial" value="$(arg lidarSerial)"/>
+    </include>
+    
+    <!-- INCLUDE DS4 CONTROLLER LAUNCH FILE -->
+    <include file="$(find akros_bringup)/launch/ds4_drive.launch">
+        <arg name="standalone" value="false"/>
+    </include>
+    
+    <!-- INCLUDE ROSSERIAL ARDUINO LAUNCH FILE -->
+    <include file="$(find akros_bringup)/launch/rosserial_arduino.launch"/>
+    
+    <!-- LAUNCH TWIST_MIXER NODE -->
+    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux"/>
+
+</launch>
