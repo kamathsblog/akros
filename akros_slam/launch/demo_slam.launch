@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     
-    <arg name="slam_type" default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
+    <arg name="slam_type"  default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
+    <arg name="trajectory" default="true"/>
     
     <group if="$(eval arg('slam_type') == 'gmapping')">
         <!-- INCLUDE GMAPPING LAUNCH FILE -->
@@ -10,7 +11,9 @@
     
     <group if="$(eval arg('slam_type') == 'hector')">
         <!-- INCLUDE HECTOR_SLAM LAUNCH FILE -->
-        <include file="$(find akros_slam)/launch/demo_hector_slam.launch"/>
+        <include file="$(find akros_slam)/launch/demo_hector_slam.launch">
+            <arg name="trajectory" value="false" if="$(arg trajectory)"/>
+        </include>
     </group>
 
     <group if="$(eval arg('slam_type') == 'karto')">
@@ -22,5 +25,14 @@
         <!-- INCLUDE SLAM_TOOLBOX LAUNCH FILE -->
         <include file="$(find akros_slam)/launch/demo_slam_toolbox.launch"/>
     </group>
-
+    
+    <group if="$(arg trajectory)">
+        <!-- LAUNCH HECTOR_TRAJECTORY_SERVER NODE -->
+        <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server" output="screen">
+            <param name="target_frame_name" type="string" value="map" />
+            <param name="source_frame_name" type="string" value="base_link"/>
+            <rosparam command="load" file="$(find akros_slam)/config/hector_trajectory_params.yaml" />
+        </node>
+    </group>
+    
 </launch>
