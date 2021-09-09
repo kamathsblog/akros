@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <launch>
     
-    <arg name="slam_type"  default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
-    <arg name="trajectory" default="true"/>
+    <arg name="slam_type"    default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
+    <arg name="toolbox_mode" default="async" doc="slam_toolbox mode [lifelong, localization, async, sync, merge]"/>
+    <arg name="trajectory"   default="true"/>
     
     <group if="$(eval arg('slam_type') == 'gmapping')">
         <!-- INCLUDE GMAPPING LAUNCH FILE -->
@@ -23,7 +24,9 @@
     
     <group if="$(eval arg('slam_type') == 'toolbox')">
         <!-- INCLUDE SLAM_TOOLBOX LAUNCH FILE -->
-        <include file="$(find akros_slam)/launch/demo_slam_toolbox.launch"/>
+        <include file="$(find akros_slam)/launch/demo_slam_toolbox.launch">
+            <arg name="tb_mode" value="$(arg toolbox_mode)"/>
+        </include>
     </group>
     
     <group if="$(arg trajectory)">
