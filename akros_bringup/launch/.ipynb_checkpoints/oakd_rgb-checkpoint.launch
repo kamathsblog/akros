@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- ARGUMENTS - LAUNCH FILE -->
+    <arg name="nodelet"   default="true"/>
+    <arg name="nn_enable" default="true"/>       
+    <arg name="nn_model"  default="mobilenet" doc="NN model [mobilenet, yolov4]"/>
+    
+    <!-- ARGUMENTS - OAKD CAMERA PARAMS -->
+    <arg name="camera_name"  default="oakd" />
+    <arg name="camera_param_uri" default="package://depthai_nodes/params/camera" />
+     
+    <!-- ARGUMENTS - OAKD NODE/NODELET -->
+    <arg name="sync_nn" default="true"/>
+    
+    <!-- AI DETECTIONS ENABLED -->
+    <group if="$(arg nn_enable)">
+        <!-- OAKD RGB + AI NODELET -->
+        <group if="$(arg nodelet)">
+            <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/>
+
+            <node name="rgb_pub" pkg="nodelet" type="nodelet" output="screen" required="true"
+                args="load depthai_nodes/rgb_$(arg nn_model)_nodelet nodelet_manager">
+                <param name="camera_name" value="$(arg camera_name)"/>
+                <param name="camera_param_uri" value="$(arg camera_param_uri)"/>
+                <param name="sync_nn" value="$(arg sync_nn)"/>
+            </node>  
+        </group>   
+    
+        <!-- OAKD RGB + AI NODE -->
+        <group unless="$(arg nodelet)">
+            <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
+            <node name="rgb_pub" pkg="depthai_nodes" type="rgb_$(arg nn_model)_node" output="screen" required="true">
+                <param name="camera_name" value="$(arg camera_name)"/>
+                <param name="camera_param_uri" value="$(arg camera_param_uri)"/>
+                <param name="sync_nn" value="$(arg sync_nn)"/>
+            </node>         
+        </group>
+    </group>
+    
+    <!-- AI DETECTIONS DISABLED -->
+    <group unless="$(arg nn_enable)">
+        <!-- OAKD RGB NODELET -->
+        <group if="$(arg nodelet)">
+            <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/>
+
+            <node name="rgb_pub" pkg="nodelet" type="nodelet" output="screen" required="true"
+                args="load depthai_nodes/rgb_nodelet nodelet_manager">
+                <param name="camera_name" value="$(arg camera_name)"/>
+                <param name="camera_param_uri" value="$(arg camera_param_uri)"/>
+            </node>  
+        </group>
+        
+        <!-- OAKD RGB NODE -->
+        <group unless="$(arg nodelet)">
+            <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
+            <node name="rgb_pub" pkg="depthai_nodes" type="rgb_node" output="screen" required="true">
+                <param name="camera_name" value="$(arg camera_name)"/>
+                <param name="camera_param_uri" value="$(arg camera_param_uri)"/>
+            </node>   
+        </group>
+    </group>
+
+</launch>
+

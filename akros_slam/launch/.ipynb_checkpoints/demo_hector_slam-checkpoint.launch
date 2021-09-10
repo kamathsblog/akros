@@ -4,9 +4,6 @@
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye" default="true"/>
     
-    <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
-    
     <!-- ARGUMENTS - HECTOR_MAPPING -->
     <arg name="scanmatch_transform_frame_name" default="scanmatcher_frame"/>
     <arg name="base_frame"                     default="t265_pose_frame"/>
@@ -21,8 +18,8 @@
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <include file="$(find akros_bringup)/launch/demo_bringup_$(arg bringupType).launch">
-        <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
+    <include file="$(find akros_bringup)/launch/demo_bringup.launch">
+        <arg name="mode"             value="$(arg bringupType)"/>
         <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
     </include>
 

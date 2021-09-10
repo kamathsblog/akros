@@ -1,31 +1,37 @@
 <?xml version="1.0"?>
 <launch>
-    
+    <arg name="bu_mode"      default="3d" doc="bringup modes [2d, 3d]"/>
     <arg name="slam_type"    default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
     <arg name="toolbox_mode" default="async" doc="slam_toolbox mode [lifelong, localization, async, sync, merge]"/>
     <arg name="trajectory"   default="true"/>
     
     <group if="$(eval arg('slam_type') == 'gmapping')">
         <!-- INCLUDE GMAPPING LAUNCH FILE -->
-        <include file="$(find akros_slam)/launch/demo_gmapping.launch"/>
+        <include file="$(find akros_slam)/launch/demo_gmapping.launch">
+            <arg name="bringupType" value="$(arg bu_mode)"/>
+        </include>
     </group>
     
     <group if="$(eval arg('slam_type') == 'hector')">
         <!-- INCLUDE HECTOR_SLAM LAUNCH FILE -->
         <include file="$(find akros_slam)/launch/demo_hector_slam.launch">
+            <arg name="bringupType" value="$(arg bu_mode)"/>
             <arg name="trajectory" value="false" if="$(arg trajectory)"/>
         </include>
     </group>
 
     <group if="$(eval arg('slam_type') == 'karto')">
         <!-- INCLUDE SLAM_KARTO LAUNCH FILE -->
-        <include file="$(find akros_slam)/launch/demo_slam_karto.launch"/>
+        <include file="$(find akros_slam)/launch/demo_slam_karto.launch">
+            <arg name="bringupType" value="$(arg bu_mode)"/>
+        </include>
     </group>
     
     <group if="$(eval arg('slam_type') == 'toolbox')">
         <!-- INCLUDE SLAM_TOOLBOX LAUNCH FILE -->
         <include file="$(find akros_slam)/launch/demo_slam_toolbox.launch">
             <arg name="tb_mode" value="$(arg toolbox_mode)"/>
+            <arg name="bringupType" value="$(arg bu_mode)"/>
         </include>
     </group>
     

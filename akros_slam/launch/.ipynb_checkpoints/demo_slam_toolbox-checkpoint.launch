@@ -4,11 +4,8 @@
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye" default="true"/>
     
-    <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
-    
     <!-- ARGUMENTS - SLAM TOOLBOX -->
-    <arg name="base_frame"         default="t265_pose_frame"/>
+    <arg name="base_frame"         default="base_link"/>
     <arg name="odom_frame"         default="t265_odom_frame"/>
     <arg name="scan_topic"         default="/rplidar/scan"/>
     <arg name="tb_mode"            default="async" doc="slam type [lifelong, localization, async, sync, merge]"/>
@@ -17,8 +14,8 @@
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <include file="$(find akros_bringup)/launch/demo_bringup_$(arg bringupType).launch">
-        <arg name="lidarSerial"    value="$(arg lidarSerial)"/>
+    <include file="$(find akros_bringup)/launch/demo_bringup.launch">
+        <arg name="mode"           value="$(arg bringupType)"/>
         <arg name="enable_fisheye" value="$(arg enable_fisheye)"/>
     </include>
 

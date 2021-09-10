@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- ARGUMENTS - OAKD -->
+    <arg name="oakd_mode" default="rgbd" doc="OAK-D Modes [rgb, rgbd, stereo]"/>
+    <arg name="nodelet"   default="true"/>
+    <arg name="nn_enable" default="true"/>
+    <arg name="nn_model"  default="mobilenet" doc="NN model [mobilenet, yolov4]"/>
+    
+    <!-- INCLUDE OAK-D LAUNCH FILE -->
+    <include file="$(find akros_bringup)/launch/oakd_$(arg oakd_mode).launch">
+        <arg name="nodelet"   value="$(arg nodelet)"/>
+        <arg name="nn_enable" value="$(arg nn_enable)" unless="$(eval arg('oakd_mode') == 'stereo')"/>
+        <arg name="nn_model"  value="$(arg nn_model)" unless="$(eval arg('oakd_mode') == 'stereo')"/>
+    </include>
+    
+    <!-- NODELET MANAGER -->
+    <node pkg="nodelet" type="nodelet" name="pointcloud_manager"  args="manager" output="screen"/>
+    
+    <group if="$(eval arg('oakd_mode') == 'rgb')">
+        <group if="$(arg nn_enable)">
+            <!-- DETECTIONS IF PUBLISH_DETECTIONS -->
+        </group>
+    </group>
+                
+    <!-- STEREO / RGBD -->
+    <group unless="$(eval arg('oakd_mode') == 'rgb')"> 
+    
+        <!-- CONVERT_METRIC NODELET (DEPTH_IMAGE_PROC) -->
+        <!-- node pkg="nodelet" type="nodelet" name="depth_convert"
+            args="load depth_image_proc/convert_metric nodelet_manager">
+            <remap from="image_raw" to="/$(arg oakd_mode)_pub/stereo/depth"/>    
+            <remap from="image" to="/$(arg oakd_mode)_pub/stereo/image"/>
+        </node -->
+        
+        <!-- POINT_CLOUD_XYZ NODELET (DEPTH_IMAGE_PROC) -->
+        <node pkg="nodelet" type="nodelet" name="pointcloud_xyz"
+            args="load depth_image_proc/point_cloud_xyz nodelet_manager">
+            <remap from="camera_info" to="/$(arg oakd_mode)_pub/stereo/camera_info"/>
+            <remap from="image_rect" to="/$(arg oakd_mode)_pub/stereo/depth"/>    
+            <remap from="points" to="/$(arg oakd_mode)_pub/stereo/points"/>
+        </node>
+        
+        <!-- POINTCLOUD_TO_LASERSCAN NODELET (DEPTH_IMAGE_PROC)-->
+        <node pkg="nodelet" type="nodelet" name="pointcloud_to_laserscan"
+            args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet pointcloud_manager">
+            <remap from="cloud_in" to="/$(arg oakd_mode)_pub/stereo/points"/>
+            <remap from="scan" to="/$(arg oakd_mode)_pub/stereo/scan"/>
+        </node>
+        
+        <!-- STATISTICAL_OUTLIER_REMOVAL(SOR) NODELET (PCL) -->
+        <!-- node pkg="nodelet" type="nodelet" name="sor_filter" 
+            args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
+            <remap from="~input" to="/$(arg oakd_mode)_pub/stereo/points" />
+            <remap from="~output" to="/$(arg oakd_mode)_pub/stereo/points_sor" />
+            <rosparam>
+              mean_k: 8
+              stddev: 0.01
+              negative: False
+            </rosparam>
+        </node -->
+        
+        <!-- VOXEL_GRID NODELET (PCL) -->
+        <node pkg="nodelet" type="nodelet" name="voxel_grid" 
+            args="load pcl/VoxelGrid pointcloud_manager" output="screen">
+            <remap from="~input" to="/$(arg oakd_mode)_pub/stereo/points" />
+            <remap from="~output" to="/$(arg oakd_mode)_pub/stereo/points_vox" />
+            <rosparam>
+              filter_field_name: z
+              filter_limit_min: 0.01
+              filter_limit_max: 8
+              filter_limit_negative: False
+              leaf_size: 0.01
+            </rosparam>
+        </node>
+    
+        <group if="$(eval arg('oakd_mode') == 'rgbd')">
+            <!-- REGISTER NODELET (DEPTH_IMAGE_PROC) -->
+            <!-- POINT_CLOUD_XYZRGB NODELET (DEPTH_IMAGE_PROC) -->
+            <group if="$(arg nn_enable)">
+                <!-- SPATIAL DETECTIONS IF PUBLISH_DETECTIONS -->
+            </group>
+        </group>
+    </group>
+                
+    <!-- POINTCLOUD XYZ -->
+    <group unless="$(eval arg('oakd_mode') == 'rgb')"> 
+        <!-- REGISTER NODELET (DEPTH_IMAGE_PROC) -->
+        <!-- POINT_CLOUD_XYZRGB NODELET (DEPTH_IMAGE_PROC) -->
+    </group>
+    
+    <!-- DETECTIONS -->
+    <group unless="$(eval arg('oakd_mode') == 'stereo')"> 
+        <!-- CONVERT_METRIC NODELET (DEPTH_IMAGE_PROC) -->
+        <!-- POINT_CLOUD_XYZ NODELET (DEPTH_IMAGE_PROC) -->
+        <!-- POINTCLOUD_TO_LASERSCAN NODELET (DEPTH_IMAGE_PROC)-->
+        <!-- STATISTICAL_OUTLIER_REMOVAL(SOR) NODELET (PCL) -->
+        <!-- VOXEL_GRID NODELET (PCL) -->
+    </group>
+   
+    <!-- DEPTH_IMAGE_PROC/REGISTER NODELET -->
+    <!-- node pkg="nodelet" type="nodelet" name="depth_rgb_register" 
+        args="load depth_image_proc/register pointcloud_manager">   
+        <remap from="rgb/camera_info" to="/$(arg nodeName)/color/camera_info"/> 
+        <remap from="depth/camera_info" to="/$(arg nodeName)/stereo/camera_info"/>
+        <remap from="depth/image_rect" to="/$(arg nodeName)/stereo/depth"/>
+        <remap from="depth_registered/camera_info" to="/$(arg nodeName)/stereo_rect/camera_info"/>
+        <remap from="depth_registered/image_rect" to="/$(arg nodeName)/stereo_rect/depth"/>
+    </node -->
+       
+    <!-- DEPTH_IMAGE_PROC/POINT_CLOUD_XYZRGB NODELET -->
+    <!-- node pkg="nodelet" type="nodelet" name="depth_pointcloud_rgb" 
+        args="load depth_image_proc/point_cloud_xyzrgb pointcloud_manager"> 
+        <remap from="rgb/camera_info" to="/$(arg nodeName)/color/camera_info"/>    
+        <remap from="rgb/image_rect_color" to="/$(arg nodeName)/color/image"/>
+        <remap from="depth_registered/image_rect" to="/$(arg nodeName)/stereo_rect/depth"/>
+        <remap from="depth_registered/points" to="/$(arg nodeName)/pointcloud/points_rgb"/>
+    </node -->
+
+</launch>

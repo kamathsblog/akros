@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- ARGUMENTS - BRINGUP -->
+    <arg name="mode" default="3d" doc="modes [2d, 3d]"/>
+    
+    <!-- ARGUMENTS - OAKD -->
+    <arg name="oakd_mode" default="rgbd" doc="OAK-D Modes [rgb, rgbd, stereo]"/>
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye" default="true"/>
-    
-    <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/akros_description.launch" />
@@ -16,9 +18,15 @@
     </include>
    
     <!-- INCLUDE RPLIDAR LAUNCH FILE -->
-    <include file="$(find akros_bringup)/launch/rplidar_a2.launch">
-        <arg name="lidarSerial" value="$(arg lidarSerial)"/>
-    </include>
+    <include file="$(find akros_bringup)/launch/rplidar_a2.launch"/>
+    
+    <!-- IF 3D, LAUNCH OAK-D -->
+    <group if="$(eval arg('mode') == '3d')"> 
+        <!-- INCLUDE OAK-D LAUNCH FILE -->
+        <include file="$(find akros_bringup)/launch/demo_oakd.launch">
+            <arg name="oakd_mode" value="$(arg oakd_mode)"/>
+        </include>
+    </group>
     
     <!-- INCLUDE DS4 CONTROLLER LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/ds4_drive.launch">
