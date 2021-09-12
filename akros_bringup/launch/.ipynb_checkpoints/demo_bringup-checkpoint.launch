@@ -25,6 +25,7 @@
         <!-- INCLUDE OAK-D LAUNCH FILE -->
         <include file="$(find akros_bringup)/launch/demo_oakd.launch">
             <arg name="oakd_mode" value="$(arg oakd_mode)"/>
+            <arg name="standalone" value="false"/>
         </include>
     </group>
     

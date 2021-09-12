@@ -13,7 +13,7 @@
     <!-- ARGUMENTS - OAKD NODE/NODELET -->
     <arg name="mode"     default="depth"/> <!-- depth or disparity -->
     <arg name="sync_nn"  default="true"/>
-    <arg name="lrcheck"  default="false" /> 
+    <arg name="lrcheck"  default="true" /> 
     <arg name="extended" default="false" /> 
     <arg name="subpixel" default="false" />
     
