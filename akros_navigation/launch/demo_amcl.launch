@@ -1,11 +1,5 @@
 <launch>
     
-    <!-- ARGUMENTS - T265 -->
-    <arg name="enable_fisheye"   default="true"/>
-    
-    <!-- ARGUMENTS - RPLIDAR -->
-    <arg name="lidarSerial" default="/dev/ttyUSB_RPLIDAR"/>
-    
     <!-- ARGUMENTS - MAP_SERVER -->
     <arg name="map_file" default="$(find akros_slam)/maps/studio_obs_slam_toolbox.yaml"/>
     
@@ -14,15 +8,17 @@
     <arg name="odom_model"     default="omni-corrected"/>
     <arg name="odom_frame_id"  default="t265_odom_frame"/>
     <arg name="base_frame_id"  default="base_link"/>
-    <arg name="initial_pose_x" default="0.0"/>
-    <arg name="initial_pose_y" default="0.0"/>
+    <arg name="initial_pose_x" default="-3.7"/>
+    <arg name="initial_pose_y" default="-0.5"/>
     <arg name="initial_pose_a" default="0.0"/>
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <include file="$(find akros_bringup)/launch/demo_bringup_$(arg bringupType).launch">
-        <arg name="lidarSerial"      value="$(arg lidarSerial)"/>
-        <arg name="enable_fisheye"   value="$(arg enable_fisheye)"/>
+    <arg name="avoidance"   default="false"/>
+    <arg name="ds4_topic" default="ds4/cmd_vel"/>
+    <include file="$(find akros_bringup)/launch/demo_bringup.launch">
+        <arg name="mode"           value="$(arg bringupType)"/>
+        <arg name="avoidance"      value="$(arg avoidance)"/>
     </include>
     
     <!-- LAUNCH MAP_SERVER NODE -->

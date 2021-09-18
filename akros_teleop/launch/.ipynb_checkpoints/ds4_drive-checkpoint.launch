@@ -7,7 +7,6 @@
     <arg name="addr"              default="84:30:95:2C:67:7C" />
     <arg name="use_standard_msgs" default="false" />
     <arg name="autorepeat_rate"   default="0" if="$(arg use_standard_msgs)" />
-    <arg name="dof"               default="3" />
     <arg name="stamped"           default="false" />
     <arg name="teleop_topic"      default="teleop/cmd_vel"/>
 
@@ -20,14 +19,14 @@
     </node>
     
     <!-- LAUNCH DS4_TWIST NODE -->
-    <node pkg="ds4_driver" type="ds4_twist_node.py" name="ds4_twist" output="screen">
+    <node pkg="akros_teleop" type="ds4_twist_node.py" name="ds4_twist" output="screen">
       <remap from="cmd_vel" to="$(arg teleop_topic)" unless="$(arg standalone)"/>
       <param name="stamped" value="$(arg stamped)" />
-      <rosparam command="load" file="$(find ds4_driver)/config/twist_$(arg dof)dof.yaml" />
+      <rosparam command="load" file="$(find akros_teleop)/config/ds4_twist_3dof.yaml" />
     </node>
     
     <!-- LAUNCH DS4_FEEDBACK NODE -->
-    <node pkg="ds4_driver" type="ds4_feedback_node.py" name="ds4_feedback" />
+    <node pkg="akros_teleop" type="ds4_feedback_node.py" name="ds4_feedback" />
 
     <!-- DS4 STATIC TRANSFORM -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="ds4_to_imu" args="0 0.05 -0.01 -1.5707 0 1.5707 ds4 ds4_imu" />

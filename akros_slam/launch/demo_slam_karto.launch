@@ -1,11 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     
-    <!-- ARGUMENTS - T265 -->
-    <arg name="enable_fisheye" default="true"/>
-    
     <!-- ARGUMENTS - SLAM TOOLBOX -->
-    <arg name="base_frame"         default="t265_pose_frame"/>
+    <arg name="base_frame"         default="base_link"/>
     <arg name="odom_frame"         default="t265_odom_frame"/>
     <arg name="scan_topic"         default="/rplidar/scan"/>
     <arg name="tb_mode"            default="async" doc="slam type [lifelong, localization, async, sync]"/>
@@ -16,7 +13,6 @@
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
     <include file="$(find akros_bringup)/launch/demo_bringup.launch">
         <arg name="mode"           value="$(arg bringupType)"/>
-        <arg name="enable_fisheye" value="$(arg enable_fisheye)"/>
     </include>
 
     <!-- LAUNCH SLAM_TOOLBOX NODE -->

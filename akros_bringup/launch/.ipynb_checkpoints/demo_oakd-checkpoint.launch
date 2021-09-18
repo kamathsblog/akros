@@ -13,7 +13,7 @@
     
     <group if="$(arg standalone)">
         <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
-        <include file="$(find akros_bringup)/launch/akros_description.launch" />
+        <include file="$(find akros_description)/launch/akros_description.launch" />
     </group>
     
     <!-- INCLUDE OAK-D LAUNCH FILE -->

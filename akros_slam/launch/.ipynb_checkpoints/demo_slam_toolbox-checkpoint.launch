@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <launch>
     
-    <!-- ARGUMENTS - T265 -->
-    <arg name="enable_fisheye" default="true"/>
-    
     <!-- ARGUMENTS - SLAM TOOLBOX -->
     <arg name="base_frame"         default="base_link"/>
     <arg name="odom_frame"         default="t265_odom_frame"/>
@@ -16,12 +13,11 @@
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
     <include file="$(find akros_bringup)/launch/demo_bringup.launch">
         <arg name="mode"           value="$(arg bringupType)"/>
-        <arg name="enable_fisheye" value="$(arg enable_fisheye)"/>
     </include>
 
     <group unless="$(eval arg('tb_mode') == 'merge')">
     <!-- LAUNCH SLAM_TOOLBOX NODE -->
-    <param name="/use_sim_time" value="false"/>
+        <param name="/use_sim_time" value="false"/>
         <node pkg="slam_toolbox" type="$(arg tb_mode)_slam_toolbox_node" name="slam_toolbox" output="screen">
             <param name="base_frame"              value="$(arg base_frame)"/>
             <param name="odom_frame"              value="$(arg odom_frame)"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="bu_mode"      default="3d" doc="bringup modes [2d, 3d]"/>
+    <arg name="bu_mode"      default="2d" doc="bringup modes [2d, 3d]"/>
     <arg name="slam_type"    default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
     <arg name="toolbox_mode" default="async" doc="slam_toolbox mode [lifelong, localization, async, sync, merge]"/>
     <arg name="trajectory"   default="true"/>

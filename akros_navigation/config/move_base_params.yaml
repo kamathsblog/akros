@@ -1,26 +1,33 @@
 # http://wiki.ros.org/move_base
 
-controller_frequency: 20.0
+controller_frequency: 5.0
+planner_frequency: 1.0
 planner_patience: 5.0
-controller_patience: 15.0
-conservative_reset_dist: 0.15
-recovery_behavior_enabled: true
-clearing_rotation_allowed: true
+controller_patience: 3.0
+conservative_reset_dist: 0.05
+recovery_behavior_enabled: false
+clearing_rotation_allowed: false
 shutdown_costmaps: false
 oscillation_timeout: 10.0
-oscillation_distance: 0.2
-planner_frequency: 0.0
+oscillation_distance: 0.5
 max_planning_retries: -1
 
-recovery_behavior_enabled: true
 recovery_behaviors:
-  - name: "rotate_recovery"
-    type: "clear_costmap_recovery/ClearCostmapRecovery"
-    reset_distance: 0.5
-  - name: "rotate_recovery"
-    type: "rotate_recovery/RotateRecovery"
-    frequency: 20.0
-    sim_granularity: 0.02
-  - name: "aggressive_reset"
-    type: "clear_costmap_recovery/ClearCostmapRecovery"
-    reset_distance: 0.10
+  - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}
+  - {name: aggressive_reset1, type: clear_costmap_recovery/ClearCostmapRecovery}
+  - {name: rotate1, type: rotate_recovery/RotateRecovery}
+  - {name: aggressive_reset2, type: clear_costmap_recovery/ClearCostmapRecovery}
+  - {name: rotate2, type: rotate_recovery/RotateRecovery}
+
+conservative_reset:
+  reset_distance: 1.0
+  invert_area_to_clear: true
+  layer_names: ["obstacle_layer"]
+
+aggressive_reset1:
+  reset_distance: 0.0 # clear all
+  layer_names: ["obstacle_layer"]
+
+aggressive_reset2:
+  reset_distance: 0.0 # clear all
+  layer_names: ["obstacle_layer"]

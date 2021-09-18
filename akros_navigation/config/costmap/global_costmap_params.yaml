@@ -1,13 +1,26 @@
 # http://wiki.ros.org/costmap_2d
-
+# http://wiki.ros.org/costmap_2d/hydro/staticmap
+static_layer:
+  enabled: true
+  
+  unknown_cost_value: -1
+  lethal_cost_threshold: 100
+  map_topic: "map"
+  first_map_only: false
+  subscribe_to_updates: true
+  track_unknown_space: true
+  use_maximum: false
+  trinary_costmap: true
+  
 global_costmap:
   global_frame: map
   robot_base_frame: base_link
-  update_frequency: 5.0
-  publish_frequency: 5.0
+  update_frequency: 1.0
+  publish_frequency: 1.0
   rolling_window: false
+  track_unknown_space: true
  
-  transform_tolerance: 0.5
+  transform_tolerance: 1
   plugins:
     - {name: static_layer,            type: "costmap_2d::StaticLayer"}
     - {name: obstacle_layer,          type: "costmap_2d::VoxelLayer"}

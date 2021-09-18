@@ -2,7 +2,7 @@
 
 GlobalPlanner:
   allow_unknown: true
-  default_tolerance: 0.05
+  default_tolerance: 0.02
   visualize_potential: true
   use_dijkstra: true
   use_quadratic: true
@@ -15,6 +15,6 @@ GlobalPlanner:
   cost_factor: 0.55
   publish_potential: true
   
-  orientation_mode: 2
-  orientation_window_size: 1
+  orientation_mode: 1
+  orientation_window_size: 2
   outline_map: true

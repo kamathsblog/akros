@@ -1,0 +1,77 @@
+footprint: [[0.00, 0.115], [0.00, -0.115], [-0.20, -0.115], [-0.20, 0.115]]
+footprint_padding: 0.00
+
+planner:
+  acc_lim_x: 0.7
+  acc_lim_y: 0.5
+  acc_lim_theta: 3.7
+  
+  max_vel_x: 0.35
+  min_vel_x: 0.20
+  
+  max_vel_y: 0.25
+  min_vel_y: 0.15
+  
+  max_vel_theta: 1.85
+  min_vel_theta: -1.85
+  min_in_place_vel_theta: 1.65
+  
+  escape_vel: -0.30
+
+  holonomic_robot: true
+  y_vels: [-0.25, -0.15, 0.15, 0.25]
+  
+# Goal Tolerance Parametes
+  xy_goal_tolerance: 0.15
+  yaw_goal_tolerance: 0.2
+  latch_xy_goal_tolerance: false
+
+# Forward Simulation Parameters
+  sim_time: 1.0
+  sim_granularity: 0.04
+  angular_sim_granularity: 0.025
+  vx_samples: 10
+  vy_samples: 10
+  vth_samples: 20
+  controller_frequency: 20.0
+
+# Trajectory Scoring Parameters
+  meter_scoring: true
+  path_distance_bias: 0.6
+  goal_distance_bias: 0.8
+  occdist_scale: 0.01
+  heading_lookahead: 0.5
+  heading_scoring: false
+  heading_scoring_timestep: 0.1
+  dwa: true
+  publish_cost_grid_pc: true
+  global_frame_id: t265_odom_frame
+  
+# Oscillation prevention parameter
+  oscillation_reset_dist: 0.05
+
+# Global plan parameter
+  prune_plan: true
+  
+# http://wiki.ros.org/costmap_2d  
+costmap:
+  publish_voxel_map: true
+  global_frame: t265_odom_frame
+  robot_base_frame: base_link
+  update_frequency: 5.0
+  publish_frequency: 2.0
+  static_map: false
+  rolling_window: true
+  width: 5
+  height: 5
+  resolution: 0.02
+  origin_x: -3.7
+  origin_y: -0.5
+
+  obstacle_range: 2.5
+  max_obstacle_height: 2.0
+  raytrace_range: 3.0
+
+  observation_sources: laser_scan_sensor
+  laser_scan_sensor: {topic: rplidar/scan, sensor_frame: laser_frame, observation_persistence: 0.0, expected_update_rate: 0.0, data_type: LaserScan, clearing: true, marking: true, marking: true, max_obstacle_height: 2.0, min_obstacle_height: -0.3, obstacle_range: 2.5, raytrace_range: 3.0, inf_is_valid: false}
+
