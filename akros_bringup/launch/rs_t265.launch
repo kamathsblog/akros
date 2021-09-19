@@ -17,8 +17,8 @@ https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/lib
   <arg name="enable_fisheye1"     default="true"/>
   <arg name="enable_fisheye2"     default="true"/>
   <arg name="fisheye_fps"         default="30"/>
-  <arg name="gyro_fps"            default="50"/>
-  <arg name="accel_fps"           default="50"/>
+  <arg name="gyro_fps"            default="-1"/>
+  <arg name="accel_fps"           default="-1"/>
   <arg name="enable_imu"          default="true"/>
   <arg name="enable_pose"         default="true"/>
   <arg name="enable_sync"         default="true"/>

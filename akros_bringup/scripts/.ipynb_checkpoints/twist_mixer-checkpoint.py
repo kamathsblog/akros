@@ -45,7 +45,7 @@ class TwistMixer():
         if (now - self._last_pub_time).to_sec() < self._min_interval: return
         
         if msg.button_cross and not self._prev.button_cross:
-            self._mode = not self._mode 
+            self._auto_mode = not self._auto_mode 
             
         if msg.button_square and not self._prev.button_square:
             self._assist_mode = not self._assist_mode

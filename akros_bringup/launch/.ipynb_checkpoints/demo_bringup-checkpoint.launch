@@ -53,6 +53,9 @@
         <remap from="cmd_vel" to="$(arg assisted_topic)" />
     </node>
     
+    <!-- SUPPRESS WARNING MESSAGES FROM ASSISTED_TELEOP LOCAL PLANNER -->
+    <node pkg="rosservice" type="rosservice" name="supress_warn" args="call --wait /assisted_teleop/set_logger_level 'ros.base_local_planner' 'fatal'" />
+    
     <!-- LAUNCH TWIST_MIXER NODE -->
     <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux"/>
 
