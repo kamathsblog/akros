@@ -1,13 +1,13 @@
 min_particles: 500
 max_particles: 3000
 kld_err: 0.02
-update_min_d: 0.20
-update_min_a: 0.20
-resample_interval: 1
+update_min_d: 0.05
+update_min_a: 0.10
+resample_interval: 0.5
 transform_tolerance: 0.2
 recovery_alpha_slow: 0.00
 recovery_alpha_fast: 0.00
-gui_publish_rate: 10.0
+gui_publish_rate: 20.0
 laser_max_range: 3.5
 laser_max_beams: 1000
 laser_z_hit: 0.5
