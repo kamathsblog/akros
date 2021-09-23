@@ -20,7 +20,7 @@ global_costmap:
   rolling_window: false
   track_unknown_space: true
  
-  transform_tolerance: 1
+  transform_tolerance: 0.5
   plugins:
     - {name: static_layer,            type: "costmap_2d::StaticLayer"}
     - {name: obstacle_layer,          type: "costmap_2d::VoxelLayer"}

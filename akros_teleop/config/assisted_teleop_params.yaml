@@ -3,24 +3,24 @@ footprint_padding: 0.00
 
 planner:
   transform_tolerance: 0.3
-  acc_lim_x: 0.7
-  acc_lim_y: 0.5
-  acc_lim_theta: 3.7
+  acc_lim_x: 1.4
+  acc_lim_y: 1
+  acc_lim_theta: 7.4
   
   max_vel_x: 0.35
-  min_vel_x: 0.20
+  min_vel_x: 0.28
   
   max_vel_y: 0.25
-  min_vel_y: 0.15
+  min_vel_y: 0.20
   
   max_vel_theta: 1.85
-  min_vel_theta: -1.85
+  min_vel_theta: 1.65
   min_in_place_vel_theta: 1.65
   
   escape_vel: -0.30
 
   holonomic_robot: true
-  y_vels: [-0.25, -0.15, 0.15, 0.25]
+  y_vels: [-0.25, -0.20, 0.20, 0.25]
   
 # Goal Tolerance Parametes
   xy_goal_tolerance: 0.10
@@ -38,8 +38,8 @@ planner:
 
 # Trajectory Scoring Parameters
   meter_scoring: true
-  path_distance_bias: 0.6
-  goal_distance_bias: 0.8
+  path_distance_bias: 0.5
+  goal_distance_bias: 0.5
   occdist_scale: 0.01
   heading_lookahead: 0.5
   heading_scoring: false

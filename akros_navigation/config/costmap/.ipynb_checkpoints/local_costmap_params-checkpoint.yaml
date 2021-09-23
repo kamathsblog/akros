@@ -9,7 +9,7 @@ local_costmap:
   width: 2
   height: 2
   resolution: 0.02
-  transform_tolerance: 1
+  transform_tolerance: 0.5
   
   plugins:
    - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}

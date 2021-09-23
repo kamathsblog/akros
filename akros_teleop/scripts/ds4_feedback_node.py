@@ -6,7 +6,7 @@ from ds4_driver.msg import Feedback, Status
 
 class Handler(object):
     def __init__(self, status_topic='status', feedback_topic='set_feedback'):
-        self._min_interval = 0.1
+        self._min_interval = 0.01
         self._last_pub_time = rospy.Time()
         self._prev = Status()
         self._led = {
@@ -39,15 +39,12 @@ class Handler(object):
             
         if msg.button_cross and not self._prev.button_cross:
             self._auto_mode = not self._auto_mode
-            self._rumble = False
             
         if msg.button_circle and not self._prev.button_circle:
             self._estop = not self._estop
             
         if msg.button_square and not self._prev.button_square:
             self._assist_mode = not self._assist_mode
-            if self._assist_mode: self._rumble = True
-            else: self._rumble = False
 
         feedback.set_led = True
         
@@ -79,9 +76,6 @@ class Handler(object):
                 feedback.led_r = self._led['r']
                 feedback.led_g = self._led['g']
                 feedback.led_b = self._led['b']
-            
-                
-                
 
         self._pub_feedback.publish(feedback)
         self._prev = msg

@@ -29,7 +29,7 @@ class TwistMixer():
         self._assist_mode    = False # teleop_assist (during teleop mode only)
         self._estop          = False # operational
 
-        self.ros_pub_mux = rospy.Publisher("cmd_vel", Twist, queue_size=1)
+        self._pub_mux = rospy.Publisher("cmd_vel", Twist, queue_size=1)
     
     def set_assisted_twist(self, msg):
         self._assisted = msg
@@ -45,7 +45,7 @@ class TwistMixer():
         if (now - self._last_pub_time).to_sec() < self._min_interval: return
         
         if msg.button_cross and not self._prev.button_cross:
-            self._auto_mode = not self._auto_mode 
+            self._auto_mode = not self._auto_mode
             
         if msg.button_square and not self._prev.button_square:
             self._assist_mode = not self._assist_mode
@@ -61,15 +61,15 @@ class TwistMixer():
         while not rospy.is_shutdown():
             
             if self._estop:
-                self.ros_pub_mux.publish(self._zero)
+                self._pub_mux.publish(self._zero)
             else:
                 if self._auto_mode:
-                    self.ros_pub_mux.publish(self._auto)
+                    self._pub_mux.publish(self._auto)
                 else:
                     if self._assist_mode:
-                        self.ros_pub_mux.publish(self._assisted)
+                        self._pub_mux.publish(self._assisted)
                     else:
-                        self.ros_pub_mux.publish(self._teleop)
+                        self._pub_mux.publish(self._teleop)
 
             rate.sleep()
             

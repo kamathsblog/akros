@@ -1,28 +1,28 @@
 # http://wiki.ros.org/base_local_planner
 
 TrajectoryPlannerROS:
-  acc_lim_x: 0.7
-  acc_lim_y: 0.5
-  acc_lim_theta: 3.7
+  acc_lim_x: 1.4
+  acc_lim_y: 1
+  acc_lim_theta: 7.4
   
   max_vel_x: 0.35
-  min_vel_x: 0.20
+  min_vel_x: 0.28
   
-  max_vel_y: 0.25
-  min_vel_y: 0.15
+  max_vel_y: 0.35
+  min_vel_y: 0.28
   
   max_vel_theta: 1.85
   min_vel_theta: -1.85
   min_in_place_vel_theta: 1.65
   
-  escape_vel: -0.30
+  escape_vel: -0.35
 
   holonomic_robot: true
-  y_vels: [-0.25, -0.15, 0.15, 0.25]
+  y_vels: [-0.35, -0.28, 0.28, 0.35]
   
 # Goal Tolerance Parametes
   xy_goal_tolerance: 0.15
-  yaw_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.75
   latch_xy_goal_tolerance: false
 
 # Forward Simulation Parameters
@@ -32,22 +32,22 @@ TrajectoryPlannerROS:
   vx_samples: 10
   vy_samples: 10
   vth_samples: 20
-  controller_frequency: 20.0
+  controller_frequency: 10.0
 
 # Trajectory Scoring Parameters
   meter_scoring: true
-  path_distance_bias: 0.6
-  goal_distance_bias: 0.8
-  occdist_scale: 0.01
+  path_distance_bias: 0.5
+  goal_distance_bias: 0.5
+  occdist_scale: 0.03
   heading_lookahead: 0.3
   heading_scoring: false
-  heading_scoring_timestep: 0.1
+  heading_scoring_timestep: 0.2
   dwa: true
   publish_cost_grid_pc: true
   global_frame_id: t265_odom_frame
   
 # Oscillation prevention parameter
-  oscillation_reset_dist: 0.05
+  oscillation_reset_dist: 0.02
 
 # Global plan parameter
   prune_plan: true
