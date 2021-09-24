@@ -22,9 +22,9 @@ https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/lib
   <arg name="enable_imu"          default="true"/>
   <arg name="enable_pose"         default="true"/>
   <arg name="enable_sync"         default="true"/>
-  <arg name="linear_accel_cov"    default="0.01"/>
+  <arg name="linear_accel_cov"    default="0.001"/>
   <arg name="initial_reset"       default="true"/>
-  <arg name="unite_imu_method"    default=""/>
+  <arg name="unite_imu_method"    default="linear_interpolation"/>
   <arg name="publish_odom_tf"     default="false"/>
   
   <group ns="$(arg camera)">
