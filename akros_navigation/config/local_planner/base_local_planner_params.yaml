@@ -3,7 +3,7 @@
 TrajectoryPlannerROS:
   acc_lim_x: 1.4
   acc_lim_y: 1
-  acc_lim_theta: 7.4
+  acc_lim_theta: 5
   
   max_vel_x: 0.35
   min_vel_x: 0.28
@@ -23,11 +23,11 @@ TrajectoryPlannerROS:
 # Goal Tolerance Parametes
   xy_goal_tolerance: 0.15
   yaw_goal_tolerance: 0.75
-  latch_xy_goal_tolerance: false
-
+  latch_xy_goal_tolerance: true
+  
 # Forward Simulation Parameters
-  sim_time: 1.0
-  sim_granularity: 0.04
+  sim_time: 1
+  sim_granularity: 0.025
   angular_sim_granularity: 0.025
   vx_samples: 10
   vy_samples: 10
@@ -37,7 +37,7 @@ TrajectoryPlannerROS:
 # Trajectory Scoring Parameters
   meter_scoring: true
   path_distance_bias: 0.5
-  goal_distance_bias: 0.5
+  goal_distance_bias: 1
   occdist_scale: 0.03
   heading_lookahead: 0.3
   heading_scoring: false
@@ -47,7 +47,7 @@ TrajectoryPlannerROS:
   global_frame_id: t265_odom_frame
   
 # Oscillation prevention parameter
-  oscillation_reset_dist: 0.02
+  oscillation_reset_dist: 0.05
 
 # Global plan parameter
   prune_plan: true

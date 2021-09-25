@@ -6,11 +6,10 @@
     <arg name="scan_topic"     default="rplidar/scan"/>
     <arg name="odom_model"     default="omni-corrected"/>
     <arg name="odom_frame_id"  default="t265_odom_frame"/>
-    <arg name="base_frame_id"  default="base_link"/>
+    <arg name="base_frame_id"  default="t265_pose_frame"/>
     <arg name="initial_pose_x" default="-3.7"/>
     <arg name="initial_pose_y" default="-0.5"/>
     <arg name="initial_pose_a" default="0.0"/>
-    <arg name="avoidance"   default="false"/>
     
     <!-- ARGUMENTS - MOVE_BASE -->
     <arg name="base_global_planner" default="global_planner/GlobalPlanner"/> 
@@ -20,7 +19,6 @@
     
     <!-- INCLUDE DEMO AMCL LAUNCH FILE -->
     <include file="$(find akros_navigation)/launch/demo_amcl.launch">
-        <arg name="avoidance"       value="$(arg avoidance)"/>
         <arg name="bringupType"     value="$(arg bringupType)"/>
         <arg name="map_file"        value="$(arg map_file)"/>
         <arg name="base_frame_id"   value="$(arg base_frame_id)"/>
@@ -32,6 +30,7 @@
     </include>
 
     <!-- LAUNCH MOVE_BASE NODE -->
+    <param name="/use_sim_time" value="false"/>
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <param name="base_global_planner" value="$(arg base_global_planner)" />
         <param name="base_local_planner" value="$(arg base_local_planner)" />

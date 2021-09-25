@@ -14,17 +14,16 @@
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <arg name="avoidance"   default="false"/>
     <arg name="ds4_topic" default="ds4/cmd_vel"/>
     <include file="$(find akros_bringup)/launch/demo_bringup.launch">
         <arg name="mode"           value="$(arg bringupType)"/>
-        <arg name="avoidance"      value="$(arg avoidance)"/>
     </include>
     
     <!-- LAUNCH MAP_SERVER NODE -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
     
     <!-- LAUNCH AMCL NODE -->
+    <param name="/use_sim_time" value="false"/>
     <node pkg="amcl" type="amcl" name="amcl">
         <remap from="scan"            to="$(arg scan_topic)"/>
         <param name="base_frame_id"   value="$(arg base_frame_id)"/>

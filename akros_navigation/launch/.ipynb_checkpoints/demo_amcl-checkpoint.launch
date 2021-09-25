@@ -14,18 +14,16 @@
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <arg name="avoidance"   default="false"/>
-    <arg name="assisted_topic" default="assisted/cmd_vel"/>
     <arg name="ds4_topic" default="ds4/cmd_vel"/>
     <include file="$(find akros_bringup)/launch/demo_bringup.launch">
         <arg name="mode"           value="$(arg bringupType)"/>
-        <arg name="avoidance"      value="$(arg avoidance)"/>
     </include>
     
     <!-- LAUNCH MAP_SERVER NODE -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
     
     <!-- LAUNCH AMCL NODE -->
+    <param name="/use_sim_time" value="false"/>
     <node pkg="amcl" type="amcl" name="amcl">
         <remap from="scan"            to="$(arg scan_topic)"/>
         <param name="base_frame_id"   value="$(arg base_frame_id)"/>
@@ -36,15 +34,5 @@
         <param name="initial_pose_a"  value="$(arg initial_pose_a)"/>
         <rosparam command="load" file="$(find akros_navigation)/config/amcl_params.yaml" />
     </node>
-    
-    <!-- LAUNCH ASSISTED_TELEOP NODE -->
-    <group if="$(arg avoidance)">
-        <param name="/use_sim_time" value="false"/>
-        <node pkg="assisted_teleop" name="assisted_teleop" type="assisted_teleop" respawn="false" output="screen">
-            <rosparam file="$(find akros_navigation)/config/assisted_teleop_params.yaml" command="load" />
-            <remap from="teleop_cmd_vel" to="$(arg ds4_topic)" />
-            <remap from="cmd_vel" to="$(arg assisted_topic)" />
-        </node>
-    </group>
 
 </launch>
