@@ -6,7 +6,7 @@
     <arg name="base_frame"                     default="base_link"/>
     <arg name="odom_frame"                     default="t265_odom_frame"/>
     <arg name="pub_map_odom_transform"         default="true"/>
-    <arg name="scan_topic"                     default="rplidar/scan"/>
+    <arg name="scan_topic"                     default="ldlidar/scan"/> <!-- ldlidar or rplidar -->
     
     <!-- ARGUMENTS - HECTOR_GEOTIFF, TRAJECTORY -->
     <arg name="trajectory"         default="true"/>

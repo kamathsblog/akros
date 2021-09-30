@@ -4,7 +4,7 @@
     <!-- ARGUMENTS - SLAM TOOLBOX -->
     <arg name="base_frame"         default="base_link"/>
     <arg name="odom_frame"         default="t265_odom_frame"/>
-    <arg name="scan_topic"         default="/rplidar/scan"/>
+    <arg name="scan_topic"         default="/ldlidar/scan"/> <!-- ldlidar or rplidar -->
     <arg name="tb_mode"            default="async" doc="slam type [lifelong, localization, async, sync, merge]"/>
     <arg name="tf_buf_duration"    default="30."/> <!-- 30. for localization/lifelong/online, 14400. for offline -->
     <arg name="enable_interactive" default="false"/>

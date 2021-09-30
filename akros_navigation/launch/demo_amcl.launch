@@ -4,7 +4,7 @@
     <arg name="map_file" default="$(find akros_slam)/maps/studio_obs_slam_toolbox.yaml"/>
     
     <!-- ARGUMENTS - AMCL -->
-    <arg name="scan_topic"     default="rplidar/scan"/>
+    <arg name="scan_topic"     default="ldlidar/scan"/> <!-- ldlidar or rplidar -->
     <arg name="odom_model"     default="omni-corrected"/>
     <arg name="odom_frame_id"  default="t265_odom_frame"/>
     <arg name="base_frame_id"  default="base_link"/>

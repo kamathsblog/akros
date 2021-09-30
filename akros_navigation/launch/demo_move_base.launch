@@ -3,7 +3,7 @@
     <!-- ARGUMENTS - BRINGUP AMCL -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
     <arg name="map_file" default="$(find akros_slam)/maps/studio_obs_slam_toolbox.yaml"/>
-    <arg name="scan_topic"     default="rplidar/scan"/>
+    <arg name="scan_topic"     default="ldlidar/scan"/> <!-- ldlidar or rplidar -->
     <arg name="odom_model"     default="omni-corrected"/>
     <arg name="odom_frame_id"  default="t265_odom_frame"/>
     <arg name="base_frame_id"  default="t265_pose_frame"/>
@@ -31,7 +31,7 @@
 
     <!-- LAUNCH MOVE_BASE NODE -->
     <param name="/use_sim_time" value="false"/>
-    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
         <param name="base_global_planner" value="$(arg base_global_planner)" />
         <param name="base_local_planner" value="$(arg base_local_planner)" />
         <rosparam file="$(find akros_navigation)/config/costmap/common_costmap_params.yaml" command="load" ns="global_costmap" />

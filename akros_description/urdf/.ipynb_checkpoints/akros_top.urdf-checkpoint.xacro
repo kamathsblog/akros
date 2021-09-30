@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <robot name="akros_top" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find rplidar_ros)/urdf/rplidar.urdf.xacro"/>
+  <!-- xacro:include filename="$(find rplidar_ros)/urdf/rplidar.urdf.xacro"/ -->
   <xacro:include filename="$(find depthai_bridge)/urdf/depthai_descr.urdf.xacro"/>
   
   <xacro:property name="M_PI"              value="3.1415926535897931" />
-  <xacro:property name="lidar_offset_yaw"  value="${M_PI/2}" />
-  <xacro:arg name="lidar_offset_z"     default="0.12" />
-  <xacro:arg name="lidar_offset_x"     default="-0.1" />
+  <xacro:property name="rplidar_offset_yaw"  value="${M_PI/2}" />
+  <xacro:arg name="lidar_offset_z"     default="0.08" />
+  <xacro:arg name="lidar_offset_x"     default="-0.08" />
   
   <link name="base_link"/>
   <link name="t265_link"/>
+  <link name="laser_frame"/>
   <link name="t265_pose_frame"/>
   
   <joint name="base_link_pose_dummy" type="fixed">
@@ -26,9 +27,9 @@
   </joint>
 
   <joint name="base_lidar_link" type="fixed">
-    <origin xyz="$(arg lidar_offset_x) 0 $(arg lidar_offset_z)" rpy="0 0 ${lidar_offset_yaw}"/>
+    <origin xyz="$(arg lidar_offset_x) 0 $(arg lidar_offset_z)" rpy="0 0 0"/>
     <parent link="base_link"/>
-    <child link="rplidar_base"/>
+    <child link="laser_frame"/>
   </joint>
   
   <joint name="base_oakd_link" type="fixed">

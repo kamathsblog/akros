@@ -2,6 +2,7 @@
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
     <arg name="mode" default="2d" doc="modes [2d, 3d]"/>
+    <arg name="lidar" default="ldlidar_ld06" doc="lidar [ldlidar_ld06, rplidar_a2]"/>
     
     <!-- ARGUMENTS - OAKD -->
     <arg name="oakd_mode" default="rgbd" doc="OAK-D Modes [rgb, rgbd, stereo]"/>
@@ -25,7 +26,7 @@
     </include>
    
     <!-- INCLUDE RPLIDAR LAUNCH FILE -->
-    <include file="$(find akros_bringup)/launch/rplidar_a2.launch"/>
+    <include file="$(find akros_bringup)/launch/$(arg lidar).launch"/>
     
     <!-- IF 3D, LAUNCH OAK-D -->
     <group if="$(eval arg('mode') == '3d')"> 

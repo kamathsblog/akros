@@ -4,7 +4,7 @@
     <!-- ARGUMENTS - GMAPPING -->
     <arg name="base_frame" default="base_link"/>
     <arg name="odom_frame" default="t265_odom_frame"/>
-    <arg name="scan_topic" default="rplidar/scan"/>
+    <arg name="scan_topic" default="ldlidar/scan"/> <!-- ldlidar or rplidar -->
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->

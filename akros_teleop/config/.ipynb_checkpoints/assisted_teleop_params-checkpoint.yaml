@@ -1,8 +1,8 @@
 footprint: [[0.00, 0.115], [0.00, -0.115], [-0.20, -0.115], [-0.20, 0.115]]
-footprint_padding: 0.00
+footprint_padding: 0.02
 
 planner:
-  transform_tolerance: 0.3
+  transform_tolerance: 0.5
   acc_lim_x: 1.4
   acc_lim_y: 1
   acc_lim_theta: 7.4
@@ -43,7 +43,7 @@ planner:
   occdist_scale: 0.01
   heading_lookahead: 0.5
   heading_scoring: false
-  heading_scoring_timestep: 0.1
+  heading_scoring_timestep: 0.2
   dwa: true
   publish_cost_grid_pc: true
   global_frame_id: t265_odom_frame
@@ -56,7 +56,7 @@ planner:
   
 # http://wiki.ros.org/costmap_2d  
 costmap:
-  transform_tolerance: 0.3
+  transform_tolerance: 0.5
   publish_voxel_map: true
   global_frame: t265_odom_frame
   robot_base_frame: base_link
@@ -75,5 +75,5 @@ costmap:
   raytrace_range: 5
 
   observation_sources: laser_scan_sensor
-  laser_scan_sensor: {topic: rplidar/scan, sensor_frame: laser_frame, observation_persistence: 0.0, expected_update_rate: 0.0, data_type: LaserScan, clearing: true, marking: true, marking: true, max_obstacle_height: 0.5, min_obstacle_height: -0.3, obstacle_range: 5, raytrace_range: 5, inf_is_valid: false}
+  laser_scan_sensor: {topic: ldlidar/scan, sensor_frame: laser_frame, observation_persistence: 0.0, expected_update_rate: 0.0, data_type: LaserScan, clearing: true, marking: true, marking: true, max_obstacle_height: 0.5, min_obstacle_height: -0.3, obstacle_range: 5, raytrace_range: 5, inf_is_valid: false}
 
