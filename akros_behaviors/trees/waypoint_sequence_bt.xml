@@ -1,13 +1,15 @@
 <root main_tree_to_execute = "MainTree" >
     <BehaviorTree ID="MainTree">
-    <Sequence name="waypoint_sequence">
-        <SetWaypoints              name="set_waypoints" num_wp="{num_wp}"/>
-        <RetryUntilSuccesful       num_attempts="{num_wp}">
-            <Sequence   name="go_to_waypoint">
-                <GetWaypointFromQueue   name="get_wp"      target_wp="{target_wp}"/>   
-                <GoToGoal               name="go_to_wp"    goal="{target_wp}"/>
-            </Sequence>   
-        </RetryUntilSuccesful>
-    </Sequence>
+        <KeepRunningUntilFailure>
+            <SequenceStar name="waypoint_sequence">
+                <SetWaypoints name="set_waypoints" num_wp="{num_wp}"/>
+                <Repeat num_cycles="{num_wp}">
+                    <Sequence name="go_to_waypoint">
+                        <GetWaypointFromQueue name="get_wp" target_wp="{target_wp}"/>   
+                        <GoToGoal name="go_to_wp" goal="{target_wp}"/>
+                    </Sequence>   
+                </Repeat>
+            </SequenceStar>
+        </KeepRunningUntilFailure> 
     </BehaviorTree>
 </root>

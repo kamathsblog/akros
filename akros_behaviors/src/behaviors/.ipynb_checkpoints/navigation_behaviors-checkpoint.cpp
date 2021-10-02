@@ -46,7 +46,7 @@ GetWaypointFromQueue::GetWaypointFromQueue(const std::string& name, const BT::No
     ros::param::get("waypoint_list", yaml_file);
     YAML::Node waypoints = YAML::LoadFile(yaml_file);
     for(YAML::const_iterator it=waypoints.begin(); it!=waypoints.end(); ++it) {
-        waypoint_queue_.push_front(it->first.as<std::string>());
+        waypoint_queue_.push_back(it->first.as<std::string>());
     }
     std::cout << "[" << this->name() << "] Initialized" << std::endl;
 }
@@ -55,12 +55,24 @@ BT::NodeStatus GetWaypointFromQueue::tick()
 {
     if (waypoint_queue_.empty()) {
         std::cout << "[" << this->name() << "] No more waypoints!" << std::endl;
-        return BT::NodeStatus::FAILURE;
-    } else {
+        std::cout << "[" << this->name() << "] Starting sequence again..." << std::endl;
+        std::string yaml_file;
+        ros::param::get("waypoint_list", yaml_file);
+        YAML::Node waypoints = YAML::LoadFile(yaml_file);
+        for(YAML::const_iterator it=waypoints.begin(); it!=waypoints.end(); ++it) {
+            waypoint_queue_.push_back(it->first.as<std::string>());
+        }
+        if(waypoint_queue_.empty()){
+           std::cout << "[" << this->name() << "] No waypoints available!" << std::endl;
+           return BT::NodeStatus::FAILURE; 
+        } 
+    }
+    
+    if(!waypoint_queue_.empty()){
         std::string tgt_wp = waypoint_queue_.front();
         setOutput("target_wp", tgt_wp);
         waypoint_queue_.pop_front();
-        std::cout << "[" << this->name() << "] Targeting waypoint: " << tgt_wp << std::endl;
+        std::cout << "[" << this->name() << "] Getting next goal: " << tgt_wp << std::endl;
         return BT::NodeStatus::SUCCESS;
     }
 }
