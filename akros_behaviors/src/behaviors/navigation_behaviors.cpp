@@ -1,4 +1,4 @@
-// Navigation Related Behaviors
+// Navigation behaviors - set/get waypoints, go to goal
 
 #include "navigation_behaviors.h"
 #include <ros/ros.h>
