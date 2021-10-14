@@ -1,15 +1,15 @@
 # http://wiki.ros.org/base_local_planner
 
 TrajectoryPlannerROS:
-  acc_lim_x: 1.4
-  acc_lim_y: 1
-  acc_lim_theta: 5
+  acc_lim_x: 3.5
+  acc_lim_y: 2.5
+  acc_lim_theta: 9.25
   
   max_vel_x: 0.35
-  min_vel_x: 0.28
+  min_vel_x: 0.14
   
-  max_vel_y: 0.35
-  min_vel_y: 0.28
+  max_vel_y: 0.25
+  min_vel_y: 0.10
   
   max_vel_theta: 1.85
   min_vel_theta: -1.85
@@ -18,7 +18,7 @@ TrajectoryPlannerROS:
   escape_vel: -0.35
 
   holonomic_robot: true
-  y_vels: [-0.35, -0.28, 0.28, 0.35]
+  y_vels: [-0.25, -0.05, 0.05, 0.25]
   
 # Goal Tolerance Parametes
   xy_goal_tolerance: 0.15
