@@ -1,5 +1,7 @@
 <launch>
 
+    <arg name="drive_mode" default="diff"/>
+
     <!-- ARGUMENTS - BRINGUP AMCL -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
     <arg name="map_file" default="$(find akros_slam)/maps/studio_obs_slam_toolbox.yaml"/>
@@ -13,9 +15,10 @@
     
     <!-- ARGUMENTS - MOVE_BASE -->
     <arg name="base_global_planner" default="global_planner/GlobalPlanner"/> 
-    <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/>
+    <arg name="diff_local_planner" default="base_local_planner/TrajectoryPlannerROS"/>
+    <arg name="holo_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
     <arg name="cmd_vel_topic" default="auto/cmd_vel" />
-    <arg name="odom_topic" default="/odometry/filtered" />
+    <arg name="odom_topic" default="/t265/odom/sample" />
     
     <!-- INCLUDE DEMO AMCL LAUNCH FILE -->
     <include file="$(find akros_navigation)/launch/demo_amcl.launch">
@@ -33,14 +36,19 @@
     <param name="/use_sim_time" value="false"/>
     <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
         <param name="base_global_planner" value="$(arg base_global_planner)" />
-        <param name="base_local_planner" value="$(arg base_local_planner)" />
+        <param name="base_local_planner" value="$(arg diff_local_planner)" if="$(eval arg('drive_mode') == 'diff')" />
+        <param name="base_local_planner" value="$(arg holo_local_planner)" if="$(eval arg('drive_mode') == 'holo')" />
+        
         <rosparam file="$(find akros_navigation)/config/costmap/common_costmap_params.yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find akros_navigation)/config/costmap/common_costmap_params.yaml" command="load" ns="local_costmap" />
         <rosparam file="$(find akros_navigation)/config/costmap/global_costmap_params.yaml" command="load" />
         <rosparam file="$(find akros_navigation)/config/costmap/local_costmap_params.yaml" command="load" />
+        
         <rosparam file="$(find akros_navigation)/config/move_base_params.yaml" command="load" />
         <rosparam file="$(find akros_navigation)/config/global_planner/global_planner_params.yaml" command="load" />
-        <rosparam file="$(find akros_navigation)/config/local_planner/base_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find akros_navigation)/config/local_planner/base_local_planner_params.yaml" command="load" if="$(eval arg('drive_mode') == 'diff')" />
+        <rosparam file="$(find akros_navigation)/config/local_planner/dwa_local_planner_params.yaml" command="load" if="$(eval arg('drive_mode') == 'holo')" />
+        
         <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
         <remap from="odom" to="$(arg odom_topic)"/>
     </node>
