@@ -5,16 +5,10 @@
     <arg name="port" default="/dev/ttyUSB_ARDUINO" />
     <arg name="baud" default="500000" />
     
-    <!-- LAUNCH ROSSERIAL_SERVER NODE -->
-    <node pkg="rosserial_server" type="serial_node" name="rosserial_server">
+    <!-- LAUNCH ROSSERIAL_PYTHON NODE -->
+    <node pkg="rosserial_python" type="serial_node.py" name="rosserial_node" output="screen">
       <param name="port" value="$(arg port)"/>
       <param name="baud" value="$(arg baud)"/>
-      <rosparam>
-        require:
-          publishers: []
-          subscribers: [cmd_vel]
-      </rosparam>
     </node>
-    <node pkg="rosserial_python" type="message_info_service.py" name="rosserial_message_info" />
 
 </launch>

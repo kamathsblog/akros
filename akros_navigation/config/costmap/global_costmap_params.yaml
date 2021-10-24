@@ -6,7 +6,7 @@ static_layer:
   unknown_cost_value: -1
   lethal_cost_threshold: 100
   map_topic: "map"
-  first_map_only: true
+  first_map_only: false
   subscribe_to_updates: true
   track_unknown_space: true
   use_maximum: false
