@@ -9,7 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
     actionlib 
     sensor_msgs
     move_base_msgs 
-    behaviortree_cpp_v3)
+    behaviortree_cpp_v3
+    rospy)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -57,3 +58,8 @@ target_link_libraries(waypoint_sequence_node
     ${catkin_LIBRARIES} yaml-cpp
 )
 target_compile_definitions(waypoint_sequence_node PRIVATE BT_XML_PATH="${PROJECT_SOURCE_DIR}/trees/waypoint_sequence_bt.xml")
+
+catkin_install_python(PROGRAMS
+   scripts/waypoint_sequence_store.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )

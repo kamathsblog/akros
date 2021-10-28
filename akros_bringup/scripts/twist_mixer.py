@@ -2,7 +2,7 @@
 
 import rospy
 from geometry_msgs.msg import Twist
-from ds4_driver.msg import Status
+from akros_msgs.msg import Mode
 
 class TwistMixer():
     def __init__(self):
@@ -15,7 +15,7 @@ class TwistMixer():
         self.ros_sub_assisted = rospy.Subscriber("assisted/cmd_vel", Twist, self.set_assisted_twist, queue_size=1)
         self.ros_sub_teleop   = rospy.Subscriber("teleop/cmd_vel", Twist, self.set_teleop_twist, queue_size=1)
         self.ros_sub_auto     = rospy.Subscriber("auto/cmd_vel", Twist, self.set_auto_twist, queue_size=1)
-        self.ros_sub_status   = rospy.Subscriber("status", Status, self.set_status, queue_size=1)
+        self.ros_sub_mode     = rospy.Subscriber("mode", Mode, self.set_mode, queue_size=1)
 
         self._assisted       = Twist()
         self._teleop         = Twist()
@@ -24,10 +24,7 @@ class TwistMixer():
         self._zero.linear.x  = 0.0;
         self._zero.linear.y  = 0.0;
         self._zero.angular.z = 0.0;
-        self._prev           = Status()
-        self._auto_mode      = False # auto mode
-        self._assist_mode    = False # teleop_assist (during teleop mode only)
-        self._estop          = False # operational
+        self._mode           = Mode()
 
         self._pub_mux = rospy.Publisher("cmd_vel", Twist, queue_size=1)
     
@@ -40,33 +37,20 @@ class TwistMixer():
     def set_auto_twist(self, msg):
         self._auto = msg
         
-    def set_status(self, msg):
-        now = rospy.Time.now()
-        if (now - self._last_pub_time).to_sec() < self._min_interval: return
-        
-        if msg.button_cross and not self._prev.button_cross:
-            self._auto_mode = not self._auto_mode
-            
-        if msg.button_square and not self._prev.button_square:
-            self._assist_mode = not self._assist_mode
-            
-        if msg.button_circle and not self._prev.button_circle:
-            self._estop = not self._estop
-
-        self._prev = msg
-        self._last_pub_time = now
+    def set_mode(self, msg):
+        self._mode = msg
         
     def run(self):
         rate = rospy.Rate(1000) # 1Khz   
         while not rospy.is_shutdown():
             
-            if self._estop:
+            if self._mode.estop:
                 self._pub_mux.publish(self._zero)
             else:
-                if self._auto_mode:
+                if self._mode.auto:
                     self._pub_mux.publish(self._auto)
                 else:
-                    if self._assist_mode:
+                    if self._mode.assist:
                         self._pub_mux.publish(self._assisted)
                     else:
                         self._pub_mux.publish(self._teleop)

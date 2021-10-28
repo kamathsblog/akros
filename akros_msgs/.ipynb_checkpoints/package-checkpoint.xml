@@ -1,32 +1,24 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>akros</name>
+  <name>akros_msgs</name>
   <version>0.0.0</version>
-  <description>ROS packages for the akros holonomic robot (ROS1 Noetic)</description>
-
-  <!-- One maintainer tag required, multiple allowed, one person per tag -->
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
+  <description>Custom message files for the akros holonomic robot</description>
   <maintainer email="adityakamath@live.com">Aditya Kamath</maintainer>
-
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
   <license>TODO</license>
 
-
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
   <!-- <url type="website">http://wiki.ros.org/akros</url> -->
 
-
   <!-- Author tags are optional, multiple are allowed, one per tag -->
   <!-- Authors do not have to be maintainers, but could be -->
   <!-- Example: -->
   <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
-
 
   <!-- The *depend tags are used to specify dependencies -->
   <!-- Dependencies can be catkin packages or system dependencies -->
@@ -49,16 +41,17 @@
   <!-- Use doc_depend for packages you need only for building documentation: -->
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-    
-  <exec_depend>akros_bringup</exec_depend>
-  <exec_depend>akros_description</exec_depend>
-  <exec_depend>akros_test</exec_depend>
-  <exec_depend>akros_slam</exec_depend>
-  <exec_depend>akros_navigation</exec_depend>
-  <exec_depend>akros_teleop</exec_depend>
-  <exec_depend>akros_behaviors</exec_depend>
-  <exec_depend>akros_msgs</exec_depend>
-  <!-- exec_depend>akros_teleop</exec_depend -->
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <!-- build_export_depend>depthai_bridge</build_export_depend -->
+
+  <!-- build_export_depend>rospy</build_export_depend -->
+ 
+  <!-- build_export_depend>std_msgs</build_export_depend -->
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

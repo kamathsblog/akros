@@ -63,6 +63,7 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>akros_msgs</exec_depend>
   <exec_depend>vision_msgs</exec_depend>
   <exec_depend>depthai_bridge</exec_depend>
   <!-- <depend>depthai_bridge</depend> -->

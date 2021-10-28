@@ -56,6 +56,8 @@
   <exec_depend>akros_slam</exec_depend>
   <exec_depend>akros_navigation</exec_depend>
   <exec_depend>akros_teleop</exec_depend>
+  <exec_depend>akros_behaviors</exec_depend>
+  <exec_depend>akros_msgs</exec_depend>
   <!-- exec_depend>akros_teleop</exec_depend -->
 
   <!-- The export tag contains other, unspecified, tags -->

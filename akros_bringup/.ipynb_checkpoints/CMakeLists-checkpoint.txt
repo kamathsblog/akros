@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   cv_bridge
   vision_msgs
+  akros_msgs
   depthai_bridge
   depthai_ros_msgs
   image_transport
@@ -27,11 +28,11 @@ if(NOT OpenCV_FOUND)
   set(_opencv_version 3)
   find_package(OpenCV 3 REQUIRED COMPONENTS imgproc highgui)
 endif()
-find_package(depthai REQUIRED)
+#find_package(depthai REQUIRED)
 
 catkin_package(
  LIBRARIES ${PROJECT_NAME}
- CATKIN_DEPENDS depthai_ros_msgs roscpp sensor_msgs std_msgs depthai_bridge vision_msgs cv_bridge
+ CATKIN_DEPENDS roscpp sensor_msgs std_msgs depthai_bridge vision_msgs cv_bridge depthai_ros_msgs
  DEPENDS
  OpenCV
  )
@@ -59,8 +60,8 @@ macro(dai_add_node node_name node_src)
 endmacro()
 
 ## DEPTHAI DETECTION CONVERTERS
-dai_add_node(rgb_converter_node src/mono_detections.cpp)
-dai_add_node(rgbd_converter_node src/spatial_detections.cpp)
+## dai_add_node(rgb_converter_node src/mono_detections.cpp)
+## dai_add_node(rgbd_converter_node src/spatial_detections.cpp)
 
 
 catkin_install_python(PROGRAMS

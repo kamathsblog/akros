@@ -8,7 +8,7 @@
     <arg name="oakd_mode" default="rgbd" doc="OAK-D Modes [rgb, rgbd, stereo]"/>
     
     <!-- ARGUMENTS - T265 -->
-    <arg name="enable_fisheye"  default="false"/>
+    <arg name="enable_fisheye"  default="true"/>
     <arg name="publish_odom_tf" default="true"/> <!-- if false EKF is used, if true t265 odom to pose tf used -->
     
     <!-- ARGUMENTS - ASSISTED TELEOP -->

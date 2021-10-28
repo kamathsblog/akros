@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <launch>
     
-    <!-- ARGUMENTS - SLAM TOOLBOX -->
+    <!-- ARGUMENTS - SLAM KARTO -->
     <arg name="base_frame"         default="base_link"/>
     <arg name="odom_frame"         default="t265_odom_frame"/>
     <arg name="scan_topic"         default="/ldlidar/scan"/>
-    <arg name="tb_mode"            default="async" doc="slam type [lifelong, localization, async, sync]"/>
-    <arg name="tf_buf_duration"    default="30."/> <!-- 30. for localization/lifelong/online, 14400. for offline -->
-    <arg name="enable_interactive" default="false"/>
     
     <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
     <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
@@ -15,7 +12,7 @@
         <arg name="mode"           value="$(arg bringupType)"/>
     </include>
 
-    <!-- LAUNCH SLAM_TOOLBOX NODE -->
+    <!-- LAUNCH SLAM_KARTO NODE -->
     <param name="/use_sim_time" value="false"/>
     <node pkg="slam_karto" type="slam_karto" name="slam_karto" output="screen">
         <remap from="scan"            to="$(arg scan_topic)"/>

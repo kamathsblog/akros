@@ -1,0 +1,9 @@
+<launch>
+
+<arg name="filename" default="$(find akros_behaviors)/config/waypoints_store.yaml"/>
+
+<!-- Run Waypoint Sequence Store -->
+<param name="waypoint_store_yaml" value="$(arg filename)" />
+<node pkg="akros_behaviors" type="waypoint_sequence_store.py" name="wp_seq_store" output="screen"/>
+
+</launch>
