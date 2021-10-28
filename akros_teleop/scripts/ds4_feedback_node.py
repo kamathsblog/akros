@@ -2,10 +2,11 @@
 
 import rospy
 from ds4_driver.msg import Feedback, Status
+from geometry_msgs.msg import Twist
 from akros_msgs.msg import Mode
 
 class Handler(object):
-    def __init__(self, status_topic='status', feedback_topic='set_feedback', mode_topic='mode'):
+    def __init__(self, status_topic='status', feedback_topic='set_feedback', mode_topic='mode', twist_topic='cmd_vel'):
         self._min_interval = 0.01
         self._last_pub_time = rospy.Time()
         self._prev = Status()
@@ -16,6 +17,7 @@ class Handler(object):
         }
         
         self._mode = Mode()
+        self._cmd = Twist()
         self._mode.estop = False
         self._mode.rumble = False
         self._mode.auto = False
@@ -25,9 +27,18 @@ class Handler(object):
         
         self._rumble_val = 0
         
+        self._scales = rospy.get_param('~scales')
+        self._scale_x = self._scales['linear']['x']
+        self._scale_y = self._scales['linear']['y']
+        self._scale_z = self._scales['angular']['z']
+        
         self._pub_feedback = rospy.Publisher(feedback_topic, Feedback, queue_size=1)
         self._pub_mode = rospy.Publisher(mode_topic, Mode, queue_size=1)
+        rospy.Subscriber(twist_topic, Twist, self.cb_twist, queue_size=1)
         rospy.Subscriber(status_topic, Status, self.cb_status, queue_size=1)
+        
+    def cb_twist(self, msg):
+        self._cmd = msg
 
     def cb_status(self, msg):
         """
@@ -87,13 +98,13 @@ class Handler(object):
                     self._led['b'] = 1
                 else:
                     if self._mode.assist:
-                        self._led['r'] = abs(msg.axis_left_y + msg.button_dpad_up - msg.button_dpad_down)* 0.90 + 0.10 #translation in ROS x
-                        self._led['g'] = abs(msg.axis_left_x + msg.button_dpad_left - msg.button_dpad_right)* 0.90 + 0.10#translation in ROS y
-                        self._led['b'] = abs(msg.axis_right_x)* 0.90 + 0.10 # rotation around ROS z direction
+                        self._led['r'] = abs(self._cmd.linear.x/self._scale_x)* 0.90 + 0.10 #translation in ROS x
+                        self._led['g'] = abs(self._cmd.linear.y/self._scale_y)* 0.90 + 0.10#translation in ROS y
+                        self._led['b'] = abs(self._cmd.angular.z/self._scale_z)* 0.90 + 0.10 # rotation around ROS z direction
                     else:
-                        self._led['r'] = abs(msg.axis_left_y + msg.button_dpad_up - msg.button_dpad_down) #translation in ROS x
-                        self._led['g'] = abs(msg.axis_left_x + msg.button_dpad_left - msg.button_dpad_right) #translation in ROS y
-                        self._led['b'] = abs(msg.axis_right_x) # rotation around ROS z direction
+                        self._led['r'] = abs(self._cmd.linear.x/self._scale_x) #translation in ROS x
+                        self._led['g'] = abs(self._cmd.linear.y/self._scale_y) #translation in ROS y
+                        self._led['b'] = abs(self._cmd.angular.z/self._scale_z) # rotation around ROS z direction
                 
                 feedback.set_rumble = True    
                 if self._mode.rumble:
