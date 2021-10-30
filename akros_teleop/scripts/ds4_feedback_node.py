@@ -122,12 +122,12 @@ class Handler(object):
         self._last_pub_time = now
 
 def main():
-    rospy.init_node('ds4_feedback')
-
-    Handler()
-
-    rospy.spin()
-
+    try:
+        rospy.init_node('ds4_feedback')
+        Handler()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("ds4_feedback node interrupted")
 
 if __name__ == '__main__':
     main()

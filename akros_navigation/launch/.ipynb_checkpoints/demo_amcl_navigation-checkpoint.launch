@@ -35,4 +35,9 @@
         <arg name="holo_local_planner"  value="$(arg holo_local_planner)"/>
     </include>
     
+    <!-- INCLUDE WAYPOINT SEQUENCE STORE / PLAYER LAUNCH FILE -->
+    <include file="$(find akros_behaviors)/launch/demo_waypoint_player.launch">
+        <arg name="filename" value="$(find akros_behaviors)/config/waypoints_store.yaml"/>
+    </include>
+    
 </launch>

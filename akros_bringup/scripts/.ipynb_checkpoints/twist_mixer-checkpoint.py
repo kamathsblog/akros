@@ -7,14 +7,12 @@ from akros_msgs.msg import Mode
 class TwistMixer():
     def __init__(self):
 
-        rospy.init_node('twist_mux')
-        
         self._min_interval  = 0.01
         self._last_pub_time = rospy.Time()
 
-        self.ros_sub_assisted = rospy.Subscriber("assisted/cmd_vel", Twist, self.set_assisted_twist, queue_size=1)
-        self.ros_sub_teleop   = rospy.Subscriber("teleop/cmd_vel", Twist, self.set_teleop_twist, queue_size=1)
-        self.ros_sub_auto     = rospy.Subscriber("auto/cmd_vel", Twist, self.set_auto_twist, queue_size=1)
+        self.ros_sub_assisted = rospy.Subscriber("assisted_cmd_vel", Twist, self.set_assisted_twist, queue_size=1)
+        self.ros_sub_teleop   = rospy.Subscriber("teleop_cmd_vel", Twist, self.set_teleop_twist, queue_size=1)
+        self.ros_sub_auto     = rospy.Subscriber("auto_cmd_vel", Twist, self.set_auto_twist, queue_size=1)
         self.ros_sub_mode     = rospy.Subscriber("mode", Mode, self.set_mode, queue_size=1)
 
         self._assisted       = Twist()
@@ -57,6 +55,13 @@ class TwistMixer():
 
             rate.sleep()
             
+def main():
+    try:
+        rospy.init_node('twist_mux')
+        mux = TwistMixer()
+        mux.run()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("twist_mux node interrupted")
+            
 if __name__ == "__main__":
-    mux = TwistMixer()
-    mux.run()
+    main()

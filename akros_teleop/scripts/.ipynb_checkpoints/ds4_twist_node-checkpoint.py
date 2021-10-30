@@ -50,14 +50,13 @@ class StatusToTwist(object):
 
         self._pub.publish(to_pub)
 
-
 def main():
-    rospy.init_node('ds4_twist')
-
-    StatusToTwist()
-
-    rospy.spin()
-
+    try:
+        rospy.init_node('ds4_twist')
+        StatusToTwist()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("ds4_twist node interrupted")
 
 if __name__ == '__main__':
     main()

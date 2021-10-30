@@ -12,13 +12,6 @@
     <arg name="initial_pose_y" default="-0.5"/>
     <arg name="initial_pose_a" default="0.0"/>
     
-    <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
-    <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <arg name="ds4_topic" default="ds4/cmd_vel"/>
-    <include file="$(find akros_bringup)/launch/demo_bringup.launch">
-        <arg name="mode"           value="$(arg bringupType)"/>
-    </include>
-    
     <!-- LAUNCH MAP_SERVER NODE -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
     

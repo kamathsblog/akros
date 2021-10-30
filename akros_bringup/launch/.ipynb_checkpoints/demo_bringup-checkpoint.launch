@@ -12,8 +12,10 @@
     <arg name="publish_odom_tf" default="true"/> <!-- if false EKF is used, if true t265 odom to pose tf used -->
     
     <!-- ARGUMENTS - ASSISTED TELEOP -->
-    <arg name="assisted_topic" default="assisted/cmd_vel"/>
-    <arg name="teleop_topic"   default="teleop/cmd_vel"/>
+    <arg name="assisted_ns" default="assisted"/>
+    <arg name="teleop_ns"   default="teleop"/>
+    <arg name="auto_ns"     default="auto"/>
+    <arg name="odom_topic"  default="t265/odom/sample"/>
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
     <include file="$(find akros_description)/launch/akros_description.launch" />
@@ -49,14 +51,20 @@
     <param name="/use_sim_time" value="false"/>
     <node pkg="assisted_teleop" name="assisted_teleop" type="assisted_teleop" respawn="false">
         <rosparam file="$(find akros_teleop)/config/assisted_teleop_params.yaml" command="load" />
-        <remap from="teleop_cmd_vel" to="$(arg teleop_topic)" />
-        <remap from="cmd_vel" to="$(arg assisted_topic)" />
+        <remap from="teleop_cmd_vel" to="$(arg teleop_ns)/cmd_vel" />
+        <remap from="cmd_vel" to="$(arg assisted_ns)/cmd_vel" />
+        <remap from="odom" to="$(arg odom_topic)"/>
     </node>
     
     <!-- SUPPRESS WARNING MESSAGES FROM ASSISTED_TELEOP LOCAL PLANNER -->
     <node pkg="rosservice" type="rosservice" name="supress_warn" args="call --wait /assisted_teleop/set_logger_level 'ros.base_local_planner' 'fatal'" />
     
     <!-- LAUNCH TWIST_MIXER NODE -->
-    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux"/>
+    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux">
+        <remap from="teleop_cmd_vel"   to="$(arg teleop_ns)/cmd_vel" />
+        <remap from="assisted_cmd_vel" to="$(arg assisted_ns)/cmd_vel" />
+        <remap from="auto_cmd_vel"     to="$(arg auto_ns)/cmd_vel" />
+        <remap from="mode"             to="$(arg teleop_ns)/mode"/>
+    </node>
 
 </launch>

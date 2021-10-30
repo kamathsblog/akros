@@ -61,5 +61,6 @@ target_compile_definitions(waypoint_sequence_node PRIVATE BT_XML_PATH="${PROJECT
 
 catkin_install_python(PROGRAMS
    scripts/waypoint_sequence_store.py
+   scripts/waypoint_sequence_player.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
