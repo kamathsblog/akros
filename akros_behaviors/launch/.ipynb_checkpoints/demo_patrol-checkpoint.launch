@@ -1,7 +1,7 @@
 <launch>
 
 <!-- Run autonomy stack -->
-<param name="waypoint_list" value="$(find akros_behaviors)/config/waypoints.yaml" />
+<param name="waypoint_list" value="$(find akros_behaviors)/config/waypoints_store.yaml" />
 <node pkg="akros_behaviors" type="waypoint_sequence_node" name="patrol_node" output="screen"/>
 
 <!-- Run behavior tree visualization -->

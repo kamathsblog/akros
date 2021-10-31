@@ -57,7 +57,7 @@ add_executable(
 target_link_libraries(waypoint_sequence_node
     ${catkin_LIBRARIES} yaml-cpp
 )
-target_compile_definitions(waypoint_sequence_node PRIVATE BT_XML_PATH="${PROJECT_SOURCE_DIR}/trees/waypoint_sequence_bt.xml")
+target_compile_definitions(waypoint_sequence_node PRIVATE BT_XML_PATH="${PROJECT_SOURCE_DIR}/config/waypoint_sequence_bt.xml")
 
 catkin_install_python(PROGRAMS
    scripts/waypoint_sequence_store.py
