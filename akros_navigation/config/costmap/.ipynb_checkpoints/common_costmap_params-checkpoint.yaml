@@ -1,6 +1,7 @@
 # http://wiki.ros.org/costmap_2d
 
 footprint: [[0.00, 0.125], [0.00, -0.125], [-0.22, -0.125], [-0.22, 0.125]]
+footprint_padding: 0.05
 # robot_radius: 0.08
 
 # http://wiki.ros.org/costmap_2d/hydro/obstacles

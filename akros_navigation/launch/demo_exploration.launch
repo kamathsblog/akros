@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="mode" default="diff"/>  <!-- diff or holo -->
+    <arg name="mode" default="holo"/>  <!-- diff or holo -->
     
     <!-- ARGUMENTS - BRINGUP SLAM -->
     <arg name="slam_mode"  default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
@@ -27,6 +27,12 @@
         <arg name="base_global_planner" value="$(arg base_global_planner)"/>
         <arg name="diff_local_planner"  value="$(arg diff_local_planner)"/>
         <arg name="holo_local_planner"   value="$(arg holo_local_planner)"/>
+    </include>
+    
+    <!-- INCLUDE FRONTIER_EXPLORATION LAUNCH FILE -->
+    <include file="$(find akros_navigation)/launch/frontier_exploration.launch">
+        <arg name="goal_aliasing_val" value="0.45"/>
+        <arg name="frequency_val" value="1.0"/>
     </include>
     
     <!-- INCLUDE WAYPOINT SEQUENCE STORE / PLAYER LAUNCH FILE -->

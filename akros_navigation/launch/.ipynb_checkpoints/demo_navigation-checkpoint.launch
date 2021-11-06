@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="mode" default="diff"/>  <!-- diff or holo -->
+    <arg name="mode" default="holo"/>  <!-- diff or holo -->
     <arg name="bu_mode" default="2d"/> <!-- 2d or 3d -->
 
     <!-- ARGUMENTS - AMCL -->

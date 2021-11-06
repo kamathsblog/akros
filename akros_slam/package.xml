@@ -44,7 +44,6 @@
   <depend>roscpp</depend>
   <depend>rospy</depend>
   <depend>sensor_msgs</depend>
-  <depend>depthai_bridge</depend>
   <exec_depend>akros_bringup</exec_depend>
 
   <!-- build_export_depend>depthai_bridge</build_export_depend -->

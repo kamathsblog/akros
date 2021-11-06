@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
-    <arg name="mode" default="2d" doc="modes [2d, 3d]"/>
+    <arg name="mode" default="2d" doc="modes [2d, 3d]"/> <!-- ONLY 2D MODE FOR NOW -->
     <arg name="lidar" default="ldlidar_ld06" doc="lidar [ldlidar_ld06, rplidar_a2]"/>
     
     <!-- ARGUMENTS - OAKD -->
@@ -47,24 +47,25 @@
     <!-- INCLUDE ROSSERIAL ARDUINO LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/rosserial_arduino.launch"/>
     
+    <!-- LAUNCH TWIST_MIXER NODE -->
+    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux">
+        <remap from="teleop_cmd_vel"    to="$(arg teleop_ns)/cmd_vel" />
+        <remap from="assisted_cmd_vel"  to="$(arg assisted_ns)/cmd_vel/filtered" />
+        <remap from="auto_cmd_vel"      to="$(arg auto_ns)/cmd_vel" />
+        <remap from="mode"              to="$(arg teleop_ns)/mode"/>
+        <remap from="pre_assist_cmd_vel" to="$(arg assisted_ns)/cmd_vel/unfiltered" />
+    </node>
+    
     <!-- LAUNCH ASSISTED_TELEOP NODE -->
     <param name="/use_sim_time" value="false"/>
     <node pkg="assisted_teleop" name="assisted_teleop" type="assisted_teleop" respawn="false">
         <rosparam file="$(find akros_teleop)/config/assisted_teleop_params.yaml" command="load" />
-        <remap from="teleop_cmd_vel" to="$(arg teleop_ns)/cmd_vel" />
-        <remap from="cmd_vel" to="$(arg assisted_ns)/cmd_vel" />
+        <remap from="teleop_cmd_vel" to="$(arg assisted_ns)/cmd_vel/unfiltered" />
+        <remap from="cmd_vel" to="$(arg assisted_ns)/cmd_vel/filtered" />
         <remap from="odom" to="$(arg odom_topic)"/>
     </node>
     
     <!-- SUPPRESS WARNING MESSAGES FROM ASSISTED_TELEOP LOCAL PLANNER -->
     <node pkg="rosservice" type="rosservice" name="supress_warn" args="call --wait /assisted_teleop/set_logger_level 'ros.base_local_planner' 'fatal'" />
-    
-    <!-- LAUNCH TWIST_MIXER NODE -->
-    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux">
-        <remap from="teleop_cmd_vel"   to="$(arg teleop_ns)/cmd_vel" />
-        <remap from="assisted_cmd_vel" to="$(arg assisted_ns)/cmd_vel" />
-        <remap from="auto_cmd_vel"     to="$(arg auto_ns)/cmd_vel" />
-        <remap from="mode"             to="$(arg teleop_ns)/mode"/>
-    </node>
 
 </launch>

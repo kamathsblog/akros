@@ -70,9 +70,9 @@ class Handler(object):
         feedback.set_led = True
         
         if self._mode.estop:
-            feedback.led_r = 0
-            feedback.led_g = 0
-            feedback.led_b = 0
+            self._led['r'] = 0
+            self._led['g'] = 0
+            self._led['b'] = 0
             self._mode.rumble = False
             self._mode.auto = False
             self._mode.assist = False
@@ -81,40 +81,40 @@ class Handler(object):
         else:
             if self._mode.auto:
                 self._mode.store = False
-                self._mode.assist = False
-                if not self._mode.play:
-                    feedback.led_r = 1
-                    feedback.led_g = 1
-                    feedback.led_b = 1
-                else:
-                    feedback.led_r = 0
-                    feedback.led_g = 0.5
-                    feedback.led_b = 1
+                if self._mode.play: #auto > playback mode - blueish-red 0xff007f
+                    self._led['r'] = 1
+                    self._led['g'] = 0
+                    self._led['b'] = 0.5
+                else: #normal auto mode - greenish-blue 0x007fff
+                    self._led['r'] = 0
+                    self._led['g'] = 0.5
+                    self._led['b'] = 1
+                    
             else:
                 self._mode.play = False
-                if self._mode.store:
+                if self._mode.store: #teleop > store mode - reddish-green 0x7fff00
                     self._led['r'] = 0.5
-                    self._led['g'] = 0
-                    self._led['b'] = 1
-                else:
-                    if self._mode.assist:
-                        self._led['r'] = abs(self._cmd.linear.x/self._scale_x)* 0.90 + 0.10 #translation in ROS x
-                        self._led['g'] = abs(self._cmd.linear.y/self._scale_y)* 0.90 + 0.10#translation in ROS y
-                        self._led['b'] = abs(self._cmd.angular.z/self._scale_z)* 0.90 + 0.10 # rotation around ROS z direction
-                    else:
-                        self._led['r'] = abs(self._cmd.linear.x/self._scale_x) #translation in ROS x
-                        self._led['g'] = abs(self._cmd.linear.y/self._scale_y) #translation in ROS y
-                        self._led['b'] = abs(self._cmd.angular.z/self._scale_z) # rotation around ROS z direction
+                    self._led['g'] = 1
+                    self._led['b'] = 0
+                else: #normal teleop mode - rgb according to xyz
+                    self._led['r'] = abs(self._cmd.linear.x/self._scale_x) #translation in ROS x
+                    self._led['g'] = abs(self._cmd.linear.y/self._scale_y) #translation in ROS y
+                    self._led['b'] = abs(self._cmd.angular.z/self._scale_z) # rotation around ROS z direction
+                    
+            if self._mode.assist:
+                self._led['r'] = self._led['r']*0.90 + 0.10
+                self._led['g'] = self._led['g']*0.90 + 0.10
+                self._led['b'] = self._led['b']*0.90 + 0.10
                 
-                feedback.set_rumble = True    
-                if self._mode.rumble:
-                    feedback.rumble_small = (abs(msg.axis_left_y) + abs(msg.axis_left_x) + abs(msg.axis_right_x) + abs(msg.button_dpad_up - msg.button_dpad_down) + abs(msg.button_dpad_left - msg.button_dpad_right)) / 4
-                else:
-                    feedback.rumble_small = 0
+            feedback.set_rumble = True    
+            if self._mode.rumble:
+                feedback.rumble_small = (abs(msg.axis_left_y) + abs(msg.axis_left_x) + abs(msg.axis_right_x) + abs(msg.button_dpad_up - msg.button_dpad_down) + abs(msg.button_dpad_left - msg.button_dpad_right)) / 4
+            else:
+                feedback.rumble_small = 0
                 
-                feedback.led_r = self._led['r']
-                feedback.led_g = self._led['g']
-                feedback.led_b = self._led['b']
+            feedback.led_r = self._led['r']
+            feedback.led_g = self._led['g']
+            feedback.led_b = self._led['b']
 
         self._pub_feedback.publish(feedback)
         self._pub_mode.publish(self._mode)

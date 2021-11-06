@@ -2,13 +2,14 @@
 <robot name="akros_top" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- xacro:include filename="$(find rplidar_ros)/urdf/rplidar.urdf.xacro"/ -->
-  <xacro:include filename="$(find depthai_bridge)/urdf/depthai_descr.urdf.xacro"/>
+  <!-- xacro:include filename="$(find depthai_bridge)/urdf/depthai_descr.urdf.xacro"/ -->
   
   <xacro:property name="M_PI"              value="3.1415926535897931" />
   <xacro:property name="rplidar_offset_yaw"  value="${M_PI/2}" />
   <xacro:arg name="lidar_offset_z"     default="0.08" />
   <xacro:arg name="lidar_offset_x"     default="-0.08" />
   
+  <link name="oakd_link"/>
   <link name="base_link"/>
   <link name="t265_link"/>
   <link name="laser_frame"/>
