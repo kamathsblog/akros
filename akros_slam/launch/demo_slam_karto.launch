@@ -14,7 +14,7 @@
 
     <!-- LAUNCH SLAM_KARTO NODE -->
     <param name="/use_sim_time" value="false"/>
-    <node pkg="slam_karto" type="slam_karto" name="slam_karto" output="screen">
+    <node pkg="slam_karto" type="slam_karto" name="slam_karto"><!-- output="screen" -->
         <remap from="scan"            to="$(arg scan_topic)"/>
         <param name="base_frame"              value="$(arg base_frame)"/>
         <param name="odom_frame"              value="$(arg odom_frame)"/>

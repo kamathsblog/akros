@@ -54,7 +54,7 @@ https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/lib
   
     <!-- Robot localization-->
     <group unless="$(arg publish_odom_tf)">
-        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_t265" clear_params="true" output="screen">
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_t265" clear_params="true">
             <rosparam command="load" file="$(find akros_bringup)/config/t265_ekf_params.yaml" />
             <param name="publish_tf" value="true"/>
             <param name="odom0" value="t265/odom/sample"/>

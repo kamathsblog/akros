@@ -27,7 +27,7 @@
                         cam_yaw:=$(arg cam_yaw)"/>
                         
     <!-- STATE PUBLISHER NODE -->
-    <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" required="true">
+    <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">
         <!-- remap from="robot_description" to="$(arg system_name)_description" / -->
     </node> 
 

@@ -4,7 +4,7 @@ kld_err: 0.02
 update_min_d: 0.05
 update_min_a: 0.10
 resample_interval: 0.5
-transform_tolerance: 0.2
+transform_tolerance: 1
 recovery_alpha_slow: 0.00
 recovery_alpha_fast: 0.00
 gui_publish_rate: 20.0
