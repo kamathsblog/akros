@@ -15,6 +15,7 @@
     <arg name="assisted_ns" default="assisted"/>
     <arg name="teleop_ns"   default="teleop"/>
     <arg name="auto_ns"     default="auto"/>
+    <arg name="mixer_ns"    default="twist_mixer"/>
     <arg name="odom_topic"  default="t265/odom/sample"/>
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
@@ -48,12 +49,24 @@
     <include file="$(find akros_bringup)/launch/rosserial_arduino.launch"/>
     
     <!-- LAUNCH TWIST_MIXER NODE -->
-    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mux">
+    <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mixer">
         <remap from="teleop_cmd_vel"    to="$(arg teleop_ns)/cmd_vel" />
         <remap from="assisted_cmd_vel"  to="$(arg assisted_ns)/cmd_vel/filtered" />
         <remap from="auto_cmd_vel"      to="$(arg auto_ns)/cmd_vel" />
         <remap from="mode"              to="$(arg teleop_ns)/mode"/>
+        <remap from="cmd_vel"           to="$(arg mixer_ns)/cmd_vel"/>
         <remap from="pre_assist_cmd_vel" to="$(arg assisted_ns)/cmd_vel/unfiltered" />
+    </node>
+    
+    <!-- LAUNCH INTERACTIVE_MARKER_TWIST_SERVER NODE -->
+    <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server">
+        <rosparam command="load" file="$(find akros_bringup)/config/holonomic_twist_marker.yaml" />
+    </node>
+    
+    <!-- LAUNCH TWIST_MUX NODE -->
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux">
+        <rosparam file="$(find akros_bringup)/config/twist_mux_config.yaml" command="load" />
+        <remap from="cmd_vel_out" to="cmd_vel"/>
     </node>
     
     <!-- LAUNCH ASSISTED_TELEOP NODE -->
