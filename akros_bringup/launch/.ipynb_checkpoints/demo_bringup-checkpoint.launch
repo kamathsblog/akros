@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
-    <arg name="mode" default="2d" doc="modes [2d, 3d]"/> <!-- ONLY 2D MODE FOR NOW -->
+    <arg name="mode" default="3d" doc="modes [2d, 3d]"/>
     <arg name="lidar" default="ldlidar_ld06" doc="lidar [ldlidar_ld06, rplidar_a2]"/>
     
     <!-- ARGUMENTS - OAKD -->
-    <arg name="oakd_mode" default="rgbd" doc="OAK-D Modes [rgb, rgbd, stereo]"/>
+    <arg name="camera_name" default="oakd"/>
+    <arg name="oakd_mode"   default="rgbd" doc="OAK-D Modes [rgbd, stereo (only for testing/debugging)]"/>
+    <arg name="nodelet"     default="false"/>
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"  default="true"/>
@@ -35,6 +37,7 @@
     <group if="$(eval arg('mode') == '3d')"> 
         <!-- INCLUDE OAK-D LAUNCH FILE -->
         <include file="$(find akros_bringup)/launch/demo_oakd.launch">
+            <arg name="camera_name" value="$(arg camera_name)"/>
             <arg name="oakd_mode" value="$(arg oakd_mode)"/>
             <arg name="standalone" value="false"/>
         </include>

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="standalone" default="true"/>
+
+    <!-- ARGUMENTS - OAKD -->
+    <arg name="oakd_mode"             default="rgbd" doc="OAK-D Modes [rgbd, stereo(only for debugging)]"/>
+    <arg name="nodelet"               default="false"/>
+    <arg name="camera_name"           default="oakd"/>
+    <arg name="lrcheck"               default="true"  /> 
+    <arg name="extended"              default="false" /> 
+    <arg name="subpixel"              default="true" />
+    <arg name="rectify"               default="false"  />
+    <arg name="depth_aligned"         default="false"  />
+     <!-- see https://docs.luxonis.com/projects/api/en/latest/components/nodes/stereo_depth/#currently-configurable-blocks for possible combination of optionf for higher fps-->
+    <arg name="stereo_fps"            default="15"    />
+    
+    <group if="$(arg standalone)">
+        <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
+        <include file="$(find akros_description)/launch/akros_description.launch" />
+    </group>
+    
+    <!-- OAK-D NODELET -->
+    <group if="$(arg nodelet)">
+        <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/>
+
+        <node name="oakd" pkg="nodelet" type="nodelet" output="screen" required="true"
+            args="load akros_bringup/RGBDInertialNodelet nodelet_manager">
+            <param name="camera_name" value="$(arg camera_name)"/>
+            <param name="mode" value="$(arg oakd_mode)"/>
+            <param name="lrcheck" value="$(arg lrcheck)"/>
+            <param name="extended" value="$(arg extended)"/>
+            <param name="subpixel" value="$(arg subpixel)"/>
+            <param name="rectify" value="$(arg rectify)" />
+            <param name="depth_aligned" value="$(arg depth_aligned)" />
+            <param name="stereo_fps" value="$(arg stereo_fps)" />
+        </node>   
+    </group>
+
+    <!-- OAK-D NODE -->
+    <group unless="$(arg nodelet)">
+        <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
+        <node name="oakd" pkg="akros_bringup" type="rgbd_inertial_node" output="screen" required="true">
+            <param name="camera_name" value="$(arg camera_name)"/>
+            <param name="mode" value="$(arg oakd_mode)"/>
+            <param name="lrcheck" value="$(arg lrcheck)"/>
+            <param name="extended" value="$(arg extended)"/>
+            <param name="subpixel" value="$(arg subpixel)"/>
+            <param name="rectify" value="$(arg rectify)" />
+            <param name="depth_aligned" value="$(arg depth_aligned)" />
+            <param name="stereo_fps" value="$(arg stereo_fps)" />
+        </node>
+    </group>
+
+</launch>

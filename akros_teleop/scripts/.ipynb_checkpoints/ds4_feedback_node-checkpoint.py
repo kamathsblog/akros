@@ -20,9 +20,9 @@ class Handler(object):
         self._cmd = Twist()
         self._mode.estop = False
         self._mode.rumble = False
-        self._mode.auto = False
+        self._mode.auto_t = False
         self._mode.assist = False
-        self._mode.play = False
+        self._mode.play_t = False
         self._mode.store = False
         
         self._rumble_val = 0
@@ -56,13 +56,13 @@ class Handler(object):
             self._mode.rumble = not self._mode.rumble
             
         if msg.button_cross and not self._prev.button_cross:
-            self._mode.auto = not self._mode.auto
+            self._mode.auto_t = not self._mode.auto_t
             
         if msg.button_square and not self._prev.button_square:
             self._mode.assist = not self._mode.assist
             
         if msg.button_triangle and not self._prev.button_triangle:
-            self._mode.play = not self._mode.play
+            self._mode.play_t = not self._mode.play_t
             
         if msg.button_options and not self._prev.button_options:
             self._mode.store = not self._mode.store
@@ -74,14 +74,14 @@ class Handler(object):
             self._led['g'] = 0
             self._led['b'] = 0
             self._mode.rumble = False
-            self._mode.auto = False
+            self._mode.auto_t = False
             self._mode.assist = False
-            self._mode.play = False
+            self._mode.play_t = False
             self._mode.store = False
         else:
-            if self._mode.auto:
+            if self._mode.auto_t:
                 self._mode.store = False
-                if self._mode.play: #auto > playback mode - blueish-red 0xff007f
+                if self._mode.play_t: #auto > playback mode - blueish-red 0xff007f
                     self._led['r'] = 1
                     self._led['g'] = 0
                     self._led['b'] = 0.5
@@ -91,7 +91,7 @@ class Handler(object):
                     self._led['b'] = 1
                     
             else:
-                self._mode.play = False
+                self._mode.play_t = False
                 if self._mode.store: #teleop > store mode - reddish-green 0x7fff00
                     self._led['r'] = 0.5
                     self._led['g'] = 1

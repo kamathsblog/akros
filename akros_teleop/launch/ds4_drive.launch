@@ -22,11 +22,13 @@
         <!-- LAUNCH DS4_TWIST NODE -->
         <node pkg="akros_teleop" type="ds4_twist_node.py" name="ds4_twist">
           <param name="stamped" value="$(arg stamped)" />
+          <remap from="cmd_vel" to="/cmd_vel" if="$(arg standalone)" />
           <rosparam command="load" file="$(find akros_teleop)/config/ds4_twist_3dof.yaml" />
         </node>
     
         <!-- LAUNCH DS4_FEEDBACK NODE -->
         <node pkg="akros_teleop" type="ds4_feedback_node.py" name="ds4_feedback">
+            <remap from="cmd_vel" to="/cmd_vel" if="$(arg standalone)" />
             <rosparam command="load" file="$(find akros_teleop)/config/ds4_twist_3dof.yaml" />
         </node>
         
@@ -37,9 +39,7 @@
     
     <group if="$(arg standalone)">
         <!-- INCLUDE ROSSERIAL ARDUINO LAUNCH FILE -->
-        <include file="$(find akros_bringup)/launch/rosserial_arduino.launch">
-            <remap from="cmd_vel" to="$(arg teleop_ns)/cmd_vel"/>
-        </include>
+        <include file="$(find akros_bringup)/launch/rosserial_arduino.launch"/>
     </group>
 
 </launch>

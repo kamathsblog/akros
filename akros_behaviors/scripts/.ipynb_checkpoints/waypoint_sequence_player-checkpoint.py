@@ -41,7 +41,7 @@ class WaypointSequencePlayer(object):
     def run(self):  
         while not rospy.is_shutdown():
             
-            if not self._mode.play:
+            if not self._mode.play_t:
                 if not self._done_once:
                     if self._goal_set:
                         self._client.cancel_goal()

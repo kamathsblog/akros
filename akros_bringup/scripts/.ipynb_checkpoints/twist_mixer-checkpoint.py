@@ -49,7 +49,7 @@ class TwistMixer():
                 self._mux_msg = self._zero
                 self._assist_msg = self._zero
             else:
-                if self._mode.auto:
+                if self._mode.auto_t:
                     self._pre_assist_msg = self._auto
                 else:
                     self._pre_assist_msg = self._teleop

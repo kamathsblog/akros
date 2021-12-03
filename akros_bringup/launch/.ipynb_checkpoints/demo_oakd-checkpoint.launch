@@ -4,122 +4,96 @@
     <arg name="standalone" default="true"/>
 
     <!-- ARGUMENTS - OAKD -->
-    <arg name="oakd_mode"      default="rgbd" doc="OAK-D Modes [rgb, rgbd, stereo]"/>
-    <arg name="nodelet"        default="true"/>
-    <arg name="nn_enable"      default="true"/>
-    <arg name="nn_model"       default="mobilenet" doc="NN model [mobilenet, yolov4]"/>
-    <arg name="pub_detections" default="true"/>
-    <arg name="camera_name"    default="oakd"/>
-    
-    <group if="$(arg standalone)">
-        <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
-        <include file="$(find akros_description)/launch/akros_description.launch" />
-    </group>
+    <arg name="oakd_mode"             default="rgbd" doc="OAK-D Modes [rgbd, stereo(only for debugging)]"/>
+    <arg name="nodelet"               default="false"/>
+    <arg name="camera_name"           default="oakd"/>
+    <arg name="lrcheck"               default="true"  /> 
+    <arg name="extended"              default="false" /> 
+    <arg name="subpixel"              default="true" />
+    <arg name="rectify"               default="false"  />
+    <arg name="depth_aligned"         default="false"  />
+     <!-- see https://docs.luxonis.com/projects/api/en/latest/components/nodes/stereo_depth/#currently-configurable-blocks for possible combination of optionf for higher fps-->
+    <arg name="stereo_fps"            default="15"    />
     
     <!-- INCLUDE OAK-D LAUNCH FILE -->
-    <include file="$(find akros_bringup)/launch/oakd_$(arg oakd_mode).launch">
-        <arg name="nodelet"   value="$(arg nodelet)"/>
-        <arg name="nn_enable" value="$(arg nn_enable)" unless="$(eval arg('oakd_mode') == 'stereo')"/>
-        <arg name="nn_model"  value="$(arg nn_model)" unless="$(eval arg('oakd_mode') == 'stereo')"/>
+    <include file="$(find akros_bringup)/launch/oakd_rgbd_inertial.launch">
+        <arg name="oakd_mode" value="$(arg oakd_mode)"/>
+        <arg name="nodelet" value="$(arg nodelet)"/>
+        <arg name="camera_name" value="$(arg camera_name)"/>
+        <arg name="lrcheck" value="$(arg lrcheck)"/>
+        <arg name="extended" value="$(arg extended)"/>
+        <arg name="subpixel" value="$(arg subpixel)"/>
+        <arg name="rectify" value="$(arg rectify)"/>
+        <arg name="depth_aligned" value="$(arg depth_aligned)"/>
+        <arg name="stereo_fps" value="$(arg stereo_fps)"/>
+        <arg name="standalone" value="$(arg standalone)"/>
     </include>
     
     <!-- NODELET MANAGER -->
     <node pkg="nodelet" type="nodelet" name="pointcloud_manager"  args="manager" output="screen"/>
-                
-    <!-- POINTCLOUDS -->
-    <group unless="$(eval arg('oakd_mode') == 'rgb')"> 
         
-        <!-- POINT_CLOUD_XYZ NODELET (DEPTH_IMAGE_PROC) -->
-        <node pkg="nodelet" type="nodelet" name="pointcloud_xyz"
-            args="load depth_image_proc/point_cloud_xyz nodelet_manager">
-            <remap from="camera_info" to="/$(arg oakd_mode)_pub/color/camera_info"/>
-            <remap from="image_rect" to="/$(arg oakd_mode)_pub/stereo/depth"/>    
-            <remap from="points" to="/$(arg oakd_mode)_pub/stereo/points"/>
-        </node>
+    <!-- POINT_CLOUD_XYZ NODELET (DEPTH_IMAGE_PROC) -->
+    <node pkg="nodelet" type="nodelet" name="pointcloud_xyz"
+        args="load depth_image_proc/point_cloud_xyz pointcloud_manager">
+        <remap from="camera_info" to="/oakd/color/camera_info"/>
+        <remap from="image_rect" to="/oakd/stereo/depth"/>    
+        <remap from="points" to="/oakd/stereo/points"/>
+    </node>
         
-        <!-- POINTCLOUD_TO_LASERSCAN NODELET (DEPTH_IMAGE_PROC)-->
-        <node pkg="nodelet" type="nodelet" name="pointcloud_to_laserscan"
-            args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet pointcloud_manager">
-            <remap from="cloud_in" to="/$(arg oakd_mode)_pub/stereo/points"/>
-            <remap from="scan" to="/$(arg oakd_mode)_pub/stereo/scan"/>
-        </node>
+    <!-- POINTCLOUD_TO_LASERSCAN NODELET (DEPTH_IMAGE_PROC)-->
+    <node pkg="nodelet" type="nodelet" name="pointcloud_to_laserscan"
+        args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet pointcloud_manager">
+        <remap from="cloud_in" to="/oakd/stereo/points"/>
+        <remap from="scan" to="/oakd/stereo/scan"/>
+    </node>
         
-        <!-- STATISTICAL_OUTLIER_REMOVAL(SOR) NODELET (PCL) -->
-        <!-- node pkg="nodelet" type="nodelet" name="sor_filter" 
-            args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
-            <remap from="~input" to="/$(arg oakd_mode)_pub/stereo/points" />
-            <remap from="~output" to="/$(arg oakd_mode)_pub/stereo/points_sor" />
-            <rosparam>
-              mean_k: 8
-              stddev: 0.01
-              negative: False
-            </rosparam>
-        </node -->
+    <!-- STATISTICAL_OUTLIER_REMOVAL(SOR) NODELET (PCL) -->
+    <!-- node pkg="nodelet" type="nodelet" name="sor_filter" 
+        args="load pcl/StatisticalOutlierRemoval pointcloud_manager" output="screen">
+        <remap from="~input" to="/oakd/stereo/points" />
+        <remap from="~output" to="/oakd/stereo/points_sor" />
+        <rosparam>
+          mean_k: 8
+          stddev: 0.01
+          negative: False
+        </rosparam>
+    </node -->
         
-        <!-- VOXEL_GRID NODELET (PCL) -->
-        <node pkg="nodelet" type="nodelet" name="voxel_grid" 
-            args="load pcl/VoxelGrid pointcloud_manager" output="screen">
-            <remap from="~input" to="/$(arg oakd_mode)_pub/stereo/points" />
-            <remap from="~output" to="/$(arg oakd_mode)_pub/stereo/points_vox" />
-            <rosparam>
-              filter_field_name: z
-              filter_limit_min: 0.01
-              filter_limit_max: 8
-              filter_limit_negative: False
-              leaf_size: 0.01
-            </rosparam>
-        </node>
-    
-    </group>
-    
-    <!-- AI DETECTIONS -->
-    <group if="$(arg pub_detections)">
+    <!-- VOXEL_GRID NODELET (PCL) -->
+    <node pkg="nodelet" type="nodelet" name="voxel_grid" 
+        args="load pcl/VoxelGrid pointcloud_manager" output="screen">
+        <remap from="~input" to="/oakd/stereo/points" />
+        <remap from="~output" to="/oakd/stereo/points_vox" />
+        <rosparam>
+          filter_field_name: z
+          filter_limit_min: 0.01
+          filter_limit_max: 8
+          filter_limit_negative: False
+          leaf_size: 0.01
+        </rosparam>
+    </node>
         
-        <!-- MONO AI DETECTION PUBLISHER-->
-        <group if="$(eval arg('oakd_mode') == 'rgb')">
-            <group if="$(arg nn_enable)">
-                <node name="rgb_detections" pkg="akros_bringup" type="rgb_converter_node" output="screen">
-                    <remap from="video_in" to="$(arg oakd_mode)_pub/color/image"/>
-                    <remap from="detections" to="$(arg oakd_mode)_pub/color/detections"/>
-                    <remap from="bb_out" to="$(arg oakd_mode)_pub/color/image_detections"/>
-                    <param name="device_name" value="$(arg camera_name)"/>
-                    <param name="nn_model" value="$(arg nn_model)"/>
-                </node>
-            </group>
-        </group>
-    
-        <!-- SPATIAL AI DETECTION PUBLISHER-->
-        <group if="$(eval arg('oakd_mode') == 'rgbd')">
-            <group if="$(arg nn_enable)">
-                <node name="rgbd_detections" pkg="akros_bringup" type="rgbd_converter_node" output="screen">
-                    <remap from="video_in" to="$(arg oakd_mode)_pub/color/image"/>
-                    <remap from="detections" to="$(arg oakd_mode)_pub/color/detections"/>
-                    <remap from="bb_out" to="$(arg oakd_mode)_pub/color/image_detections"/>
-                    <param name="device_name" value="$(arg camera_name)"/>
-                    <param name="nn_model" value="$(arg nn_model)"/>
-                </node>
-            </group>
-        </group>
-    
-    </group>
+    <group if="$(arg depth_aligned)"> 
    
-    <!-- DEPTH_IMAGE_PROC/REGISTER NODELET -->
-    <!-- node pkg="nodelet" type="nodelet" name="depth_rgb_register" 
-        args="load depth_image_proc/register pointcloud_manager">   
-        <remap from="rgb/camera_info" to="/$(arg oakd_mode)_pub/color/camera_info"/> 
-        <remap from="depth/camera_info" to="/$(arg oakd_mode)_pub/stereo/camera_info"/>
-        <remap from="depth/image_rect" to="/$(arg oakd_mode)_pub/stereo/depth"/>
-        <remap from="depth_registered/camera_info" to="/$(arg oakd_mode)_pub/stereo_rect/camera_info"/>
-        <remap from="depth_registered/image_rect" to="/$(arg oakd_mode)_pub/stereo_rect/depth"/>
-    </node -->
+        <!-- DEPTH_IMAGE_PROC/REGISTER NODELET -->
+        <node pkg="nodelet" type="nodelet" name="depth_rgb_register" 
+            args="load depth_image_proc/register pointcloud_manager">   
+            <remap from="rgb/camera_info" to="/oakd/color/camera_info"/> 
+            <remap from="depth/camera_info" to="/oakd/stereo/camera_info"/>
+            <remap from="depth/image_rect" to="/oakd/stereo/depth"/>
+            <remap from="depth_registered/camera_info" to="/oakd/stereo_rect/camera_info"/>
+            <remap from="depth_registered/image_rect" to="/oakd/stereo_rect/depth"/>
+        </node>
        
-    <!-- DEPTH_IMAGE_PROC/POINT_CLOUD_XYZRGB NODELET -->
-    <!-- node pkg="nodelet" type="nodelet" name="depth_pointcloud_rgb" 
-        args="load depth_image_proc/point_cloud_xyzrgb pointcloud_manager"> 
-        <remap from="rgb/camera_info" to="/$(arg oakd_mode)_pub/color/camera_info"/>    
-        <remap from="rgb/image_rect_color" to="/$(arg oakd_mode)_pub/color/image"/>
-        <remap from="depth_registered/image_rect" to="/$(arg oakd_mode)_pub/stereo_rect/depth"/>
-        <remap from="depth_registered/points" to="/$(arg oakd_mode)_pub/pointcloud/points_rgb"/>
-    </node -->
+        <!-- DEPTH_IMAGE_PROC/POINT_CLOUD_XYZRGB NODELET -->
+        <node pkg="nodelet" type="nodelet" name="depth_pointcloud_rgb" 
+            args="load depth_image_proc/point_cloud_xyzrgb pointcloud_manager"> 
+            <remap from="rgb/camera_info" to="/oakd/color/camera_info"/>    
+            <remap from="rgb/image_rect_color" to="/oakd/color/image"/>
+            <remap from="depth_registered/image_rect" to="/oakd/stereo_rect/depth"/>
+            <remap from="depth_registered/points" to="/oakd/pointcloud/points_rgb"/>
+        </node>
+    
+    </group>
 
 </launch>
