@@ -82,5 +82,8 @@
     
     <!-- SUPPRESS WARNING MESSAGES FROM ASSISTED_TELEOP LOCAL PLANNER -->
     <node pkg="rosservice" type="rosservice" name="supress_warn" args="call --wait /assisted_teleop/set_logger_level 'ros.base_local_planner' 'fatal'" />
+    
+    <!-- LAUNCH ROSBOARD -->
+    <node pkg="rosboard" type="rosboard_node" name="rosboard"/>
 
 </launch>
