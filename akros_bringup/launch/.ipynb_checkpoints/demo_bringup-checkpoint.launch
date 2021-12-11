@@ -7,7 +7,6 @@
     <!-- ARGUMENTS - OAKD -->
     <arg name="camera_name" default="oakd"/>
     <arg name="oakd_mode"   default="rgbd" doc="OAK-D Modes [rgbd, stereo (only for testing/debugging)]"/>
-    <arg name="nodelet"     default="false"/>
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"  default="true"/>

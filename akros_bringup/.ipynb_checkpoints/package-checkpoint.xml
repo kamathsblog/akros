@@ -78,7 +78,6 @@
   <build_depend>nodelet</build_depend>
   <exec_depend>nodelet</exec_depend>
   <export>
-    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
   </export>
 
 </package>

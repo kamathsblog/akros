@@ -19,10 +19,13 @@
         <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
         <include file="$(find akros_description)/launch/akros_description.launch" />
     </group>
-
-    <!-- OAK-D NODE -->
-    <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
-    <node name="oakd" pkg="akros_bringup" type="rgbd_inertial_node" output="screen" required="true">
+    
+    <!-- NODELET MANAGER -->
+    <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/>
+    
+    <!-- OAK-D NODELET -->
+    <node name="oakd" pkg="nodelet" type="nodelet" output="screen" required="true"
+        args="load akros_test/RGBDInertialNodelet nodelet_manager">
         <param name="camera_name" value="$(arg camera_name)"/>
         <param name="mode" value="$(arg oakd_mode)"/>
         <param name="lrcheck" value="$(arg lrcheck)"/>
@@ -33,6 +36,28 @@
         <param name="stereo_fps" value="$(arg stereo_fps)" />
         <param name="confidence" value="$(arg confidence)"/>
         <param name="LRcheckthresh" value="$(arg LRcheckthresh)"/>
+    </node>   
+
+    <!-- POINT_CLOUD_XYZ NODELET (DEPTH_IMAGE_PROC) -->
+    <node pkg="nodelet" type="nodelet" name="pointcloud_xyz"
+        args="load depth_image_proc/point_cloud_xyz nodelet_manager">
+        <remap from="camera_info" to="/$(arg camera_name)/color/camera_info"/>
+        <remap from="image_rect" to="/$(arg camera_name)/stereo/depth"/>    
+        <remap from="points" to="/$(arg camera_name)/stereo/points"/>
+    </node>
+        
+    <!-- VOXEL_GRID NODELET (PCL) -->
+    <node pkg="nodelet" type="nodelet" name="voxel_grid" 
+        args="load pcl/VoxelGrid nodelet_manager" output="screen">
+        <remap from="~input" to="/$(arg camera_name)/stereo/points" />
+        <remap from="~output" to="/$(arg camera_name)/stereo/points_vox" />
+        <rosparam>
+          filter_field_name: z
+          filter_limit_min: 0.01
+          filter_limit_max: 8
+          filter_limit_negative: False
+          leaf_size: 0.01
+        </rosparam>
     </node>
 
 </launch>

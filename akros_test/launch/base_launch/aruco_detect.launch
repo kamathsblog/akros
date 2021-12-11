@@ -1,31 +1,4 @@
 <?xml version="1.0"?>
 <launch>
-    
-    <!-- ARGUMENTS - ARUCO_DETECT -->
-    <arg name="fiducial_len"          default="0.068"/>
-    <arg name="dictionary"            default="7"/>
-    <arg name="do_pose_estimation"    default="true"/>
-    <arg name="vis_msgs"              default="false"/>
-    <arg name="ignore_fiducials"      default="" />
-    <arg name="fiducial_len_override" default="" />
-    <arg name="pub_fiducials"         default="false"/>
-    <arg name="nodeName"              default="rgbd"/>
-
-    <!-- ARUCO_DETECT NODE -->
-    <node pkg="aruco_detect" name="aruco_detect" type="aruco_detect" output="screen" respawn="false">
-        <param name="image_transport" value="compressed"/>
-        <param name="publish_images" value="$(arg pub_fiducials)" />
-        <param name="fiducial_len" value="$(arg fiducial_len)"/>
-        <param name="dictionary" value="$(arg dictionary)"/>
-        <param name="do_pose_estimation" value="$(arg do_pose_estimation)"/>
-        <param name="vis_msgs" value="$(arg vis_msgs)"/>
-        <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
-        <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
-        <remap from="camera/compressed" to="$(arg nodeName)_pub/color/image/compressed"/>
-        <remap from="camera_info" to="$(arg nodeName)_pub/color/camera_info"/>
-        <remap from="fiducial_images" to="$(arg nodeName)_pub/color/fiducial_images"/>
-        <remap from="fiducial_vertices" to="aruco_detect/fiducial_vertices"/>
-        <remap from="fiducial_transforms" to="aruco_detect/fiducial_transforms"/>
-    </node>
 
 </launch>

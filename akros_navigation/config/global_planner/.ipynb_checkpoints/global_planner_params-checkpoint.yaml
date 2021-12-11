@@ -15,6 +15,6 @@ GlobalPlanner:
   cost_factor: 0.55
   publish_potential: true
   
-  orientation_mode: 2
-  orientation_window_size: 2
+  orientation_mode: 3
+  orientation_window_size: 3
   outline_map: true

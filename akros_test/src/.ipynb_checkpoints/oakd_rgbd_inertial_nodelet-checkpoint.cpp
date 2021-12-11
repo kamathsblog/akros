@@ -38,6 +38,8 @@ namespace akros_bringup{
             std::string deviceName, mode;
             int badParams = 0; 
             int stereo_fps = 0;
+            int confidence = 200;
+            int LRcheckthresh = 5;
             bool lrcheck, extended, subpixel, enableRGBD, rectify, depth_aligned;
 
             badParams += !pnh.getParam("camera_name", deviceName);
@@ -48,6 +50,8 @@ namespace akros_bringup{
             badParams += !pnh.getParam("rectify",  rectify);
             badParams += !pnh.getParam("depth_aligned",  depth_aligned);
             badParams += !pnh.getParam("stereo_fps",  stereo_fps);
+            badParams += !pnh.getParam("confidence", confidence);
+            badParams += !pnh.getParam("LRcheckthresh", LRcheckthresh);
             
             if (badParams > 0)
             {   
@@ -58,7 +62,7 @@ namespace akros_bringup{
             if(mode == "rgbd"){ enableRGBD = true; }
             else{ enableRGBD = false; }
 
-            dai::Pipeline pipeline = createPipeline(enableRGBD, lrcheck, extended, subpixel, rectify, depth_aligned, stereo_fps);
+            dai::Pipeline pipeline = createPipeline(enableRGBD, lrcheck, extended, subpixel, rectify, depth_aligned, stereo_fps, confidence, LRcheckthresh);
             
             _dev = std::make_unique<dai::Device>(pipeline);
 
@@ -146,7 +150,7 @@ namespace akros_bringup{
         }
 
 
-    dai::Pipeline createPipeline(bool enableRGBD, bool lrcheck, bool extended, bool subpixel, bool rectify, bool depth_aligned, int stereo_fps){
+    dai::Pipeline createPipeline(bool enableRGBD, bool lrcheck, bool extended, bool subpixel, bool rectify, bool depth_aligned, int stereo_fps, int confidence, int LRcheckthresh){
         dai::Pipeline pipeline;
 
         auto imu                  = pipeline.create<dai::node::IMU>();
@@ -172,9 +176,9 @@ namespace akros_bringup{
         imu->setMaxBatchReports(1); // Get one message only for now.
         
         // StereoDepth
-        stereo->initialConfig.setConfidenceThreshold(220); //Known to be best
+        stereo->initialConfig.setConfidenceThreshold(confidence); //Known to be best
         stereo->setRectifyEdgeFillColor(0); // black, to better see the cutout
-        stereo->initialConfig.setLeftRightCheckThreshold(10); //Known to be best
+        stereo->initialConfig.setLeftRightCheckThreshold(LRcheckthresh); //Known to be best
         stereo->setLeftRightCheck(lrcheck);
         stereo->setExtendedDisparity(extended);
         stereo->setSubpixel(subpixel);

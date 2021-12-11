@@ -79,7 +79,6 @@ macro(dai_add_node node_name node_src)
 endmacro() 
 
 dai_add_node(rgbd_inertial_node src/oakd_rgbd_inertial_publisher.cpp)
-dai_add_nodelet(rgbd_inertial_nodelet src/oakd_rgbd_inertial_nodelet.cpp)
 
 catkin_install_python(PROGRAMS
    scripts/twist_mixer.py
