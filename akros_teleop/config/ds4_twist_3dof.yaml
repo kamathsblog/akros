@@ -7,8 +7,7 @@ inputs:
     z: axis_right_x
 scales:
   linear:
-    # Default scale is 1.0
-    x: 0.35
+    x: 0.30
     y: 0.25
   angular:
-    z: 1.85
+    z: 1.57

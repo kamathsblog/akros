@@ -2,7 +2,7 @@
 
 DWAPlannerROS:
 # Robot Configuration Parameters  
-  acc_lim_x: 1
+  acc_lim_x: 1.2
   acc_lim_y: 1
   acc_lim_th: 3.14
 
@@ -12,15 +12,15 @@ DWAPlannerROS:
   max_vel_x: 0.30
   min_vel_x: -0.30
   
-  max_vel_y: 0.20
-  min_vel_y: -0.20
+  max_vel_y: 0.25
+  min_vel_y: -0.25
 
-  max_vel_theta: 1.5
-  min_vel_theta: 1
+  max_vel_theta: 1.57
+  min_vel_theta: 0.785
 
 # Goal Tolerance Parametes
-  xy_goal_tolerance: 0.15
-  yaw_goal_tolerance: 1.57
+  xy_goal_tolerance: 0.10
+  yaw_goal_tolerance: 0.785
   latch_xy_goal_tolerance: false
 
 # Trajectory Scoring Parameters

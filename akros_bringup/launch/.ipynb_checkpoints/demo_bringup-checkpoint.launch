@@ -3,6 +3,7 @@
     <!-- ARGUMENTS - BRINGUP -->
     <arg name="mode" default="3d" doc="modes [2d, 3d]"/>
     <arg name="lidar" default="ldlidar_ld06" doc="lidar [ldlidar_ld06, rplidar_a2]"/>
+    <arg name="board" default="false"/>
     
     <!-- ARGUMENTS - OAKD -->
     <arg name="camera_name" default="oakd"/>
@@ -84,6 +85,8 @@
     <node pkg="rosservice" type="rosservice" name="supress_warn" args="call --wait /assisted_teleop/set_logger_level 'ros.base_local_planner' 'fatal'" />
     
     <!-- LAUNCH ROSBOARD -->
-    <node pkg="rosboard" type="rosboard_node" name="rosboard"/>
+    <group if="$(arg board)">
+        <node pkg="rosboard" type="rosboard_node" name="rosboard"/>
+    </group>
 
 </launch>
