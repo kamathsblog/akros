@@ -9,7 +9,7 @@
     <arg name="frequency" default="100"/>
     
     <!-- LAUNCH ARDUINO_INTERFACE NODE -->
-    <node pkg="akros_bringup" type="arduino_interface.py" name="arduino_interface">
+    <node pkg="akros_bringup" type="arduino_odometry.py" name="arduino_odom">
         <param name="pose_frame_id" value="$(arg pose_frame_id)"/>
         <param name="twist_frame_id" value="$(arg twist_frame_id)"/>
         <param name="frequency" value="$(arg frequency)"/>

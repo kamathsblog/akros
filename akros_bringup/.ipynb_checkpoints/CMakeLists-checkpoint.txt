@@ -83,7 +83,7 @@ dai_add_node(oakd_imu_node src/oakd_imu_node.cpp)
 
 catkin_install_python(PROGRAMS
    scripts/twist_mixer.py
-   scripts/arduino_interface.py
+   scripts/arduino_odometry.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
