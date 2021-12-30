@@ -38,7 +38,7 @@ dai::Pipeline createPipeline(bool enableRGBD, bool lrcheck, bool extended, bool 
     xoutRight->setStreamName("right");
     
     //Imu
-    imu->enableIMUSensor({dai::IMUSensor::ROTATION_VECTOR, dai::IMUSensor::ACCELEROMETER_RAW, dai::IMUSensor::GYROSCOPE_RAW}, 400);
+    imu->enableIMUSensor({dai::IMUSensor::ROTATION_VECTOR, dai::IMUSensor::LINEAR_ACCELERATION, dai::IMUSensor::GYROSCOPE_CALIBRATED}, 400);
     imu->setMaxBatchReports(1); // Get one message only for now.
     
     // StereoDepth

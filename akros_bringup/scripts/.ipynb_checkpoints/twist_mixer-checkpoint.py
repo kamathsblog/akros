@@ -7,13 +7,10 @@ from akros_msgs.msg import Mode
 class TwistMixer():
     def __init__(self):
 
-        self._min_interval  = 0.01
-        self._last_pub_time = rospy.Time()
-
-        self.ros_sub_assisted = rospy.Subscriber("assisted_cmd_vel", Twist, self.set_assisted_twist, queue_size=1)
-        self.ros_sub_teleop   = rospy.Subscriber("teleop_cmd_vel", Twist, self.set_teleop_twist, queue_size=1)
-        self.ros_sub_auto     = rospy.Subscriber("auto_cmd_vel", Twist, self.set_auto_twist, queue_size=1)
-        self.ros_sub_mode     = rospy.Subscriber("mode", Mode, self.set_mode, queue_size=1)
+        self._sub_assisted = rospy.Subscriber("assisted_cmd_vel", Twist, self.set_assisted_twist, queue_size=1)
+        self._sub_teleop   = rospy.Subscriber("teleop_cmd_vel", Twist, self.set_teleop_twist, queue_size=1)
+        self._sub_auto     = rospy.Subscriber("auto_cmd_vel", Twist, self.set_auto_twist, queue_size=1)
+        self._sub_mode     = rospy.Subscriber("mode", Mode, self.set_mode, queue_size=1)
 
         self._assisted       = Twist()
         self._teleop         = Twist()
@@ -21,9 +18,9 @@ class TwistMixer():
         self._zero           = Twist()
         self._mux_msg        = Twist()
         self._pre_assist_msg = Twist()
-        self._zero.linear.x  = 0.0;
-        self._zero.linear.y  = 0.0;
-        self._zero.angular.z = 0.0;
+        self._zero.linear.x  = 0.0
+        self._zero.linear.y  = 0.0
+        self._zero.angular.z = 0.0
         self._mode           = Mode()
 
         self._pub_mux = rospy.Publisher("cmd_vel", Twist, queue_size=1)

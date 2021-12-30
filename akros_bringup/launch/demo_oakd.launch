@@ -24,20 +24,25 @@
     <arg name="fiducial_len_override" default="" />
     <arg name="pub_fiducials"         default="true"/>
     
-    <!-- INCLUDE OAK-D LAUNCH FILE -->
-    <include file="$(find akros_bringup)/launch/oakd_rgbd_inertial.launch">
-        <arg name="oakd_mode" value="$(arg oakd_mode)"/>
-        <arg name="camera_name" value="$(arg camera_name)"/>
-        <arg name="lrcheck" value="$(arg lrcheck)"/>
-        <arg name="extended" value="$(arg extended)"/>
-        <arg name="subpixel" value="$(arg subpixel)"/>
-        <arg name="rectify" value="$(arg rectify)"/>
-        <arg name="depth_aligned" value="$(arg depth_aligned)"/>
-        <arg name="stereo_fps" value="$(arg stereo_fps)"/>
-        <arg name="confidence" value="$(arg confidence)"/>
-        <arg name="LRcheckthresh" value="$(arg LRcheckthresh)"/>
-        <arg name="standalone" value="$(arg standalone)"/>
-    </include>
+    <group if="$(arg standalone)">
+        <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
+        <include file="$(find akros_description)/launch/akros_description.launch" />
+    </group>
+    
+    <!-- LAUNCH OAK-D NODE -->
+    <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
+    <node name="oakd" pkg="akros_bringup" type="oakd_rgbd_imu_node" output="screen" required="true">
+        <param name="camera_name" value="$(arg camera_name)"/>
+        <param name="mode" value="$(arg oakd_mode)"/>
+        <param name="lrcheck" value="$(arg lrcheck)"/>
+        <param name="extended" value="$(arg extended)"/>
+        <param name="subpixel" value="$(arg subpixel)"/>
+        <param name="rectify" value="$(arg rectify)" />
+        <param name="depth_aligned" value="$(arg depth_aligned)" />
+        <param name="stereo_fps" value="$(arg stereo_fps)" />
+        <param name="confidence" value="$(arg confidence)"/>
+        <param name="LRcheckthresh" value="$(arg LRcheckthresh)"/>
+    </node>
     
     <!-- IMAGE TRANSPORT NODELET - REPUBLISH RAW TO COMPRESSED -->
     <node name="raw_to_compressed" type="republish" pkg="image_transport" args="raw in:=/$(arg camera_name)/color/image compressed out:=/$(arg camera_name)/color/image/compressed" />

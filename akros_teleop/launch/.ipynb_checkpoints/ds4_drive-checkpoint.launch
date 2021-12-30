@@ -38,8 +38,14 @@
 
     
     <group if="$(arg standalone)">
+        <arg name="encoder_frame" default="enc_odom_frame"/>
+        <arg name="base_frame" default="base_link"/>
+    
         <!-- INCLUDE ROSSERIAL ARDUINO LAUNCH FILE -->
-        <include file="$(find akros_bringup)/launch/rosserial_arduino.launch"/>
+        <include file="$(find akros_bringup)/launch/rosserial_arduino.launch">
+            <arg name="pose_frame_id" value="$(arg encoder_frame)"/>
+            <arg name="twist_frame_id" value="$(arg base_frame)"/>
+        </include>
     </group>
 
 </launch>

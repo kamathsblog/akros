@@ -4,6 +4,16 @@
     <!-- ARGUMENTS - ROSSERIAL -->
     <arg name="port" default="/dev/ttyUSB_ARDUINO" />
     <arg name="baud" default="500000" />
+    <arg name="pose_frame_id" default="enc_odom_frame"/>
+    <arg name="twist_frame_id" default="enc_odom_frame"/>
+    <arg name="frequency" default="100"/>
+    
+    <!-- LAUNCH ARDUINO_INTERFACE NODE -->
+    <node pkg="akros_bringup" type="arduino_interface.py" name="arduino_interface">
+        <param name="pose_frame_id" value="$(arg pose_frame_id)"/>
+        <param name="twist_frame_id" value="$(arg twist_frame_id)"/>
+        <param name="frequency" value="$(arg frequency)"/>
+    </node>
     
     <!-- LAUNCH ROSSERIAL_PYTHON NODE -->
     <node pkg="rosserial_python" type="serial_node.py" name="rosserial_node">
