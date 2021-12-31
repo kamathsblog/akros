@@ -83,7 +83,7 @@ class WaypointSequenceStore(object):
         now = rospy.Time.now()
         if (now - self._last_pub_time).to_sec() < self._min_interval: return
 
-        if self._mode.store:
+        if self._mode.record:
             if msg.button_r3 and not self._prev.button_r3:
                 self._cursor +=1
                 if self._cursor > self._max_count:

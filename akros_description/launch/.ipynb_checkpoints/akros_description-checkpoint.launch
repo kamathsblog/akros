@@ -13,10 +13,12 @@
     <arg name="cam_roll"          default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     <arg name="cam_pitch"         default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
     <arg name="cam_yaw"           default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
+    <arg name="t265"              default="true"/>
     
     <!-- URDF -->
-    <param name="robot_description"
-               command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_top.urdf.xacro'
+    <group if="$(arg t265)">
+        <param name="robot_description"
+               command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_top_t265.urdf.xacro'
                         camera_name:=$(arg camera_name)
                         camera_model:=$(arg camera_model)
                         base_frame:=$(arg camera_base_frame)
@@ -27,6 +29,7 @@
                         cam_roll:=$(arg cam_roll)
                         cam_pitch:=$(arg cam_pitch)
                         cam_yaw:=$(arg cam_yaw)"/>
+    </group>
                         
     <!-- STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">

@@ -5,11 +5,13 @@
     <arg name="tb_mode"    default="async" doc="slam_toolbox mode [lifelong, localization, async, sync, merge]"/>
     <arg name="bu_mode"    default="2d" doc="bringup modes [2d, 3d]"/>
     <arg name="trajectory" default="true"/>
+    <arg name="t265"       default="true"/>
     
     <group if="$(eval arg('mode') == 'gmapping')">
         <!-- INCLUDE GMAPPING LAUNCH FILE -->
         <include file="$(find akros_slam)/launch/demo_gmapping.launch">
             <arg name="bringupType" value="$(arg bu_mode)"/>
+            <arg name="t265" value="$(arg t265)"/>
         </include>
     </group>
     
@@ -18,6 +20,7 @@
         <include file="$(find akros_slam)/launch/demo_hector_slam.launch">
             <arg name="bringupType" value="$(arg bu_mode)"/>
             <arg name="trajectory" value="false" if="$(arg trajectory)"/>
+            <arg name="t265" value="$(arg t265)"/>
         </include>
     </group>
 
@@ -25,6 +28,7 @@
         <!-- INCLUDE SLAM_KARTO LAUNCH FILE -->
         <include file="$(find akros_slam)/launch/demo_slam_karto.launch">
             <arg name="bringupType" value="$(arg bu_mode)"/>
+            <arg name="t265" value="$(arg t265)"/>
         </include>
     </group>
     
@@ -33,6 +37,7 @@
         <include file="$(find akros_slam)/launch/demo_slam_toolbox.launch">
             <arg name="mode" value="$(arg tb_mode)"/>
             <arg name="bringupType" value="$(arg bu_mode)"/>
+            <arg name="t265" value="$(arg t265)"/>
         </include>
     </group>
     

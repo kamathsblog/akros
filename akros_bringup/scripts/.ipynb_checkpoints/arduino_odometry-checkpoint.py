@@ -5,12 +5,15 @@ import math
 import tf
 from geometry_msgs.msg import Twist, Point, Pose, Quaternion, TransformStamped
 from nav_msgs.msg import Odometry
+from akros_msgs.msg import Mode
+from std_msgs.msg import UInt32
 
 class ArduinoInterface():
     def __init__(self):
 
         self._sub_raw_vec = rospy.Subscriber("raw_vec", Point, self.set_raw_vec, queue_size=1)
         self._sub_cmd_vel = rospy.Subscriber("cmd_vel", Twist, self.set_cmd_vel, queue_size=1)
+        self._sub_mode    = rospy.Subscriber("teleop/mode", Mode, self.set_mode, queue_size=1)
 
         self._raw_vec   = Point()
         self._odom      = Odometry()
@@ -22,13 +25,15 @@ class ArduinoInterface():
         self._th        = 0.0
         self._pose      = Pose()
         self._transform = TransformStamped()
+        self._mode      = Mode()
         
-        self._pose_frame_id  = rospy.get_param('pose_frame_id', 'enc_odom')
-        self._twist_frame_id = rospy.get_param('twist_frame_id', 'base_link')
-        self._frequency      = rospy.get_param('frequency', 100)
+        self._odom_frame_id = rospy.get_param('odom_frame_id', 'enc_odom_frame')
+        self._pose_frame_id = rospy.get_param('pose_frame_id', 'enc_pose_frame')
+        self._frequency     = rospy.get_param('frequency', 100)
         
-        self._pub_cmd_vec  = rospy.Publisher("cmd_vec", Point, queue_size=1)
-        self._pub_enc_odom = rospy.Publisher("enc_odom", Odometry, queue_size=1)
+        self._pub_cmd_vec  = rospy.Publisher("cmd_vel/vector", Point, queue_size=1)
+        self._pub_enc_odom = rospy.Publisher("enc/odom", Odometry, queue_size=1)
+        self._pub_mode     = rospy.Publisher("cmd_vel/mode", UInt32, queue_size=1)
         self._broadcaster  = tf.TransformBroadcaster()
     
     def set_raw_vec(self, msg):
@@ -38,13 +43,16 @@ class ArduinoInterface():
     def set_cmd_vel(self, msg):
         self._cmd_vel = msg
         
+    def set_mode(self, msg):
+        self._mode = msg
+        
     def run(self):
         rate = rospy.Rate(self._frequency) # 100Hz   
         while not rospy.is_shutdown():
         
             self._odom.header.stamp = rospy.Time.now()
-            self._odom.header.frame_id = self._pose_frame_id
-            self._odom.child_frame_id = self._twist_frame_id
+            self._odom.header.frame_id = self._odom_frame_id
+            self._odom.child_frame_id = self._pose_frame_id
             
             dt = self._odom.header.stamp.to_sec() - self._sub_time.to_sec()
             self._th += self._raw_vec.z*dt
@@ -67,13 +75,21 @@ class ArduinoInterface():
             self._cmd_vec.y = self._cmd_vel.linear.y
             self._cmd_vec.z = self._cmd_vel.angular.z
             
+            mode_out = 100000;
+            if self._mode.estop:   mode_out += 1
+            if self._mode.auto_t:  mode_out += 10
+            if self._mode.play_wp: mode_out += 100
+            if self._mode.play_t:  mode_out += 1000
+            if self._mode.record:  mode_out += 10000
+            
             self._broadcaster.sendTransform((self._x, self._y, 0),
                                             quat,
                                             rospy.Time.now(),
-                                            self._odom.child_frame_id,
-                                            self._odom.header.frame_id)
+                                            self._pose_frame_id,
+                                            self._odom_frame_id)
             self._pub_cmd_vec.publish(self._cmd_vec)
             self._pub_enc_odom.publish(self._odom)
+            self._pub_mode.publish(mode_out);
 
             rate.sleep()
             

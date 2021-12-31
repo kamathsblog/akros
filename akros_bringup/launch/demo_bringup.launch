@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
-    <arg name="mode" default="3d" doc="modes [2d, 3d]"/>
+    <arg name="mode" default="2d" doc="modes [2d, 3d]"/>
     <arg name="lidar" default="ldlidar_ld06" doc="lidar [ldlidar_ld06, rplidar_a2]"/>
     <arg name="board" default="false"/>
+    <arg name="t265" default="true"/>
+    <arg name="publish_odom_tf" default="true"/> <!-- if false EKF is used, if true t265 odom to pose tf used -->
     
     <!-- ARGUMENTS - OAKD -->
     <arg name="camera_name" default="oakd"/>
@@ -11,30 +13,23 @@
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"  default="true"/>
-    <arg name="publish_odom_tf" default="true"/> <!-- if false EKF is used, if true t265 odom to pose tf used -->
     
     <!-- ARGUMENTS - ASSISTED TELEOP -->
     <arg name="assisted_ns" default="assisted"/>
     <arg name="teleop_ns"   default="teleop"/>
     <arg name="auto_ns"     default="auto"/>
     <arg name="mixer_ns"    default="twist_mixer"/>
-    <arg name="odom_topic"  default="t265/odom/sample"/>
     
-    <!-- ARGUMENTS - ARDUINO INTERFACE -->
-    <arg name="encoder_frame" default="enc_odom_frame"/>
-    <arg name="base_frame" default="base_link"/>
+    <!-- ARGUMENTS - ARDUINO ODOMETRY -->
+    <arg name="encoder_odom_frame" default="enc_odom_frame"/>
+    <arg name="encoder_pose_frame" default="enc_pose_frame"/>
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
-    <include file="$(find akros_description)/launch/akros_description.launch" />
-    
-    <!-- INCLUDE T265 LAUNCH FILE -->
-    <include file="$(find akros_bringup)/launch/rs_t265.launch">
-        <arg name="enable_fisheye1" value="$(arg enable_fisheye)"/>
-        <arg name="enable_fisheye2" value="$(arg enable_fisheye)"/>
-        <arg name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
+    <include file="$(find akros_description)/launch/akros_description.launch">
+        <arg name="t265" value="$(arg t265)"/>
     </include>
    
-    <!-- INCLUDE RPLIDAR LAUNCH FILE -->
+    <!-- INCLUDE LIDAR LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/$(arg lidar).launch"/>
     
     <!-- IF 3D, LAUNCH OAK-D -->
@@ -56,6 +51,26 @@
         </node>
     </group>
     
+    <!-- INCLUDE T265 LAUNCH FILE -->
+    <group if="$(arg t265)">
+        <include file="$(find akros_bringup)/launch/rs_t265.launch">
+            <arg name="enable_fisheye1" value="$(arg enable_fisheye)"/>
+            <arg name="enable_fisheye2" value="$(arg enable_fisheye)"/>
+            <arg name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
+        </include>
+    </group>
+    
+    <!-- LAUNCH ROBOT_LOCALIZATION NODE (OAKD IMU + ENCODER)-->
+    <group unless="$(arg t265)">
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_oakd_enc" clear_params="true">
+            <rosparam command="load" file="$(find akros_bringup)/config/oakd_enc_ekf_params.yaml" />
+            <param name="publish_tf" value="$(arg publish_odom_tf)"/>
+            <param name="imu0" value="oakd/imu"/>
+            <param name="odom0" value="enc/odom"/>
+            <remap from="odometry/filtered" to="enc/odom/filtered"/>
+        </node>
+    </group>
+    
     <!-- INCLUDE DS4 CONTROLLER LAUNCH FILE -->
     <include file="$(find akros_teleop)/launch/ds4_drive.launch">
         <arg name="standalone" value="false"/>
@@ -63,18 +78,16 @@
     
     <!-- INCLUDE ROSSERIAL ARDUINO LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/rosserial_arduino.launch">
-        <arg name="pose_frame_id" value="$(arg encoder_frame)"/>
-        <arg name="twist_frame_id" value="$(arg base_frame)"/>
+        <arg name="odom_frame_id" value="$(arg encoder_odom_frame)"/>
+        <arg name="pose_frame_id" value="$(arg encoder_pose_frame)"/>
     </include>
     
     <!-- LAUNCH TWIST_MIXER NODE -->
     <node pkg="akros_bringup" type="twist_mixer.py" name="twist_mixer">
         <remap from="teleop_cmd_vel"    to="$(arg teleop_ns)/cmd_vel" />
-        <remap from="assisted_cmd_vel"  to="$(arg assisted_ns)/cmd_vel/filtered" />
         <remap from="auto_cmd_vel"      to="$(arg auto_ns)/cmd_vel" />
         <remap from="mode"              to="$(arg teleop_ns)/mode"/>
         <remap from="cmd_vel"           to="$(arg mixer_ns)/cmd_vel"/>
-        <remap from="pre_assist_cmd_vel" to="$(arg assisted_ns)/cmd_vel/unfiltered" />
     </node>
     
     <!-- LAUNCH INTERACTIVE_MARKER_TWIST_SERVER NODE -->
@@ -87,18 +100,6 @@
         <rosparam file="$(find akros_bringup)/config/twist_mux_config.yaml" command="load" />
         <remap from="cmd_vel_out" to="cmd_vel"/>
     </node>
-    
-    <!-- LAUNCH ASSISTED_TELEOP NODE -->
-    <param name="/use_sim_time" value="false"/>
-    <node pkg="assisted_teleop" name="assisted_teleop" type="assisted_teleop" respawn="false">
-        <rosparam file="$(find akros_teleop)/config/assisted_teleop_params.yaml" command="load" />
-        <remap from="teleop_cmd_vel" to="$(arg assisted_ns)/cmd_vel/unfiltered" />
-        <remap from="cmd_vel" to="$(arg assisted_ns)/cmd_vel/filtered" />
-        <remap from="odom" to="$(arg odom_topic)"/>
-    </node>
-    
-    <!-- SUPPRESS WARNING MESSAGES FROM ASSISTED_TELEOP LOCAL PLANNER -->
-    <node pkg="rosservice" type="rosservice" name="supress_warn" args="call --wait /assisted_teleop/set_logger_level 'ros.base_local_planner' 'fatal'" />
     
     <!-- LAUNCH ROSBOARD -->
     <group if="$(arg board)">
