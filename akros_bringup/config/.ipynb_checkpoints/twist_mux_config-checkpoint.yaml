@@ -1,14 +1,10 @@
 topics:
-- name    : interactive_marker
-  topic   : twist_marker_server/cmd_vel
-  timeout : 0.5
-  priority: 10
 - name    : twist_mixer
-  topic   : twist_mixer/cmd_vel
+  topic   : /twist_mixer/cmd_vel
   timeout : 0.5
-  priority: 5
+  priority: 100
 locks:
-- name    : e_stop
-  topic   : e_stop
+- name    : joystick_estop
+  topic   : /teleop/estop_lock
   timeout : 0.0
   priority: 255

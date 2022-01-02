@@ -3,9 +3,10 @@
 import rospy
 from ds4_driver.msg import Feedback, Status
 from akros_msgs.msg import Mode
+from std_msgs.msg import Bool
 
 class Handler(object):
-    def __init__(self, status_topic='status', feedback_topic='set_feedback', mode_topic='mode'):
+    def __init__(self, status_topic='status', estop_lock_topic='estop_lock', feedback_topic='set_feedback', mode_topic='mode'):
         self._min_interval = 0.05
         self._last_pub_time = rospy.Time()
         self._prev = Status()
@@ -33,6 +34,7 @@ class Handler(object):
         
         self._pub_feedback = rospy.Publisher(feedback_topic, Feedback, queue_size=1)
         self._pub_mode = rospy.Publisher(mode_topic, Mode, queue_size=1)
+        self._pub_estop_lock = rospy.Publisher(estop_lock_topic, Bool, queue_size=1)
         rospy.Subscriber(status_topic, Status, self.cb_status, queue_size=1)
 
     def cb_status(self, msg):
@@ -74,7 +76,7 @@ class Handler(object):
             self._led['g'] = 0
             self._led['b'] = 0
         else:
-            if self._mode.auto_t: # AUTO
+            if self._mode.auto_t: # AUTO (+ TELEOP)
                 self._mode.record = False
                 if self._mode.play_t or self._mode.play_wp:
                     if not self._mode.play_t: # AUTO > PLAYBACK WAYPOINTS - pink 0xe6007e 
@@ -106,10 +108,10 @@ class Handler(object):
                     self._led['g'] = 75/255
                     self._led['b'] = 1                     
                     
-            else: # TELEOP
+            else: # TELEOP ONLY
                 self._mode.play_t = False
                 self._mode.play_wp = False
-                if self._mode.record: # TELEOP > RECORD - Orange Red 0xff4500 
+                if self._mode.record: # TELEOP  > RECORD - Orange Red 0xff4500 
                     self._led['r'] = 1
                     self._led['g'] = 69/255
                     self._led['b'] = 0
@@ -130,6 +132,7 @@ class Handler(object):
 
         self._pub_feedback.publish(feedback)
         self._pub_mode.publish(self._mode)
+        self._pub_estop_lock.publish(self._mode.estop)
         self._prev = msg
         self._last_pub_time = now
 

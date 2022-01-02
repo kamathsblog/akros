@@ -35,13 +35,10 @@ class TwistMixer():
         rate = rospy.Rate(1000) #1000Hz   
         while not rospy.is_shutdown():
             
-            if self._mode.estop:
-                self._mux_msg = self._zero
+            if self._mode.auto_t:
+                self._mux_msg = self._auto
             else:
-                if self._mode.auto_t:
-                    self._mux_msg = self._auto
-                else:
-                    self._mux_msg = self._teleop
+                self._mux_msg = self._teleop
                         
             self._pub_mux.publish(self._mux_msg)
 
