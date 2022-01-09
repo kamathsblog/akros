@@ -29,7 +29,7 @@ class ArduinoInterface():
         
         self._odom_frame_id = rospy.get_param('odom_frame_id', 'enc_odom_frame')
         self._pose_frame_id = rospy.get_param('pose_frame_id', 'enc_pose_frame')
-        self._frequency     = rospy.get_param('frequency', 100)
+        self._frequency     = rospy.get_param('frequency', 80)
         
         self._pub_cmd_vec  = rospy.Publisher("cmd_vel/vector", Point, queue_size=1)
         self._pub_enc_odom = rospy.Publisher("enc/odom", Odometry, queue_size=1)

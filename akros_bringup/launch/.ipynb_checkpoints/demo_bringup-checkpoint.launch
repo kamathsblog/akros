@@ -11,10 +11,9 @@
     <arg name="oakd_mode"   default="rgbd" doc="OAK-D Modes [rgbd, stereo (only for testing/debugging)]"/>
     
     <!-- ARGUMENTS - T265 -->
-    <arg name="enable_fisheye"  default="true"/>
+    <arg name="enable_fisheye"  default="false"/>
     
-    <!-- ARGUMENTS - ASSISTED TELEOP -->
-    <arg name="assisted_ns" default="assisted"/>
+    <!-- ARGUMENTS - TELEOP -->
     <arg name="teleop_ns"   default="teleop"/>
     <arg name="auto_ns"     default="auto"/>
     <arg name="mixer_ns"    default="twist_mixer"/>
@@ -41,15 +40,6 @@
         </include>
     </group>
     
-    <!-- IF NOT 3D, ONLY LAUNCH OAK-D IMU -->
-    <group unless="$(eval arg('mode') == '3d')">
-        <!-- INCLUDE OAK-D IMU LAUNCH FILE -->
-        <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
-        <node name="oakd" pkg="akros_bringup" type="oakd_imu_node" output="screen" required="true">
-            <param name="camera_name" value="$(arg camera_name)"/>
-        </node>
-    </group>
-    
     <!-- INCLUDE T265 LAUNCH FILE -->
     <group if="$(arg t265)">
         <include file="$(find akros_bringup)/launch/rs_t265.launch">
@@ -61,6 +51,15 @@
     
     <!-- LAUNCH ROBOT_LOCALIZATION NODE (OAKD IMU + ENCODER)-->
     <group unless="$(arg t265)">
+        <!-- IF NOT 3D, AND NO T265, LAUNCH OAK-D IMU -->
+        <group unless="$(eval arg('mode') == '3d')">
+            <!-- INCLUDE OAK-D IMU LAUNCH FILE -->
+            <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
+            <node name="oakd" pkg="akros_bringup" type="oakd_imu_node" output="screen" required="true">
+                <param name="camera_name" value="$(arg camera_name)"/>
+            </node>
+        </group>
+    
         <node pkg="robot_localization" type="ekf_localization_node" name="ekf_oakd_enc" clear_params="true">
             <rosparam command="load" file="$(find akros_bringup)/config/oakd_enc_ekf_params.yaml" />
             <param name="publish_tf" value="$(arg publish_odom_tf)"/>
@@ -68,6 +67,19 @@
             <param name="odom0" value="enc/odom"/>
             <remap from="odometry/filtered" to="enc/odom/filtered"/>
         </node>
+        
+        <!-- node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+            <param name="output_frame" value="$(arg encoder_odom_frame)"/>
+            <param name="freq" value="30.0"/>
+            <param name="sensor_timeout" value="1.0"/>
+            <param name="odom_used" value="true"/>
+            <param name="imu_used" value="true"/>
+            <param name="vo_used" value="false"/>
+            <param name="debug" value="false"/>
+            <param name="self_diagnose" value="false"/>
+            <remap from="imu_data" to="/oakd/imu"/>
+            <remap from="/robot_pose_ekf/odom_combined" to="enc/odom/filtered"/>
+        </node -->
     </group>
     
     <!-- LAUNCH TWIST_MIXER NODE -->

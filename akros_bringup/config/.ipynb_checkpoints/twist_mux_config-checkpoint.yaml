@@ -1,8 +1,12 @@
 topics:
 - name    : twist_mixer
   topic   : /twist_mixer/cmd_vel
-  timeout : 0.5
+  timeout : 0.1
   priority: 100
+- name    : teleop_keyboard
+  topic   : /teleop_keyboard/cmd_vel
+  timeout : 0.5
+  priority: 120
 locks:
 - name    : joystick_estop
   topic   : /teleop/estop_lock

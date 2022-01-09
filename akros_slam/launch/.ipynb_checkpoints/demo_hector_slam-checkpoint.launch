@@ -9,18 +9,21 @@
     <arg name="pub_map_odom_transform"         default="true"/>
     <arg name="scan_topic"                     default="ldlidar/scan"/>
     <arg name="t265"                           default="true"/>
+    <arg name="bringup"                        default="true"/>
     
     <!-- ARGUMENTS - HECTOR_GEOTIFF, TRAJECTORY -->
     <arg name="trajectory"         default="true"/>
     <arg name="map_file_path"      default="$(find akros_slam)/maps"/>
     <arg name="map_file_base_name" default="hector_slam_map"/>
     
-    <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
-    <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
-    <include file="$(find akros_bringup)/launch/demo_bringup.launch">
-        <arg name="mode" value="$(arg bringupType)"/>
-        <arg name="t265" value="$(arg t265)"/>
-    </include>
+    <group if="$(arg bringup)">
+        <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
+        <arg name="bringupType" default="2d"/> <!-- 2d or 3d -->
+        <include file="$(find akros_bringup)/launch/demo_bringup.launch">
+            <arg name="mode" value="$(arg bringupType)"/>
+            <arg name="t265" value="$(arg t265)"/>
+        </include>
+    </group>
 
     <!-- LAUNCH HECTOR_MAPPING NODE -->
     <param name="/use_sim_time" value="false"/>

@@ -15,12 +15,15 @@
     <arg name="covariance_diagonal"    default=""/>
     <arg name="map_file"               default="$(env HOME)/.ros/slam/map.txt"/>
     <arg name="t265"                   default="true"/>
+    <arg name="bringup"                default="true"/>
     
-    <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
-    <include file="$(find akros_bringup)/launch/demo_bringup.launch">
-        <arg name="mode" value="3d"/>
-        <arg name="t265" value="$(arg t265)"/>
-    </include>
+    <group if="$(arg bringup)">
+        <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
+        <include file="$(find akros_bringup)/launch/demo_bringup.launch">
+            <arg name="mode" value="3d"/>
+            <arg name="t265" value="$(arg t265)"/>
+        </include>
+    </group>
 
     <!-- FIDUCIAL_SLAM NODE -->
     <node type="fiducial_slam" pkg="fiducial_slam" output="screen" name="fiducial_slam">

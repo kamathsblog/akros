@@ -1,7 +1,8 @@
 <launch>
 
-    <arg name="mode" default="holo"/>  <!-- diff or holo -->
-    <arg name="t265" default="true"/>
+    <arg name="mode"    default="holo"/>  <!-- diff or holo -->
+    <arg name="t265"    default="true"/>
+    <arg name="bringup" default="true"/>
     
     <!-- ARGUMENTS - BRINGUP SLAM -->
     <arg name="slam_mode"  default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
@@ -21,6 +22,7 @@
         <arg name="bu_mode"    value="$(arg bu_mode)"/>
         <arg name="trajectory" value="$(arg trajectory)"/>
         <arg name="t265"       value="$(arg t265)"/>
+        <arg name="bringup"    value="$(arg bringup)"/>
     </include>
 
     <!-- INCLUDE MOVE_BASE LAUNCH FILE -->

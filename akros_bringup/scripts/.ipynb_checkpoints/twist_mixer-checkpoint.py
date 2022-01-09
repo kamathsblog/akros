@@ -32,7 +32,7 @@ class TwistMixer():
         self._mode = msg
         
     def run(self):
-        rate = rospy.Rate(1000) #1000Hz   
+        rate = rospy.Rate(200) #200Hz   
         while not rospy.is_shutdown():
             
             if self._mode.auto_t:
