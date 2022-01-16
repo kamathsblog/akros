@@ -1,8 +1,6 @@
 <launch>
 
     <arg name="mode"    default="holo"/>  <!-- diff or holo -->
-    <arg name="bu_mode" default="2d"/> <!-- 2d or 3d -->
-    <arg name="t265"    default="true"/>
     <arg name="bringup" default="true"/>
 
     <!-- ARGUMENTS - AMCL -->
@@ -18,10 +16,7 @@
     
     <group if="$(arg bringup)">
         <!-- INCLUDE AKROS BRINGUP LAUNCH FILE -->
-        <include file="$(find akros_bringup)/launch/demo_bringup.launch">
-            <arg name="mode" value="$(arg bu_mode)"/>
-            <arg name="t265" value="$(arg t265)"/>
-        </include>
+        <include file="$(find akros_bringup)/launch/demo_bringup.launch"/>
     </group>
     
     <!-- INCLUDE AMCL LAUNCH FILE -->
@@ -30,7 +25,6 @@
         <arg name="initial_pose_x"  value="$(arg initial_pose_x)"/>
         <arg name="initial_pose_y"  value="$(arg initial_pose_y)"/>
         <arg name="initial_pose_a"  value="$(arg initial_pose_a)"/>
-        <arg name="t265"            value="$(arg t265)"/>
     </include>
 
     <!-- INCLUDE MOVE_BASE LAUNCH FILE -->
@@ -39,7 +33,6 @@
         <arg name="base_global_planner" value="$(arg base_global_planner)"/>
         <arg name="diff_local_planner"  value="$(arg diff_local_planner)"/>
         <arg name="holo_local_planner"  value="$(arg holo_local_planner)"/>
-        <arg name="t265"                value="$(arg t265)"/>
     </include>
     
     <!-- INCLUDE WAYPOINT SEQUENCE STORE / PLAYER LAUNCH FILE -->

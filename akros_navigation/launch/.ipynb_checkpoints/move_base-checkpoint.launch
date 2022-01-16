@@ -7,8 +7,6 @@
     <arg name="holo_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
     <arg name="cmd_vel_topic" default="auto/cmd_vel" />
     <arg name="t265_odom_topic" default="/t265/odom/sample"/>
-    <arg name="enc_odom_topic"  default="/enc/odom/filtered"/>
-    <arg name="t265"            default="true"/>
 
     <!-- LAUNCH MOVE_BASE NODE -->
     <param name="/use_sim_time" value="false"/>
@@ -21,19 +19,14 @@
         <rosparam file="$(find akros_navigation)/config/costmap/common_costmap_params.yaml" command="load" ns="local_costmap" />
         <rosparam file="$(find akros_navigation)/config/costmap/global_costmap_params.yaml" command="load" />
         <rosparam file="$(find akros_navigation)/config/costmap/local_costmap_params.yaml" command="load" />
-        <param name="local_costmap/global_frame" value="t265_odom_frame" if="$(arg t265)"/>
-        <param name="local_costmap/global_frame" value="enc_odom_frame" unless="$(arg t265)"/>
         
         <rosparam file="$(find akros_navigation)/config/move_base_params.yaml" command="load" />
         <rosparam file="$(find akros_navigation)/config/global_planner/global_planner_params.yaml" command="load" />
         <rosparam file="$(find akros_navigation)/config/local_planner/base_local_planner_params.yaml" command="load" if="$(eval arg('mode') == 'diff')" />
-        <param name="TrajectoryPlannerROS/global_frame_id" value="t265_odom_frame" if="$(eval (arg('mode') == 'diff') and arg('t265'))"/>
-        <param name="TrajectoryPlannerROS/global_frame_id" value="enc_odom_frame" if="$(eval (arg('mode') == 'diff') and not arg('t265'))"/>
         <rosparam file="$(find akros_navigation)/config/local_planner/dwa_local_planner_params.yaml" command="load" if="$(eval arg('mode') == 'holo')" />
         
         <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
-        <remap from="odom"    to="$(arg t265_odom_topic)" if="$(arg t265)" />
-        <remap from="odom"    to="$(arg enc_odom_topic)" unless="$(arg t265)"/>
+        <remap from="odom"    to="$(arg t265_odom_topic)"/>
     </node>
     
 </launch>

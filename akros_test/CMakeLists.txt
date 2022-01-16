@@ -79,4 +79,6 @@ macro(dai_add_node node_name node_src)
 endmacro() 
 
 dai_add_nodelet(rgbd_inertial_nodelet src/oakd_rgbd_inertial_nodelet.cpp)
+dai_add_node(oakd_rgbd_imu_node src/oakd_rgbd_imu_node.cpp)
+dai_add_node(oakd_imu_node src/oakd_imu_node.cpp)
 

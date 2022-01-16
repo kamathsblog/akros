@@ -1,0 +1,10 @@
+[Unit]
+Description=akros
+After=rgb_cooling_hat.service
+
+[Service]
+Type=idle
+ExecStart=/home/ubuntu/ros1_ws/src/akros/startup_launch.sh
+
+[Install]
+WantedBy=multi-user.target

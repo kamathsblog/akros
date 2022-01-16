@@ -6,7 +6,7 @@
     <arg name="baud" default="500000" />
     <arg name="odom_frame_id" default="enc_odom_frame"/>
     <arg name="pose_frame_id" default="enc_pose_frame"/>
-    <arg name="frequency" default="100"/>
+    <arg name="frequency" default="200"/>
     
     <!-- LAUNCH ARDUINO_ODOMETRY NODE -->
     <node pkg="akros_bringup" type="arduino_odometry.py" name="arduino_odom">

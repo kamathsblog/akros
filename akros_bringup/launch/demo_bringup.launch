@@ -1,14 +1,8 @@
 <?xml version="1.0"?>
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
-    <arg name="mode" default="2d" doc="modes [2d, 3d]"/>
     <arg name="board" default="false"/>
-    <arg name="t265" default="true"/>
-    <arg name="publish_odom_tf" default="true"/> <!-- if false EKF is used, if true t265 odom to pose tf used -->
-    
-    <!-- ARGUMENTS - OAKD -->
-    <arg name="camera_name" default="oakd"/>
-    <arg name="oakd_mode"   default="rgbd" doc="OAK-D Modes [rgbd, stereo (only for testing/debugging)]"/>
+    <arg name="t265_tf" default="true"/> <!-- if false EKF tf is published-->
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"  default="false"/>
@@ -23,50 +17,26 @@
     <arg name="encoder_pose_frame" default="enc_pose_frame"/>
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
-    <include file="$(find akros_description)/launch/akros_description.launch">
-        <arg name="t265" value="$(arg t265)"/>
-    </include>
+    <include file="$(find akros_description)/launch/akros_description.launch"/>
    
     <!-- INCLUDE LIDAR LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/ldlidar_ld06.launch"/>
     
-    <!-- IF 3D, LAUNCH OAK-D -->
-    <group if="$(eval arg('mode') == '3d')"> 
-        <!-- INCLUDE OAK-D LAUNCH FILE -->
-        <include file="$(find akros_bringup)/launch/demo_oakd.launch">
-            <arg name="camera_name" value="$(arg camera_name)"/>
-            <arg name="oakd_mode" value="$(arg oakd_mode)"/>
-            <arg name="standalone" value="false"/>
-        </include>
-    </group>
-    
     <!-- INCLUDE T265 LAUNCH FILE -->
-    <group if="$(arg t265)">
-        <include file="$(find akros_bringup)/launch/rs_t265.launch">
-            <arg name="enable_fisheye1" value="$(arg enable_fisheye)"/>
-            <arg name="enable_fisheye2" value="$(arg enable_fisheye)"/>
-            <arg name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
-        </include>
-    </group>
+    <include file="$(find akros_bringup)/launch/rs_t265.launch">
+        <arg name="enable_fisheye1" value="$(arg enable_fisheye)"/>
+        <arg name="enable_fisheye2" value="$(arg enable_fisheye)"/>
+        <arg name="publish_odom_tf" value="$(arg t265_tf)"/>
+    </include>
     
-    <!-- LAUNCH ROBOT_LOCALIZATION NODE (OAKD IMU + ENCODER)-->
-    <group unless="$(arg t265)">
-        <!-- IF NOT 3D, AND NO T265, LAUNCH OAK-D IMU -->
-        <group unless="$(eval arg('mode') == '3d')">
-            <!-- INCLUDE OAK-D IMU LAUNCH FILE -->
-            <!-- launch-prefix="xterm -e gdb (add [- - args] without space) -->
-            <node name="oakd" pkg="akros_bringup" type="oakd_imu_node" output="screen" required="true">
-                <param name="camera_name" value="$(arg camera_name)"/>
-            </node>
-        </group>
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_oakd_enc" clear_params="true">
+        <rosparam command="load" file="$(find akros_bringup)/config/t265_ekf_params.yaml" />
+        <param name="imu0" value="t265/odom/sample"/>
+        <param name="publish_tf" value="false" if="$(arg t265_tf)"/>
+    </node>
     
-        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_oakd_enc" clear_params="true">
-            <rosparam command="load" file="$(find akros_bringup)/config/oakd_enc_ekf_params.yaml" />
-            <param name="publish_tf" value="$(arg publish_odom_tf)"/>
-            <param name="imu0" value="oakd/imu"/>
-            <param name="odom0" value="enc/odom"/>
-            <remap from="odometry/filtered" to="enc/odom/filtered"/>
-        </node>
+    <!-- LAUNCH ROBOT_LOCALIZATION NODE (T265 + ENCODER)-->
+    <group unless="$(arg t265_tf)">
         
         <!-- node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
             <param name="output_frame" value="$(arg encoder_odom_frame)"/>
@@ -90,11 +60,6 @@
         <remap from="cmd_vel"           to="$(arg mixer_ns)/cmd_vel"/>
     </node>
     
-    <!-- INCLUDE DS4 CONTROLLER LAUNCH FILE -->
-    <include file="$(find akros_teleop)/launch/ds4_drive.launch">
-        <arg name="standalone" value="false"/>
-    </include>
-    
     <!-- LAUNCH TWIST_MUX NODE (ESTOP) -->
     <node pkg="twist_mux" type="twist_mux" name="twist_mux">
         <rosparam file="$(find akros_bringup)/config/twist_mux_config.yaml" command="load" />
@@ -105,6 +70,11 @@
     <include file="$(find akros_bringup)/launch/rosserial_arduino.launch">
         <arg name="odom_frame_id" value="$(arg encoder_odom_frame)"/>
         <arg name="pose_frame_id" value="$(arg encoder_pose_frame)"/>
+    </include>
+    
+    <!-- INCLUDE DS4 CONTROLLER LAUNCH FILE -->
+    <include file="$(find akros_teleop)/launch/ds4_drive.launch">
+        <arg name="standalone" value="false"/>
     </include>
     
     <!-- LAUNCH ROSBOARD -->

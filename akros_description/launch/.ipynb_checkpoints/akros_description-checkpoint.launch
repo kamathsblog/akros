@@ -2,34 +2,10 @@
 <launch>
 
     <!-- ARGUMENTS -->
-    <arg name="system_name"       default="akros"/>
-    <arg name="camera_model"      default="BW1098OAK" /> <!-- 'zed' or 'zedm' -->
-    <arg name="camera_name"       default="oakd" />
-    <arg name="camera_parent"     default="oakd_link" />
-    <arg name="camera_base_frame" default="oakd_frame" />
-    <arg name="cam_pos_x"         default="0.0" /> <!-- Position respect to base frame (i.e. "base_link) -->
-    <arg name="cam_pos_y"         default="0.0" /> <!-- Position respect to base frame (i.e. "base_link) -->
-    <arg name="cam_pos_z"         default="0.055" /> <!-- Position respect to base frame (i.e. "base_link) -->
-    <arg name="cam_roll"          default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
-    <arg name="cam_pitch"         default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
-    <arg name="cam_yaw"           default="0.0" /> <!-- Orientation respect to base frame (i.e. "base_link) -->
-    <arg name="t265"              default="true"/>
+    <arg name="system_name" default="akros"/>
     
     <!-- URDF -->
-    <group if="$(arg t265)">
-        <param name="robot_description"
-               command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_top_t265.urdf.xacro'
-                        camera_name:=$(arg camera_name)
-                        camera_model:=$(arg camera_model)
-                        base_frame:=$(arg camera_base_frame)
-                        parent_frame:=$(arg camera_parent)
-                        cam_pos_x:=$(arg cam_pos_x)
-                        cam_pos_y:=$(arg cam_pos_y)
-                        cam_pos_z:=$(arg cam_pos_z)
-                        cam_roll:=$(arg cam_roll)
-                        cam_pitch:=$(arg cam_pitch)
-                        cam_yaw:=$(arg cam_yaw)"/>
-    </group>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find akros_description)/urdf/akros.urdf.xacro'"/>
                         
     <!-- STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">

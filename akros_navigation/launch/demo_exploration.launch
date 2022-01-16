@@ -1,13 +1,11 @@
 <launch>
 
     <arg name="mode"    default="holo"/>  <!-- diff or holo -->
-    <arg name="t265"    default="true"/>
     <arg name="bringup" default="true"/>
     
     <!-- ARGUMENTS - BRINGUP SLAM -->
     <arg name="slam_mode"  default="toolbox" doc="slam type [gmapping, hector, karto, toolbox]"/>
     <arg name="tb_mode"    default="async" doc="slam_toolbox mode [lifelong, localization, async, sync, merge]"/>
-    <arg name="bu_mode"    default="2d" doc="bringup modes [2d, 3d]"/>
     <arg name="trajectory" default="true"/>
     
     <!-- ARGUMENTS - MOVE_BASE -->
@@ -19,9 +17,7 @@
     <include file="$(find akros_slam)/launch/demo_slam.launch">
         <arg name="mode"       value="$(arg slam_mode)"/>
         <arg name="tb_mode"    value="$(arg tb_mode)"/>
-        <arg name="bu_mode"    value="$(arg bu_mode)"/>
         <arg name="trajectory" value="$(arg trajectory)"/>
-        <arg name="t265"       value="$(arg t265)"/>
         <arg name="bringup"    value="$(arg bringup)"/>
     </include>
 
@@ -31,7 +27,6 @@
         <arg name="base_global_planner" value="$(arg base_global_planner)"/>
         <arg name="diff_local_planner"  value="$(arg diff_local_planner)"/>
         <arg name="holo_local_planner"  value="$(arg holo_local_planner)"/>
-        <arg name="t265"                value="$(arg t265)"/>
     </include>
     
     <!-- INCLUDE FRONTIER_EXPLORATION LAUNCH FILE -->

@@ -27,7 +27,7 @@
         </node>
     
         <!-- LAUNCH DS4_FEEDBACK NODE -->
-        <node pkg="akros_teleop" type="ds4_feedback_node.py" name="ds4_feedback">
+        <node pkg="akros_teleop" type="ds4_feedback_node.py" name="ds4_feedback" respawn="true">
             <remap from="cmd_vel" to="/cmd_vel" if="$(arg standalone)" />
             <rosparam command="load" file="$(find akros_teleop)/config/ds4_twist_3dof.yaml" />
         </node>
