@@ -1,0 +1,40 @@
+{
+    "velocimeters": [ // array of velocity sensors (currently max. 2 supported)
+        {
+            "scale_and_alignment": [ // 3-by-3 matrix, row-major (multiplies measurement)
+                1.0,
+                0.0000000000000000,
+                0.0000000000000000,
+                0.0000000000000000,
+                1.0,
+                0.0000000000000000,
+                0.0000000000000000,
+                0.0000000000000000,
+                1.0
+            ],
+            "noise_variance": 0.004445126050420168, // measurement covariance (to be determined/tuned)
+            "extrinsics": { // relative transformation of sensor frame w.r.t. T265 body frame (see T265 data sheet, sec. 4.3 "Coordinate System")
+                "T": [ // translation (in meters)
+                    -0.125,
+                    0.0,
+                    0.0
+                ],
+                "T_variance": [ // currently not used, please ignore
+                    9.999999974752427e-7, 
+                    9.999999974752427e-7, 
+                    9.999999974752427e-7
+                ],
+                "W": [ // orientation in axis-angle representation, axis x angle (in rad)
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "W_variance": [ // currently not used, please ignore
+                    9.999999974752427e-5, 
+                    9.999999974752427e-5, 
+                    9.999999974752427e-5
+                ]
+            }
+        }
+    ]
+}

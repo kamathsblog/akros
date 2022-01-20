@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
-    <arg name="board" default="false"/>
-    <arg name="t265_tf" default="true"/> <!-- if false EKF tf is published-->
+    <arg name="rosboard" default="true"/>
+    <arg name="t265_tf" default="false"/> <!-- false is preferred, to keep the tf tree continuous -->
+    <arg name="ekf_fusion" default="false"/> <!-- if false, on-board encoder fusion is used -->
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"  default="false"/>
+    <arg name="calib_odom_file" default="$(find akros_bringup)/config/t265_encoder_config.json"/>
+    <arg name="topic_odom_in"   default="/enc/odom"/>
     
     <!-- ARGUMENTS - TELEOP -->
     <arg name="teleop_ns"   default="teleop"/>
@@ -14,10 +17,11 @@
     
     <!-- ARGUMENTS - ARDUINO ODOMETRY -->
     <arg name="encoder_odom_frame" default="enc_odom_frame"/>
-    <arg name="encoder_pose_frame" default="enc_pose_frame"/>
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
-    <include file="$(find akros_description)/launch/akros_description.launch"/>
+    <include file="$(find akros_description)/launch/akros_description.launch">
+        <arg name="t265" value="$(arg t265_tf)"/>
+    </include>
    
     <!-- INCLUDE LIDAR LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/ldlidar_ld06.launch"/>
@@ -27,29 +31,60 @@
         <arg name="enable_fisheye1" value="$(arg enable_fisheye)"/>
         <arg name="enable_fisheye2" value="$(arg enable_fisheye)"/>
         <arg name="publish_odom_tf" value="$(arg t265_tf)"/>
+        <arg name="calib_odom_file" value="$(arg calib_odom_file)" unless="$(arg ekf_fusion)"/>
+        <arg name="topic_odom_in"   value="$(arg topic_odom_in)" unless="$(arg ekf_fusion)"/>
     </include>
     
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_oakd_enc" clear_params="true">
-        <rosparam command="load" file="$(find akros_bringup)/config/t265_ekf_params.yaml" />
-        <param name="imu0" value="t265/odom/sample"/>
-        <param name="publish_tf" value="false" if="$(arg t265_tf)"/>
-    </node>
-    
-    <!-- LAUNCH ROBOT_LOCALIZATION NODE (T265 + ENCODER)-->
-    <group unless="$(arg t265_tf)">
-        
-        <!-- node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
-            <param name="output_frame" value="$(arg encoder_odom_frame)"/>
-            <param name="freq" value="30.0"/>
+    <!--USE T265 TF DIRECTLY, PUBLISH DUMMY TRANSFORM FOR ENCODER ODOM -->
+    <group if="$(arg t265_tf)">
+        <!-- LAUNCH EKF NODE-->
+        <!-- ENC_ODOM_FRAME -> BASE_FOOTPRINT TRANSFORM-->
+        <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="ekf_enc_only">
+            <param name="output_frame" value="enc_odom_frame"/>
+            <param name="base_footprint_frame" value="base_footprint"/>
+            <param name="freq" value="100.0"/>
             <param name="sensor_timeout" value="1.0"/>
             <param name="odom_used" value="true"/>
-            <param name="imu_used" value="true"/>
+            <param name="imu_used" value="false"/>
             <param name="vo_used" value="false"/>
             <param name="debug" value="false"/>
             <param name="self_diagnose" value="false"/>
-            <remap from="imu_data" to="/oakd/imu"/>
+            <remap from="odom_data" to="/enc/odom"/>
             <remap from="/robot_pose_ekf/odom_combined" to="enc/odom/filtered"/>
-        </node -->
+        </node>
+    </group>
+    
+    <!--USE T265 WITH ENCODER ODOMETRY-->
+    <group unless="$(arg t265_tf)">
+        <!--LAUNCH ROBOT_POSE_EKF TO FUSE T265 VIO and ENCODER ODOM-->
+        <!-- ENC_ODOM_FRAME -> BASE_LINK TRANSFORM-->
+        <group if="$(arg ekf_fusion)">
+            <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="ekf_t265_enc">
+                <param name="output_frame" value="enc_odom_frame"/>
+                <param name="base_footprint_frame" value="base_link"/>
+                <param name="freq" value="100.0"/>
+                <param name="sensor_timeout" value="1.0"/>
+                <param name="odom_used" value="true"/>
+                <param name="imu_used" value="false"/>
+                <param name="vo_used" value="true"/>
+                <param name="debug" value="true"/>
+                <param name="self_diagnose" value="true"/>
+                <remap from="odom_data" to="/enc/odom"/>
+                <remap from="vo" to="/t265/odom/sample"/>
+                <remap from="/robot_pose_ekf/odom_combined" to="enc/odom/combined"/>
+            </node>
+        </group>
+    </group>
+    
+    <!--LAUNCH ROBOT_LOCALIZATION TO FILTER T265 VIO (FUSED WITH/WITHOUT ENCODER ODOM) FOR TF TREE COMPLETENESS-->
+    <!-- T265_ODOM_FRAME -> BASE_LINK TRANSFORM PUBLISHED ONLY IF T265_TF IS FALSE-->
+    <group unless="$(arg ekf_fusion)">
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_t265_filter" clear_params="true">
+            <rosparam command="load" file="$(find akros_bringup)/config/t265_ekf_params.yaml" />
+            <param name="imu0" value="t265/odom/sample"/>
+            <param name="publish_tf" value="false" if="$(arg t265_tf)"/>
+            <remap from="/odometry/filtered" to="t265/odom/filtered"/>
+        </node>
     </group>
     
     <!-- LAUNCH TWIST_MIXER NODE -->
@@ -69,7 +104,6 @@
     <!-- INCLUDE ROSSERIAL ARDUINO LAUNCH FILE -->
     <include file="$(find akros_bringup)/launch/rosserial_arduino.launch">
         <arg name="odom_frame_id" value="$(arg encoder_odom_frame)"/>
-        <arg name="pose_frame_id" value="$(arg encoder_pose_frame)"/>
     </include>
     
     <!-- INCLUDE DS4 CONTROLLER LAUNCH FILE -->
@@ -78,7 +112,7 @@
     </include>
     
     <!-- LAUNCH ROSBOARD -->
-    <group if="$(arg board)">
+    <group if="$(arg rosboard)">
         <node pkg="rosboard" type="rosboard_node" name="rosboard"/>
     </group>
 

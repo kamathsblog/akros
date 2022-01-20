@@ -28,8 +28,7 @@ class ArduinoInterface():
         self._mode      = Mode()
         
         self._odom_frame_id = rospy.get_param('odom_frame_id', 'enc_odom_frame')
-        self._pose_frame_id = rospy.get_param('pose_frame_id', 'enc_pose_frame')
-        self._frequency     = rospy.get_param('frequency', 80)
+        self._frequency     = rospy.get_param('frequency', 100)
         
         self._pub_cmd_vec  = rospy.Publisher("cmd_vel/vector", Point, queue_size=1)
         self._pub_enc_odom = rospy.Publisher("enc/odom", Odometry, queue_size=1)
@@ -52,7 +51,7 @@ class ArduinoInterface():
         
             self._odom.header.stamp = rospy.Time.now()
             self._odom.header.frame_id = self._odom_frame_id
-            self._odom.child_frame_id = self._pose_frame_id
+            self._odom.child_frame_id = self._odom_frame_id
             
             dt = self._odom.header.stamp.to_sec() - self._sub_time.to_sec()
             self._th += self._raw_vec.z*dt
@@ -82,11 +81,6 @@ class ArduinoInterface():
             if self._mode.play_t:  mode_out += 1000
             if self._mode.record:  mode_out += 10000
             
-            self._broadcaster.sendTransform((self._x, self._y, 0),
-                                            quat,
-                                            rospy.Time.now(),
-                                            self._pose_frame_id,
-                                            self._odom_frame_id)
             self._pub_cmd_vec.publish(self._cmd_vec)
             self._pub_enc_odom.publish(self._odom)
             self._pub_mode.publish(mode_out);

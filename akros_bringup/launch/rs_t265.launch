@@ -9,7 +9,7 @@ https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/lib
   <arg name="serial_no"           default=""/>
   <arg name="usb_port_id"         default=""/>
   <arg name="device_type"         default="t265"/>
-  <arg name="json_file_path"      default=""/>
+  <arg name="calib_odom_file"     default=""/>
   <arg name="camera"              default="t265"/>
   <arg name="tf_prefix"           default="$(arg device_type)"/>
   <arg name="fisheye_width"       default="-1"/> 
@@ -26,14 +26,16 @@ https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/lib
   <arg name="initial_reset"       default="true"/>
   <arg name="unite_imu_method"    default=""/>
   <arg name="publish_odom_tf"     default="false"/>
+  <arg name="topic_odom_in"       default=""/>
   
   <group ns="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+      <arg name="topic_odom_in"          value="$(arg topic_odom_in)"/>
       <arg name="tf_prefix"                value="$(arg tf_prefix)"/>
       <arg name="serial_no"                value="$(arg serial_no)"/>
       <arg name="usb_port_id"              value="$(arg usb_port_id)"/>
       <arg name="device_type"              value="$(arg device_type)"/>
-      <arg name="json_file_path"           value="$(arg json_file_path)"/>
+      <arg name="calib_odom_file"          value="$(arg calib_odom_file)"/>
       <arg name="enable_sync"              value="$(arg enable_sync)"/>
       <arg name="fisheye_width"            value="$(arg fisheye_width)"/>
       <arg name="fisheye_height"           value="$(arg fisheye_height)"/>

@@ -3,9 +3,11 @@
 
     <!-- ARGUMENTS -->
     <arg name="system_name" default="akros"/>
+    <arg name="t265" default="true"/>
     
     <!-- URDF -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find akros_description)/urdf/akros.urdf.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_t265.urdf.xacro'" if="$(arg t265)"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_ekf.urdf.xacro'" unless="$(arg t265)"/>
                         
     <!-- STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">
