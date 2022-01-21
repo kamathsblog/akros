@@ -3,7 +3,7 @@
     
     <!-- ARGUMENTS - SLAM KARTO -->
     <arg name="base_frame"      default="base_link"/>
-    <arg name="t265_odom_frame" default="t265_odom_frame"/>
+    <arg name="odom_frame"      default="t265_odom_frame"/>
     <arg name="scan_topic"      default="ldlidar/scan"/>
     <arg name="bringup"         default="true"/>
     
@@ -17,7 +17,7 @@
     <node pkg="slam_karto" type="slam_karto" name="slam_karto"><!-- output="screen" -->
         <remap from="scan"        to="$(arg scan_topic)"/>
         <param name="base_frame"  value="$(arg base_frame)"/>
-        <param name="odom_frame"  value="$(arg t265_odom_frame)"/>
+        <param name="odom_frame"  value="$(arg odom_frame)"/>
         <param name="map_frame"   value="map"/>
         <rosparam command="load" file="$(find akros_slam)/config/slam_karto_params.yaml" />
     </node>

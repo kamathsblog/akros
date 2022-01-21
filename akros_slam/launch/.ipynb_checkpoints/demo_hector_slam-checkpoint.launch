@@ -4,7 +4,7 @@
     <!-- ARGUMENTS - HECTOR_MAPPING -->
     <arg name="scanmatch_transform_frame_name" default="scanmatcher_frame"/>
     <arg name="base_frame"                     default="base_link"/>
-    <arg name="t265_odom_frame"                default="t265_odom_frame"/>
+    <arg name="odom_frame"                     default="t265_odom_frame"/>
     <arg name="pub_map_odom_transform"         default="true"/>
     <arg name="scan_topic"                     default="ldlidar/scan"/>
     <arg name="bringup"                        default="true"/>
@@ -24,7 +24,7 @@
     <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping"><!-- output="screen" -->
         <param name="map_frame"              value="map" />
         <param name="base_frame"             value="$(arg base_frame)" />
-        <param name="odom_frame"             value="$(arg t265_odom_frame)"/>
+        <param name="odom_frame"             value="$(arg odom_frame)"/>
         <param name="pub_map_odom_transform" value="$(arg pub_map_odom_transform)"/>
         <param name="scan_topic"             value="$(arg scan_topic)"/>
         <param name="tf_map_scanmatch_transform_frame_name" value="$(arg scanmatch_transform_frame_name)"/>

@@ -3,7 +3,7 @@
     <!-- ARGUMENTS - BRINGUP -->
     <arg name="rosboard" default="true"/>
     <arg name="t265_tf" default="false"/> <!-- false is preferred, to keep the tf tree continuous -->
-    <arg name="ekf_fusion" default="false"/> <!-- if false, on-board encoder fusion is used -->
+    <arg name="ekf_fusion" default="true"/> <!-- if false, on-board encoder fusion is used -->
     
     <!-- ARGUMENTS - T265 -->
     <arg name="enable_fisheye"  default="false"/>
@@ -48,7 +48,7 @@
             <param name="imu_used" value="false"/>
             <param name="vo_used" value="false"/>
             <param name="debug" value="false"/>
-            <param name="self_diagnose" value="false"/>
+            <param name="self_diagnose" value="true"/>
             <remap from="odom_data" to="/enc/odom"/>
             <remap from="/robot_pose_ekf/odom_combined" to="enc/odom/filtered"/>
         </node>
@@ -57,21 +57,21 @@
     <!--USE T265 WITH ENCODER ODOMETRY-->
     <group unless="$(arg t265_tf)">
         <!--LAUNCH ROBOT_POSE_EKF TO FUSE T265 VIO and ENCODER ODOM-->
-        <!-- ENC_ODOM_FRAME -> BASE_LINK TRANSFORM-->
+        <!-- T265_ODOM_FRAME -> BASE_LINK TRANSFORM-->
         <group if="$(arg ekf_fusion)">
             <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="ekf_t265_enc">
-                <param name="output_frame" value="enc_odom_frame"/>
+                <param name="output_frame" value="t265_odom_frame"/>
                 <param name="base_footprint_frame" value="base_link"/>
                 <param name="freq" value="100.0"/>
                 <param name="sensor_timeout" value="1.0"/>
                 <param name="odom_used" value="true"/>
                 <param name="imu_used" value="false"/>
                 <param name="vo_used" value="true"/>
-                <param name="debug" value="true"/>
+                <param name="debug" value="false"/>
                 <param name="self_diagnose" value="true"/>
                 <remap from="odom_data" to="/enc/odom"/>
                 <remap from="vo" to="/t265/odom/sample"/>
-                <remap from="/robot_pose_ekf/odom_combined" to="enc/odom/combined"/>
+                <remap from="/robot_pose_ekf/odom_combined" to="t265/odom/combined"/>
             </node>
         </group>
     </group>
