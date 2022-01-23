@@ -6,7 +6,7 @@
     <arg name="ekf_fusion" default="true"/> <!-- if false, on-board encoder fusion is used -->
     
     <!-- ARGUMENTS - T265 -->
-    <arg name="enable_fisheye"  default="false"/>
+    <arg name="enable_fisheye"  default="true"/>
     <arg name="calib_odom_file" default="$(find akros_bringup)/config/t265_encoder_config.json"/>
     <arg name="topic_odom_in"   default="/enc/odom"/>
     
