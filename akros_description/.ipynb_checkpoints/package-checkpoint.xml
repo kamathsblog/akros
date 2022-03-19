@@ -45,6 +45,7 @@
   <depend>rospy</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>visualization_msgs</depend>
   <depend>std_msgs</depend>
 
   <!-- build_export_depend>depthai_bridge</build_export_depend -->

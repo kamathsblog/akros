@@ -6,15 +6,10 @@
 
 <!-- NAVIGATION MODULE (BASE_LINK) -->
 <link name="base_link">
-  <inertial>
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <mass value="0.001" />
-    <inertia ixx="0.01" ixy="0.01" ixz="0.01" iyy="0.01" iyz="0.01" izz="0.01" />
-  </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/navigation_module_rsz.stl" />
+      <mesh filename="package://mecanum_car/meshes/navigation_module_centered.stl" />
     </geometry>
     <material name="">
       <color rgba="1 1 1 1" />
@@ -26,6 +21,15 @@
       <box size='0.21 0.15 0.02'/>
     </geometry>
   </collision>
+</link>
+
+<!-- BASE_LINK_INERTIAL (WORKAROUND FOR KDL) -->
+<link name="base_link_inertial">
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.01" ixy="0.01" ixz="0.01" iyy="0.01" iyz="0.01" izz="0.01" />
+  </inertial>
 </link>
 
 <!-- LD06 LIDAR -->
@@ -192,6 +196,13 @@
 </link>
 
 <!-- **** JOINTS **** -->
+
+<!-- BASE_LINK_INERTIAL TO BASE_LINK -->
+<joint name="base_inertial_fixed" type="fixed">
+  <parent link="base_link"/>
+  <child link="base_link_inertial"/>
+  <origin xyz="0 0 0"/>
+</joint>
 
 <!-- LASER_FRAME TO BASE_LINK -->
 <joint name="base_lidar_fixed" type="fixed">

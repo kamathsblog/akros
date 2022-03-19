@@ -2,6 +2,7 @@
 <launch>
     <!-- ARGUMENTS - BRINGUP -->
     <arg name="rosboard" default="true"/>
+    <arg name="foxglove" default="true"/>
     <arg name="t265_tf" default="false"/> <!-- false is preferred, to keep the tf tree continuous -->
     <arg name="ekf_fusion" default="true"/> <!-- if false, on-board encoder fusion is used -->
     
@@ -20,7 +21,8 @@
 
     <!-- INCLUDE DESCRIPTION LAUNCH FILE -->
     <include file="$(find akros_description)/launch/akros_description.launch">
-        <arg name="t265" value="$(arg t265_tf)"/>
+        <arg name="t265"     value="$(arg t265_tf)"/>
+        <arg name="mesh_pub" value="$(arg foxglove)"/>
     </include>
    
     <!-- INCLUDE LIDAR LAUNCH FILE -->

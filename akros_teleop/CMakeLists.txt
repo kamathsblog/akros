@@ -27,15 +27,13 @@ catkin_package(
 ## Build ##
 ###########
 
-
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
-
 
 catkin_install_python(PROGRAMS
    scripts/ds4_feedback_node.py
    scripts/ds4_twist_node.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- )
+)
 

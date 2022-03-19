@@ -3,7 +3,8 @@
 
     <!-- ARGUMENTS -->
     <arg name="system_name" default="akros"/>
-    <arg name="t265" default="true"/>
+    <arg name="t265" default="false"/>
+    <arg name="mesh_pub" default="true"/>
     
     <!-- URDF -->
     <param name="robot_description" 
@@ -15,5 +16,10 @@
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">
         <!-- remap from="robot_description" to="$(arg system_name)_description" / -->
     </node> 
+    
+    <!-- MESH_PUBLISHER NODE -->
+    <group if="$(arg mesh_pub)">
+        <node pkg="akros_description" type="mesh_publisher.py" name="mesh_pub"/>
+    </group>
 
 </launch>
