@@ -5,7 +5,7 @@
     <arg name="system_name" default="akros"/>
     <arg name="t265" default="false"/>
     <arg name="mesh_pub" default="true"/>
-    <arg name=gui" default="true"/>
+    <arg name="gui" default="true"/>
     
     <!-- URDF -->
     <param name="use_gui" value="$(arg gui)"/>
@@ -22,7 +22,25 @@
     
     <!-- MESH_PUBLISHER NODE -->
     <group if="$(arg mesh_pub)">
-        <node pkg="akros_description" type="mesh_publisher.py" name="mesh_pub"/>
+        <node pkg="akros_description" type="mesh_publisher.py" name="mesh_pub">
+            <param name="frame_base"      value="base_link" />
+            <param name="frame_laser"     value="laser_link" />
+            <param name="frame_t265"      value="t265_link" if="$(arg t265)"/>
+            <param name="frame_t265"      value="t265_pose_frame" unless="$(arg t265)"/>
+            <param name="frame_footprint" value="base_footprint" />
+            <param name="frame_wheel_lf"  value="wheel_lf" />
+            <param name="frame_wheel_lb"  value="wheel_lb" />
+            <param name="frame_wheel_rf"  value="wheel_rf" />
+            <param name="frame_wheel_rb"  value="wheel_rb" />
+            <param name="url_base"        value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/navigation_module_centered.stl" />
+            <param name="url_laser"       value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/ld06.stl" />
+            <param name="url_t265"        value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/t265.stl" />
+            <param name="url_footprint"   value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/base_module_centered.stl" />
+            <param name="url_wheel_lf"    value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_left_front.stl" />
+            <param name="url_wheel_lb"    value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_left_back.stl" />
+            <param name="url_wheel_rf"    value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_right_front.stl" />
+            <param name="url_wheel_rb"    value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_right_back.stl" />
+        </node>
     </group>
 
 </launch>
