@@ -5,17 +5,20 @@
     <arg name="system_name" default="akros"/>
     <arg name="t265" default="false"/>
     <arg name="mesh_pub" default="true"/>
+    <arg name=gui" default="true"/>
     
     <!-- URDF -->
+    <param name="use_gui" value="$(arg gui)"/>
     <param name="robot_description" 
         command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_t265_only.urdf.xacro'" if="$(arg t265)"/>
     <param name="robot_description" 
         command="$(find xacro)/xacro '$(find akros_description)/urdf/akros.urdf.xacro'" unless="$(arg t265)"/>
                         
-    <!-- STATE PUBLISHER NODE -->
-    <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">
-        <!-- remap from="robot_description" to="$(arg system_name)_description" / -->
-    </node> 
+    <!-- ROBOT STATE PUBLISHER NODE -->
+    <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true"/>
+    
+    <!-- JOINT STATE PUBLISHER NODE -->
+    <node name="$(arg system_name)_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" required="true"/>
     
     <!-- MESH_PUBLISHER NODE -->
     <group if="$(arg mesh_pub)">

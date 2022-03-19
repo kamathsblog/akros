@@ -1,72 +1,99 @@
 #! /usr/bin/env python
-import os.path
-import rospkg
+
 import rospy
 from visualization_msgs.msg import Marker, MarkerArray
 
-rospy.init_node('mesh_publisher')
-marker_pub = rospy.Publisher("/akros_mesh", MarkerArray, queue_size = 5)
-
-marker_array_msg = MarkerArray()
-num_markers = 8
-
-rospack = rospkg.RosPack()
-my_path = rospack.get_path('akros_description')
-
-for i in range(num_markers):
-    marker = Marker()
-    marker.header.stamp = rospy.Time.now()
-    marker.ns = ""
-    marker.type = 10
-    marker.id = i
-    marker.action = 0
-    marker.mesh_use_embedded_materials = True
-    marker.scale.x = 1
-    marker.scale.y = 1
-    marker.scale.z = 1
-    marker.pose.position.x = 0
-    marker.pose.position.y = 0
-    marker.pose.position.z = 0
-    marker.pose.orientation.x = 0.0
-    marker.pose.orientation.y = 0.0
-    marker.pose.orientation.z = 0.0
-    marker.pose.orientation.w = 1.0
-    marker.color.a = 1.0
-    marker.frame_locked = True
-    if i==0 or i==3:
-        marker.color.r = 1.0
-        marker.color.g = 1.0
-        marker.color.b = 1.0
-    else:
-        marker.color.r = 0.0
-        marker.color.g = 0.0
-        marker.color.b = 0.0
-    if i==0:
-        marker.header.frame_id = "base_link"
-        marker.mesh_resource = os.path.join(my_path, "meshes/navigation_module_centered.stl")
-    elif i==1:
-        marker.header.frame_id = "laser_frame"
-        marker.mesh_resource = os.path.join(my_path, "meshes/ld06.stl")
-    elif i==2:
-        marker.header.frame_id = "t265_pose_frame"
-        marker.mesh_resource = os.path.join(my_path, "meshes/t265.stl")
-    elif i==3:
-        marker.header.frame_id = "base_footprint"
-        marker.mesh_resource = os.path.join(my_path, "meshes/base_module_centered.stl")
-    elif i==4:
-        marker.header.frame_id = "wheel_lf"
-        marker.mesh_resource = os.path.join(my_path, "meshes/wheel_left_front.stl")
-    elif i==5:
-        marker.header.frame_id = "wheel_lb"
-        marker.mesh_resource = os.path.join(my_path, "meshes/wheel_left_back.stl")
-    elif i==6:
-        marker.header.frame_id = "wheel_rf"
-        marker.mesh_resource = os.path.join(my_path, "meshes/wheel_right_front.stl")
-    elif i==7:
-        marker.header.frame_id = "wheel_rb"
-        marker.mesh_resource = os.path.join(my_path, "meshes/wheel_right_back.stl")
-    marker_array_msg.markers.append(marker);
-
-while not rospy.is_shutdown():
-  marker_pub.publish(marker_array_msg)
-  rospy.rostime.wallsleep(1.0)
+class AKROSMeshPublisher():
+    def __init__(self):
+        self._marker_pub = rospy.Publisher("mesh_array", MarkerArray, queue_size=8)
+        
+        self._marker_array_msg = MarkerArray()
+        self._num_markers      = 8
+        
+        self._frame_base      = rospy.get_param('frame_base', 'base_link')
+        self._frame_laser     = rospy.get_param('frame_laser', 'laser_link')
+        self._frame_t265      = rospy.get_param('frame_t265', 't265_pose_frame')
+        self._frame_footprint = rospy.get_param('frame_footprint', 'base_footprint')
+        self._frame_wheel_lf  = rospy.get_param('frame_wheel_lf', 'wheel_lf')
+        self._frame_wheel_lb  = rospy.get_param('frame_wheel_lb', 'wheel_lb')
+        self._frame_wheel_rf  = rospy.get_param('frame_wheel_rf', 'wheel_rf')
+        self._frame_wheel_rb  = rospy.get_param('frame_wheel_rb', 'wheel_rb')
+        
+        self._url_base      = rospy.get_param('url_base', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/navigation_module_centered.glb")
+        self._url_laser     = rospy.get_param('url_laser', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/ld06.glb")
+        self._url_t265      = rospy.get_param('url_t265', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/t265.glb")
+        self._url_footprint = rospy.get_param('url_footprint', "https://raw.githubusercontent.com/adityakamath/akros/main/base_module_centered.glb")
+        self._url_wheel_lf  = rospy.get_param('url_wheel_lf', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_left_front.glb")
+        self._url_wheel_lb  = rospy.get_param('url_wheel_lb', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_left_back.glb")
+        self._url_wheel_rf  = rospy.get_param('url_wheel_rf', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_right_front.glb")
+        self._url_wheel_rb  = rospy.get_param('url_wheel_rb', "https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_right_back.glb")
+        
+        for i in range(self._num_markers):
+            self._marker = Marker()
+            self._marker.header.stamp = rospy.Time.now()
+            self._marker.ns = ""
+            self._marker.type = 10
+            self._marker.id = i
+            self._marker.action = 0
+            self._marker.mesh_use_embedded_materials = True
+            self._marker.scale.x = 1
+            self._marker.scale.y = 1
+            self._marker.scale.z = 1
+            self._marker.pose.position.x = 0
+            self._marker.pose.position.y = 0
+            self._marker.pose.position.z = 0
+            self._marker.pose.orientation.x = 0.0
+            self._marker.pose.orientation.y = 0.0
+            self._marker.pose.orientation.z = 0.0
+            self._marker.pose.orientation.w = 1.0
+            self._marker.color.a = 1.0
+            self._marker.frame_locked = True
+            if i==0 or i==3:
+                self._marker.color.r = 1.0
+                self._marker.color.g = 1.0
+                self._marker.color.b = 1.0
+            else:
+                self._marker.color.r = 0.0
+                self._marker.color.g = 0.0
+                self._marker.color.b = 0.0
+            if i==0:
+                self._marker.header.frame_id = self._frame_base
+                self._marker.mesh_resource = self._url_base
+            elif i==1:
+                self._marker.header.frame_id = self._frame_laser
+                self._marker.mesh_resource = self._url_laser
+            elif i==2:
+                self._marker.header.frame_id = self._frame_t265
+                self._marker.mesh_resource = self._url_t265
+            elif i==3:
+                self._marker.header.frame_id = self._frame_footprint
+                self._marker.mesh_resource = self._url_footprint
+            elif i==4:
+                self._marker.header.frame_id = self._frame_wheel_lf
+                self._marker.mesh_resource = self._url_wheel_lf
+            elif i==5:
+                self._marker.header.frame_id = self._frame_wheel_lb
+                self._marker.mesh_resource = self._url_wheel_lb
+            elif i==6:
+                self._marker.header.frame_id = self._frame_wheel_rf
+                self._marker.mesh_resource = self._url_wheel_rf
+            elif i==7:
+                self._marker.header.frame_id = self._frame_wheel_rb
+                self._marker.mesh_resource = self._url_wheel_rb
+            self._marker_array_msg.markers.append(self._marker);
+        
+    def run(self):
+        while not rospy.is_shutdown():
+            self._marker_pub.publish(self._marker_array_msg)
+            rospy.rostime.wallsleep(1.0)
+            
+def main():
+    try:
+        rospy.init_node('mesh_publisher')
+        pub = AKROSMeshPublisher()
+        pub.run()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("mesh_publisher node interrupted")
+            
+if __name__ == "__main__":
+    main()

@@ -23,7 +23,7 @@
   </collision>
 </link>
 
-<!-- BASE_LINK_INERTIAL (WORKAROUND FOR KDL) -->
+<!-- BASE_LINK_INERTIAL (WORKAROUND FOR KDL WHICH DOES NOT ACCEPT BASE_LINK WITH INERTIA) -->
 <link name="base_link_inertial">
   <inertial>
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -32,8 +32,8 @@
   </inertial>
 </link>
 
-<!-- LD06 LIDAR -->
-<link name="laser_frame">
+<!-- LD06 LASER_LINK -->
+<link name="laser_link">
   <inertial>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <mass value="0.001" />
@@ -56,7 +56,10 @@
   </collision>
 </link>
 
-<!-- T265 TRACKING CAMERA -->
+<!-- LASER_FRAME -->
+<link name="laser_frame"/>
+
+<!-- T265 TRACKING CAMERA (T265_POSE_FRAME AS WORKAROUND TO KEEP TREE CONTINUOUS)-->
 <link name="t265_pose_frame">
   <inertial>
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -204,11 +207,18 @@
   <origin xyz="0 0 0"/>
 </joint>
 
-<!-- LASER_FRAME TO BASE_LINK -->
+<!-- LASER_LINK TO BASE_LINK -->
 <joint name="base_lidar_fixed" type="fixed">
   <parent link="base_link"/>
-  <child link="laser_frame"/>
+  <child link="laser_link"/>
   <origin xyz="0 0 0.0415"/>
+</joint>
+
+<!-- LASER_FRAME TO LASER_LINK -->
+<joint name="laser_frame_fixed" type="fixed">
+  <parent link="laser_link"/>
+  <child link="laser_frame"/>
+  <origin xyz="0 0 0.03"/>
 </joint>
 
 <!-- T265_POSE_FRAME TO BASE_LINK -->
@@ -220,7 +230,7 @@
 
 <!-- BASE_FOOTPRINT TO BASE_LINK -->
 <joint name="base_link_footprint_fixed" type="fixed">
-  <origin xyz="0 0 -0.063" rpy="0 0 0"/>
+  <origin xyz="0 0 -0.099" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="base_footprint"/>
   <axis xyz="0 0 0"/>
