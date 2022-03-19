@@ -9,7 +9,7 @@
     <param name="robot_description" 
         command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_t265_only.urdf.xacro'" if="$(arg t265)"/>
     <param name="robot_description" 
-        command="$(find xacro)/xacro '$(find akros_description)/urdf/akros_t265_with_encoders.urdf.xacro'" unless="$(arg t265)"/>
+        command="$(find xacro)/xacro '$(find akros_description)/urdf/akros.urdf.xacro'" unless="$(arg t265)"/>
                         
     <!-- STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true">

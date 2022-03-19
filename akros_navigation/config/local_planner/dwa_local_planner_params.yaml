@@ -20,7 +20,7 @@ DWAPlannerROS:
 
 # Goal Tolerance Parametes
   xy_goal_tolerance: 0.10
-  yaw_goal_tolerance: 0.785
+  yaw_goal_tolerance: 1.57
   latch_xy_goal_tolerance: false
 
 # Trajectory Scoring Parameters

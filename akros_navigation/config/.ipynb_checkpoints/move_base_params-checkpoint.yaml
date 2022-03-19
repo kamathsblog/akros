@@ -4,8 +4,8 @@ controller_frequency: 5.0
 planner_frequency: 5.0
 planner_patience: 5.0
 controller_patience: 5.0
-conservative_reset_dist: 0.15
-recovery_behavior_enabled: false
+conservative_reset_dist: 0.10
+recovery_behavior_enabled: true
 clearing_rotation_allowed: true
 shutdown_costmaps: false
 oscillation_timeout: 0
@@ -20,12 +20,12 @@ recovery_behaviors:
   - {name: rotate2, type: rotate_recovery/RotateRecovery}
 
 conservative_reset:
-  reset_distance: 0.05
+  reset_distance: 0.10
   invert_area_to_clear: true
   layer_names: ["obstacle_layer"]
 
 aggressive_reset1:
-  reset_distance: 0.0 # clear all
+  reset_distance: 0.05
   layer_names: ["obstacle_layer"]
 
 aggressive_reset2:
