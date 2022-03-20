@@ -17,9 +17,6 @@
     <!-- ROBOT STATE PUBLISHER NODE -->
     <node name="$(arg system_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true"/>
     
-    <!-- JOINT STATE PUBLISHER NODE -->
-    <node name="$(arg system_name)_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" required="true"/>
-    
     <!-- MESH_PUBLISHER NODE -->
     <group if="$(arg mesh_pub)">
         <node pkg="akros_description" type="mesh_publisher.py" name="mesh_pub">
@@ -42,5 +39,11 @@
             <param name="url_wheel_rb"    value="https://raw.githubusercontent.com/adityakamath/akros_3d_assets/main/wheel_right_back.stl" />
         </node>
     </group>
+    
+    <!-- JOINT STATE PUBLISHER NODE -->
+    <group unless="$(arg mesh_pub)">
+        <node name="$(arg system_name)_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" required="true"/>
+    </group>
+    
 
 </launch>
