@@ -1,0 +1,3 @@
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", SYMLINK+="ttyUSB_ARDUINO"
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="10c4", SYMLINK+="ttyUSB_LIDAR"
+KERNEL=="ttyACM*", ATTRS{idVendor}=="16c0", SYMLINK+="ttyUSB_TEENSY"
