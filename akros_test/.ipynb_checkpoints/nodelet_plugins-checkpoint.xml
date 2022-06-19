@@ -1,7 +1,0 @@
-<library path="lib/librgbd_inertial_nodelet">
-  <class name="akros_test/RGBDInertialNodelet" type="akros_bringup::RGBDInertialNodelet" base_class_type="nodelet::Nodelet">
-  <description>
-  This is OAKD RGB + Depth + IMU publishing nodelet.
-  </description>
-  </class>
-</library>
