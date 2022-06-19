@@ -1,3 +1,6 @@
+# To install, type this command in a terminal:
+# sudo cp 99-usb-serial.rules /etc/udev/rules.d/99-usb-serial.rules
+
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", SYMLINK+="ttyUSB_ARDUINO"
 KERNEL=="ttyUSB*", ATTRS{idProduct}=="ea60", SYMLINK+="ttyUSB_LIDAR"
 KERNEL=="ttyACM*", ATTRS{idProduct}=="0483", SYMLINK+="ttyUSB_TEENSY"
