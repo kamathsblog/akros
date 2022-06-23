@@ -1,0 +1,14 @@
+# To install, type this command in a terminal:
+# sudo cp akros.service /etc/systemd/system/akros.service
+# + change path to executable
+
+[Unit]
+Description=akros
+After=rgb_cooling_hat.service
+
+[Service]
+Type=idle
+ExecStart=/home/ubuntu/ros1_ws/src/akros/akros/utilities/startup_launch.sh
+
+[Install]
+WantedBy=multi-user.target
