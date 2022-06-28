@@ -3,7 +3,8 @@
 
 KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", SYMLINK+="ttyUSB_ARDUINO"
 KERNEL=="ttyUSB*", ATTRS{idProduct}=="ea60", SYMLINK+="ttyUSB_LIDAR"
-KERNEL=="ttyACM*", ATTRS{idProduct}=="0483", SYMLINK+="ttyUSB_TEENSY"
+KERNEL=="ttyACM*", ATTRS{idProduct}=="0483", ATTRS{serial}=="11062590", SYMLINK+="ttyUSB_TEENSY"
+KERNEL=="ttyACM*", ATTRS{idProduct}=="0483", ATTRS{serial}=="11913570", SYMLINK+="ttyUSB_TEENSY_TEST"
 KERNEL=="ttyACM*", ATTRS{idProduct}=="025b", SYMLINK+="ttyUSB_PORTENTA"
 KERNEL=="ttyACM*", ATTRS{idProduct}=="005e", SYMLINK+="ttyUSB_NANO_RP2040"
 KERNEL=="ttyACM*", ATTRS{idProduct}=="000a", SYMLINK+="ttyUSB_RPI_PICO"
