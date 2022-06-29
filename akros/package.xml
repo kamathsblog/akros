@@ -52,7 +52,6 @@
     
   <exec_depend>akros_bringup</exec_depend>
   <exec_depend>akros_description</exec_depend>
-  <exec_depend>akros_test</exec_depend>
   <exec_depend>akros_slam</exec_depend>
   <exec_depend>akros_navigation</exec_depend>
   <exec_depend>akros_teleop</exec_depend>
