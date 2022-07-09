@@ -132,6 +132,10 @@ def setOLEDshow():
     cmd = "hostname -I | cut -d\' \' -f1"
     IP = subprocess.check_output(cmd, shell = True)
     IP = IP.decode("utf-8")
+    if(IP == "192.168.1.100\n"):
+    	cmd = "hostname -I | cut -d\' \' -f2"
+    	IP = subprocess.check_output(cmd, shell = True)
+    	IP = IP.decode("utf-8")
 
     # Write four lines of text.
     draw.text((x, top), "AKROS|" + str(IP),  font=font, fill=255)
