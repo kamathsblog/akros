@@ -74,12 +74,9 @@ class ArduinoInterface():
             self._cmd_vec.y = self._cmd_vel.linear.y
             self._cmd_vec.z = self._cmd_vel.angular.z
             
-            mode_out = 100000;
+            mode_out = 100;
             if self._mode.estop:   mode_out += 1
-            if self._mode.auto_t:  mode_out += 10
-            if self._mode.play_wp: mode_out += 100
-            if self._mode.play_t:  mode_out += 1000
-            if self._mode.record:  mode_out += 10000
+            if self._mode.auto:    mode_out += 10
             
             self._pub_cmd_vec.publish(self._cmd_vec)
             self._pub_enc_odom.publish(self._odom)

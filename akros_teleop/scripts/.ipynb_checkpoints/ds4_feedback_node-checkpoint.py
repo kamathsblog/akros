@@ -18,10 +18,7 @@ class Handler(object):
         
         self._mode = Mode()
         self._mode.estop = False
-        self._mode.auto_t = False
-        self._mode.play_wp = False
-        self._mode.play_t = False
-        self._mode.record = False
+        self._mode.auto = False
         
         self._rumble = False
         self._playback = 0
@@ -53,72 +50,26 @@ class Handler(object):
             self._rumble = not self._rumble
             
         if msg.button_cross and not self._prev.button_cross:
-            self._mode.auto_t = not self._mode.auto_t
-            
-        if msg.button_square and not self._prev.button_square:
-            self._mode.play_wp = not self._mode.play_wp
-            
-        if msg.button_triangle and not self._prev.button_triangle:
-            self._mode.play_t = not self._mode.play_t
-            
-        if msg.button_options and not self._prev.button_options:
-            self._mode.record = not self._mode.record
+            self._mode.auto = not self._mode.auto
 
         feedback.set_led = True
         
         if self._mode.estop: # STOP! - red
             self._rumble = False
-            self._mode.auto_t = False
-            self._mode.play_wp = False
-            self._mode.play_t = False
-            self._mode.record = False# STOP! - red
+            self._mode.auto = False
             self._led['r'] = 1
             self._led['g'] = 0
             self._led['b'] = 0
         else:
-            if self._mode.auto_t: # AUTO (+ TELEOP)
-                self._mode.record = False
-                if self._mode.play_t or self._mode.play_wp:
-                    if not self._mode.play_t: # AUTO > PLAYBACK WAYPOINTS - pink 0xe6007e 
-                        self._mode.play_wp = True
-                        self._mode.play_t = False
-                        self._playback = 1
-                        self._led['r'] = 230/255
-                        self._led['g'] = 0
-                        self._led['b'] = 126/255
-                    elif not self._mode.play_wp: # AUTO > PLAYBACK TRAJECTORY - green 0x4bff00
-                        self._mode.play_t = True
-                        self._mode.play_wp = False
-                        self._playback = 2
-                        self._led['r'] = 75/255
-                        self._led['g'] = 1
-                        self._led['b'] = 0
-                    else:
-                        if self._playback == 1:
-                            self._mode.play_wp = True
-                            self._mode.play_t  = False
-                        elif self._playback == 2:
-                            self._mode.play_wp = False
-                            self._mode.play_t  = True
-                        else:
-                            self._mode.play_t = False
-                            self._mode.play_wp = False
-                else: # AUTO > NORMAL - blue 0x004bff
-                    self._led['r'] = 0
-                    self._led['g'] = 75/255
-                    self._led['b'] = 1                     
+            if self._mode.auto: # AUTO - blue 0x004bff
+                self._led['r'] = 0
+                self._led['g'] = 75/255
+                self._led['b'] = 1                     
                     
-            else: # TELEOP ONLY
-                self._mode.play_t = False
-                self._mode.play_wp = False
-                if self._mode.record: # TELEOP  > RECORD - Orange Red 0xff4500 
-                    self._led['r'] = 1
-                    self._led['g'] = 69/255
-                    self._led['b'] = 0
-                else: # TELEOP > NORMAL - blueish-white 0xf5f5ff
-                    self._led['r'] = 245/255
-                    self._led['g'] = 245/255
-                    self._led['b'] = 1
+            else: # TELEOP - blueish-white 0xf5f5ff
+                self._led['r'] = 245/255
+                self._led['g'] = 245/255
+                self._led['b'] = 1
                 
         feedback.set_rumble = True    
         if self._rumble:

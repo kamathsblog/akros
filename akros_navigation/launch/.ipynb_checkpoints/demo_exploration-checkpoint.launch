@@ -35,9 +35,4 @@
         <arg name="frequency_val" value="1.0"/>
     </include>
     
-    <!-- INCLUDE WAYPOINT SEQUENCE STORE / PLAYER LAUNCH FILE -->
-    <include file="$(find akros_behaviors)/launch/demo_waypoint_player.launch">
-        <arg name="filename" value="$(find akros_behaviors)/config/waypoints_store.yaml"/>
-    </include>
-    
 </launch>
