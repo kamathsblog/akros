@@ -67,9 +67,9 @@ class Handler(object):
                 self._led['b'] = 1                     
                     
             else: # TELEOP - blueish-white 0xf5f5ff
-                self._led['r'] = 245/255
-                self._led['g'] = 245/255
-                self._led['b'] = 1
+                self._led['r'] = 0
+                self._led['g'] = 1
+                self._led['b'] = 75/255
                 
         feedback.set_rumble = True    
         if self._rumble:
