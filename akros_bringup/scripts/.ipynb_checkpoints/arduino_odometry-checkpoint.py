@@ -76,7 +76,7 @@ class ArduinoInterface():
             
             mode_out = 100;
             if self._mode.estop:   mode_out += 1
-            if self._mode.auto:    mode_out += 10
+            if self._mode.auto_t:    mode_out += 10
             
             self._pub_cmd_vec.publish(self._cmd_vec)
             self._pub_enc_odom.publish(self._odom)

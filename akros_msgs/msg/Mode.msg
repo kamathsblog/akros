@@ -1,2 +1,2 @@
 bool estop
-bool auto
+bool auto_t

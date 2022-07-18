@@ -18,7 +18,7 @@ class Handler(object):
         
         self._mode = Mode()
         self._mode.estop = False
-        self._mode.auto = False
+        self._mode.auto_t = False
         
         self._rumble = False
         self._playback = 0
@@ -50,18 +50,18 @@ class Handler(object):
             self._rumble = not self._rumble
             
         if msg.button_cross and not self._prev.button_cross:
-            self._mode.auto = not self._mode.auto
+            self._mode.auto_t = not self._mode.auto_t
 
         feedback.set_led = True
         
         if self._mode.estop: # STOP! - red
             self._rumble = False
-            self._mode.auto = False
+            self._mode.auto_t = False
             self._led['r'] = 1
             self._led['g'] = 0
             self._led['b'] = 0
         else:
-            if self._mode.auto: # AUTO - blue 0x004bff
+            if self._mode.auto_t: # AUTO - blue 0x004bff
                 self._led['r'] = 0
                 self._led['g'] = 75/255
                 self._led['b'] = 1                     
