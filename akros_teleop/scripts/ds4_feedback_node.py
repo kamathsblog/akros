@@ -12,8 +12,8 @@ class Handler(object):
         self._prev = Status()
         self._led = {
             'r': 0,
-            'g': 0,
-            'b': 0,
+            'g': 255,
+            'b': 255,
         }
         
         self._mode = Mode()
@@ -61,15 +61,15 @@ class Handler(object):
             self._led['g'] = 0
             self._led['b'] = 0
         else:
-            if self._mode.auto_t: # AUTO - blue 0x004bff
+            if self._mode.auto_t: # AUTO - blue
                 self._led['r'] = 0
-                self._led['g'] = 75/255
+                self._led['g'] = 55/255
                 self._led['b'] = 1                     
                     
-            else: # TELEOP - blueish-white 0xf5f5ff
+            else: # TELEOP - green
                 self._led['r'] = 0
                 self._led['g'] = 1
-                self._led['b'] = 75/255
+                self._led['b'] = 55/255
                     
         if self._rumble:
             feedback.set_rumble = True
