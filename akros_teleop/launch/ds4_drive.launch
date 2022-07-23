@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="standalone" default="true"/>
+    <arg name="standalone" default="false"/>
 
     <!-- ARGUMENTS - DS4 -->
     <arg name="addr"              default="84:30:95:2C:67:7C" />

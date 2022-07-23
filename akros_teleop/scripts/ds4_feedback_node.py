@@ -2,7 +2,7 @@
 
 import rospy
 from ds4_driver.msg import Feedback, Status
-from akros_msgs.msg import Mode
+from akros2_msgs.msg import Mode
 from std_msgs.msg import Bool
 
 class Handler(object):
@@ -70,11 +70,12 @@ class Handler(object):
                 self._led['r'] = 0
                 self._led['g'] = 1
                 self._led['b'] = 75/255
-                
-        feedback.set_rumble = True    
+                    
         if self._rumble:
+            feedback.set_rumble = True
             feedback.rumble_small = (abs(msg.axis_left_y) + abs(msg.axis_left_x) + abs(msg.axis_right_x) + abs(msg.button_dpad_up - msg.button_dpad_down) + abs(msg.button_dpad_left - msg.button_dpad_right)) / 4
         else:
+            feedback.set_rumble = False
             feedback.rumble_small = 0
                 
         feedback.led_r = self._led['r']
