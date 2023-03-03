@@ -314,7 +314,7 @@
   <material>Gazebo/White</material>
 </gazebo>
 
-<gazebo reference="laser_frame">
+<gazebo reference="laser_link">
   <material>Gazebo/Black</material>
 </gazebo>
 
