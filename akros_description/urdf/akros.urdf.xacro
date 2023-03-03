@@ -9,7 +9,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/navigation_module_centered.stl" />
+      <mesh filename="package://akros_description/meshes/navigation_module_centered.stl" />
     </geometry>
     <material name="">
       <color rgba="1 1 1 1" />
@@ -42,7 +42,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/ld06.stl" />
+      <mesh filename="package://akros_description/meshes/ld06.stl" />
     </geometry>
     <material name="">
       <color rgba="0 0 0 1" />
@@ -51,7 +51,7 @@
   <collision>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/ld06.stl" />
+      <mesh filename="package://akros_description/meshes/ld06.stl" />
     </geometry>
   </collision>
 </link>
@@ -69,7 +69,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/t265.stl" />
+      <mesh filename="package://akros_description/meshes/t265.stl" />
     </geometry>
     <material name="">
       <color rgba="0 0 0 1" />
@@ -92,7 +92,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/base_module_centered.stl" />
+      <mesh filename="package://akros_description/meshes/base_module_centered.stl" />
     </geometry>
     <material name="">
       <color rgba="1 1 1 1" />
@@ -115,7 +115,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/wheel_left_front.stl" />
+      <mesh filename="package://akros_description/meshes/wheel_left_front.stl" />
     </geometry>
     <material name="">
       <color rgba="0 0 0 1" />
@@ -138,7 +138,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/wheel_left_back.stl" />
+      <mesh filename="package://akros_description/meshes/wheel_left_back.stl" />
     </geometry>
     <material name="">
       <color rgba="0 0 0 1" />
@@ -161,7 +161,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/wheel_right_front.stl" />
+      <mesh filename="package://akros_description/meshes/wheel_right_front.stl" />
     </geometry>
     <material name="">
       <color rgba="0 0 0 1" />
@@ -184,7 +184,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0" />
     <geometry>
-      <mesh filename="package://mecanum_car/meshes/wheel_right_back.stl" />
+      <mesh filename="package://akros_description/meshes/wheel_right_back.stl" />
     </geometry>
     <material name="">
       <color rgba="0 0 0 1" />
